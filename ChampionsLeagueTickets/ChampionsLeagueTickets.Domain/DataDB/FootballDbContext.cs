@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ChampionsLeagueTickets.Domain.EntitiesDB;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace ChampionsLeagueTickets.Domain.DataDB;
 
@@ -49,9 +50,11 @@ public partial class FootballDbContext : DbContext
     public virtual DbSet<Zitplaatsen> Zitplaatsens { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=.\\sql22_vives; Database=ChampionsLeague; Trusted_Connection=True;TrustServerCertificate=True; MultipleActiveResultSets=true;");
-
+    {
+            optionsBuilder.UseSqlServer(
+                "Server = championsleagueticketsvivesilona.database.windows.net; Initial Catalog = BierSql; User ID = Beheerder; Password = MagneetRolstoelToetsenbord9!; MultipleActiveResultSets = True; Encrypt = True; TrustServerCertificate = True;"
+            );
+    }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Abonnementen>(entity =>
