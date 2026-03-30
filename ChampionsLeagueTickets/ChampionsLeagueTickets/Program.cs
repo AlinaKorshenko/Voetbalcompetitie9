@@ -56,8 +56,13 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddAutoMapper(typeof(Program));
 
 //DI
+//Stadion
 builder.Services.AddScoped<IDAO<Stadion>, StadionDAO>();
 builder.Services.AddScoped<IService<Stadion>, StadionService>();
+
+//VakType
+builder.Services.AddScoped<IDAO<VakType>, VakTypeDAO>();
+builder.Services.AddScoped<IService<VakType>, VakTypeService>();
 
 //Jwt
 builder.Services
