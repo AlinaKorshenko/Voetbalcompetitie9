@@ -34,19 +34,19 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "My API Employee",
+        Title = "API for Champions League Tickets application",
         Version = "version 1",
-        Description = "An API to perform Employee operations",
+        Description = "An API to perform Get operations on Champions League Tickets information",
         TermsOfService = new Uri("https://example.com/terms"),
         Contact = new OpenApiContact
         {
-            Name = "CDW",
-            Email = "christophe.dewaele@vives.be",
+            Name = "ID",
+            Email = "ilona.defevere@student.vives.be",
             Url = new Uri("https://vives.be"),
         },
         License = new OpenApiLicense
         {
-            Name = "Employee API LICX",
+            Name = "ChampionsLeague API LICX",
             Url = new Uri("https://example.com/license"),
         }
     });
@@ -67,24 +67,24 @@ builder.Services
     //Gebruik JWT Bearer authentication als standaard authenticatiemethode.
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
+});
 
 //JWT Bearer authentication configuration
-.AddJwtBearer(cfg =>
-{
-    cfg.RequireHttpsMetadata = false;
-    cfg.SaveToken = true;
-    //Configureer de parameters voor het valideren van het token
-    cfg.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidIssuer = builder.Configuration["JwtConfig:JwtIssuer"], // uitgever van het token
-        ValidAudience = builder.Configuration["JwtConfig:JwtIssuer"],
-        //de sleutel waarmee de token signature wordt gecontroleerd
-        IssuerSigningKey = new
-    SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtConfig:JwtKey"])),
-        ClockSkew = TimeSpan.Zero // remove delay of token when expire
-    };
-});
+//.AddJwtBearer(cfg =>
+//{
+//    cfg.RequireHttpsMetadata = false;
+//    cfg.SaveToken = true;
+//    //Configureer de parameters voor het valideren van het token
+//    cfg.TokenValidationParameters = new TokenValidationParameters
+//    {
+//        ValidIssuer = builder.Configuration["JwtConfig:JwtIssuer"], // uitgever van het token
+//        ValidAudience = builder.Configuration["JwtConfig:JwtIssuer"],
+//        //de sleutel waarmee de token signature wordt gecontroleerd
+//        IssuerSigningKey = new
+//    SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtConfig:JwtKey"])),
+//        ClockSkew = TimeSpan.Zero // remove delay of token when expire
+//    };
+//});
 
 var app = builder.Build();
 
@@ -103,6 +103,10 @@ else
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseSwagger();
+app.UseSwaggerUI();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();

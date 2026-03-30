@@ -8,18 +8,18 @@ namespace ChampionsLeagueTickets.Controllers.API
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class APIController : Controller
+    public class StadionController : Controller
     {
         private IService<Stadion> _stadionService;
         private readonly IMapper _mapper;
-        public APIController(IMapper mapper, IService<Stadion> stadionService)
+        public StadionController(IMapper mapper, IService<Stadion> stadionService)
         {
             _mapper = mapper;
             _stadionService = stadionService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<StadionVM>> GetStadions()
+        public async Task<ActionResult<StadionVM>> Get()
         {
             try
             {
