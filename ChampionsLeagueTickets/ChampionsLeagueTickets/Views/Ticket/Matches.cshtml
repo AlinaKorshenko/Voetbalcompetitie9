@@ -1,42 +1,65 @@
-﻿@model Voetbalcompetitie9.ViewModels.MatchVM
+﻿@model IEnumerable<Voetbalcompetitie9.ViewModels.MatchVM>
 
 @{
     ViewData["Title"] = "Matches";
 }
 
-<h1>Matches</h1>
+@section Styles {
+   <link href="~/lib/datatables/css/jquery.datatables.min.css" rel="stylesheet" />
+}
 
-<div>
-    <h4>MatchVM</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.homeTeamName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.homeTeamName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.awayTeamName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.awayTeamName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.stadionName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.stadionName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.date)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.date)
-        </dd>
-    </dl>
-</div>
-<div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    <a asp-action="Index">Back to List</a>
-</div>
+@if (Model != null){
+{
+    <table id="matchesTable" class="table border-0">
+            <thead>
+                <tr>
+                    <th>Matches</th>
+                </tr>
+            </thead>
+        <tbody>
+            @foreach (var match in Model)
+            {
+               <tr class="match-card">
+                    <td>
+                        <div class="card p-3 shadow-sm mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5 class="mb-0">
+                                       @match.stadionName
+                                    </h5>
+                                </div>
+                                    <div>
+                                        @match.homeTeamName
+                                        <span class="badge bg-dark mx-2">VS</span>
+                                        @match.awayTeamName
+                                    </div>
+                                <div class="text-end">
+                                    <strong>
+                                        @match.DatumTijdStartMatch.ToString("dd/MM/yyyy")
+                                    </strong><br/>
+                                    <span>
+                                        @match.DatumTijdStartMatch.ToString("HH:mm")
+                                    </span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </td>
+               </tr>
+            }
+        </tbody>
+    </table>
+ }
+}
+else
+ {
+    <p>Er is een fout</p>
+ }
+@section Scripts {
+    <script src="~/lib/datatables/js/jquery.datatables.min.js"></script>
+    <script>
+        $(() => {
+        $('#matchesTable').DataTable();
+        });
+    </script>
+}

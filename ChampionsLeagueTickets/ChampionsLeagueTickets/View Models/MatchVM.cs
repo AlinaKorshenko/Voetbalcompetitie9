@@ -4,9 +4,9 @@
     {
 
         public string homeTeamName { get; set; }
-        public int awayTeamName { get; set; }
-        public int stadionName { get; set; }
-        public int date { get; set; }
+        public string awayTeamName { get; set; }
+        public string stadionName { get; set; }
+        public DateTime DatumTijdStartMatch { get; set; }
 
     }
 }
