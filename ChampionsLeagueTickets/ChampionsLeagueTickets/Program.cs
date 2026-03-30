@@ -1,18 +1,90 @@
 using ChampionsLeagueTickets.Data;
+using ChampionsLeagueTickets.Domain.DataDB;
+using ChampionsLeagueTickets.Domain.EntitiesDB;
+using ChampionsLeagueTickets.Repositories;
+using ChampionsLeagueTickets.Repositories.Interfaces;
+using ChampionsLeagueTickets.Services;
+using ChampionsLeagueTickets.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+//Services
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
+
+builder.Services.AddDbContext<FootballDbContext>(options =>
+    options.UseSqlServer(connectionString));
+builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllers();
+
+//Swagger
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "My API Employee",
+        Version = "version 1",
+        Description = "An API to perform Employee operations",
+        TermsOfService = new Uri("https://example.com/terms"),
+        Contact = new OpenApiContact
+        {
+            Name = "CDW",
+            Email = "christophe.dewaele@vives.be",
+            Url = new Uri("https://vives.be"),
+        },
+        License = new OpenApiLicense
+        {
+            Name = "Employee API LICX",
+            Url = new Uri("https://example.com/license"),
+        }
+    });
+});
+
+//Automapper
+builder.Services.AddAutoMapper(typeof(Program));
+
+//DI
+builder.Services.AddScoped<IDAO<Stadion>, StadionDAO>();
+builder.Services.AddScoped<IService<Stadion>, StadionService>();
+
+//Jwt
+builder.Services
+.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    //Gebruik JWT Bearer authentication als standaard authenticatiemethode.
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+
+//JWT Bearer authentication configuration
+.AddJwtBearer(cfg =>
+{
+    cfg.RequireHttpsMetadata = false;
+    cfg.SaveToken = true;
+    //Configureer de parameters voor het valideren van het token
+    cfg.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidIssuer = builder.Configuration["JwtConfig:JwtIssuer"], // uitgever van het token
+        ValidAudience = builder.Configuration["JwtConfig:JwtIssuer"],
+        //de sleutel waarmee de token signature wordt gecontroleerd
+        IssuerSigningKey = new
+    SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtConfig:JwtKey"])),
+        ClockSkew = TimeSpan.Zero // remove delay of token when expire
+    };
+});
 
 var app = builder.Build();
 

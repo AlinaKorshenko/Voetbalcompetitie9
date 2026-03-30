@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ChampionsLeagueTickets.Services
 {
-    internal class StadionService : IService<Stadion>
+    public class StadionService : IService<Stadion>
     {
         private IDAO<Stadion> _stadionDAO;
 
