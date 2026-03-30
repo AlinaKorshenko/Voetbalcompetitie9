@@ -52,7 +52,7 @@ public partial class FootballDbContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
             optionsBuilder.UseSqlServer(
-                "Server = championsleagueticketsvivesilona.database.windows.net; Initial Catalog = BierSql; User ID = Beheerder; Password = MagneetRolstoelToetsenbord9!; MultipleActiveResultSets = True; Encrypt = True; TrustServerCertificate = True;"
+                "Server = championsleagueticketsvivesilona.database.windows.net; Initial Catalog = ChampionsLeague; User ID = Beheerder; Password = MagneetRolstoelToetsenbord9!; MultipleActiveResultSets = True; Encrypt = True; TrustServerCertificate = True;"
             );
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
