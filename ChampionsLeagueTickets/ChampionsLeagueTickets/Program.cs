@@ -2,7 +2,6 @@ using ChampionsLeagueTickets.Data;
 using ChampionsLeagueTickets.Domain.DataDB;
 using ChampionsLeagueTickets.Domain.EntitiesDB;
 using ChampionsLeagueTickets.Repositories;
-using ChampionsLeagueTickets.Repositories.Interface;
 using ChampionsLeagueTickets.Services;
 using ChampionsLeagueTickets.Domain.DataDB;
 using ChampionsLeagueTickets.Domain.EntitiesDB;
