@@ -33,9 +33,9 @@ namespace ChampionsLeagueTickets.Services
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Zitplaatsen>?> GetAllAsync()
+        public async Task<IEnumerable<Zitplaatsen>?> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _zitplaatsenDAO.GetAllAsync();
         }
 
         public Task UpdateAsync(Zitplaatsen entity)
