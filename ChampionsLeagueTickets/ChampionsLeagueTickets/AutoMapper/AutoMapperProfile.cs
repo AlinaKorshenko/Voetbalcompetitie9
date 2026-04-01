@@ -20,7 +20,7 @@ namespace ChampionsLeagueTickets.AutoMapper
                 opts => opts.MapFrom(src => src.ThuisTeam.Stadion.Naam));
 
             CreateMap<Stadion, StadionVM>();
-            CreateMap<VakType, VakTypeInformatieVM>();
+            CreateMap<VakType, VakTypeVM>();
         }
 
     }

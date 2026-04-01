@@ -3,11 +3,7 @@ using ChampionsLeagueTickets.Domain.DataDB;
 using ChampionsLeagueTickets.Domain.EntitiesDB;
 using ChampionsLeagueTickets.Repositories;
 using ChampionsLeagueTickets.Services;
-using ChampionsLeagueTickets.Domain.DataDB;
-using ChampionsLeagueTickets.Domain.EntitiesDB;
-using ChampionsLeagueTickets.Repositories;
 using ChampionsLeagueTickets.Repositories.Interfaces;
-using ChampionsLeagueTickets.Services;
 using ChampionsLeagueTickets.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
@@ -69,6 +65,10 @@ builder.Services.AddScoped<IService<Stadion>, StadionService>();
 //VakType
 builder.Services.AddScoped<IDAO<VakType>, VakTypeDAO>();
 builder.Services.AddScoped<IService<VakType>, VakTypeService>();
+
+//Zitplaatsen
+builder.Services.AddScoped<IZitplaatsenDAO, ZitplaatsenDAO>();
+builder.Services.AddScoped<IZitplaatsenService, ZitplaatsenService>();
 
 //Jwt
 builder.Services

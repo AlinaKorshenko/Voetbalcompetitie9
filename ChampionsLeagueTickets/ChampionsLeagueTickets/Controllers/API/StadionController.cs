@@ -12,42 +12,63 @@ namespace ChampionsLeagueTickets.Controllers.API
     {
         private IService<Stadion> _stadionService;
         private IService<VakType> _vakTypeService;
+        private IZitplaatsenService _zitplaatsenService;
         private readonly IMapper _mapper;
-        public StadionController(IMapper mapper, IService<Stadion> stadionService, IService<VakType> vakTypeService)
+        public StadionController(IMapper mapper, IService<Stadion> stadionService, IService<VakType> vakTypeService, IZitplaatsenService zitplaatsenService)
         {
             _mapper = mapper;
             _stadionService = stadionService;
             _vakTypeService = vakTypeService;
+            _zitplaatsenService = zitplaatsenService;
         }
 
-        //[HttpGet]
-        //public async Task<ActionResult<StadionVM>> Get()
-        //{
-        //    try
-        //    {
-        //        var listStadions = await _stadionService.GetAllAsync();
-        //        List<StadionVM> stadions = _mapper.Map<List<StadionVM>>(listStadions);
-        //        if (stadions == null)
-        //        {
-        //            return NotFound();
-        //        }
+        [HttpGet]
+        public async Task<ActionResult<List<StadionInformatieVM>>> Get()
+        {
+            try
+            {
+                var listStadions = await _stadionService.GetAllAsync();
+                var listVakTypes = await _vakTypeService.GetAllAsync();
 
-        //        var listVakTypes = await _vakTypeService.GetAllAsync();
-        //        List<StadionVM> vakTypes = _mapper.Map<List<StadionVM>>(listVakTypes);
-        //        if (stadions == null)
-        //        {
-        //            return NotFound();
-        //        }
+                var data = new List<StadionInformatieVM>();
 
-        //        return Ok(data);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, new
-        //        {
-        //            error = ex.Message
-        //        });
-        //    }
-        //}
+                foreach (var stadion in listStadions)
+                {
+                    var vaktypeInfoList = new List<VakTypeInformatieVM>();
+
+                    foreach (var vak in listVakTypes)
+                    {
+                        var capaciteit = await _zitplaatsenService
+                            .GetCountZitplaatsenByVakTypeAndStadion(
+                                stadion,
+                                vak
+                            );
+
+                        vaktypeInfoList.Add(new VakTypeInformatieVM
+                        {
+                            VakType = _mapper.Map<VakTypeVM>(vak),
+                            AantalZitplaatsen = capaciteit
+                        });
+                    }
+
+                    data.Add(new StadionInformatieVM
+                    {
+                        Stadion = _mapper.Map<StadionVM>(stadion),
+                        VakTypes = vaktypeInfoList
+                    });
+                }
+
+                if (!data.Any())
+                    return NotFound();
+
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new {
+                    error = ex.Message 
+                });
+            }
+        }
     }
 }
