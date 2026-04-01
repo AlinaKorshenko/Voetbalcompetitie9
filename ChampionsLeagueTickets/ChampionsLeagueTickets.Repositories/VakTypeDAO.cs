@@ -38,7 +38,7 @@ namespace ChampionsLeagueTickets.Repositories
         {
             try
             {
-                return await _dbContext.Zitplaatsens
+                return await _dbContext.VakTypes
                     .ToListAsync();
             }
             catch

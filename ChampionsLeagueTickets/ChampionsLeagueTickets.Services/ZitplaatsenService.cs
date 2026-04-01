@@ -1,4 +1,5 @@
 ﻿using ChampionsLeagueTickets.Domain.EntitiesDB;
+using ChampionsLeagueTickets.Repositories;
 using ChampionsLeagueTickets.Repositories.Interfaces;
 using ChampionsLeagueTickets.Services.Interfaces;
 using System;
@@ -9,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace ChampionsLeagueTickets.Services
 {
-    public class ZitplaatsenService : IService<Zitplaatsen>
+    public class ZitplaatsenService : IZitplaatsenService
     {
-        private IDAO<Zitplaatsen> _zitplaatsenDAO;
+        private IZitplaatsenDAO _zitplaatsenDAO;
 
-        public ZitplaatsenService(IDAO<Zitplaatsen> zitplaatsenDAO)
+        public ZitplaatsenService(IZitplaatsenDAO zitplaatsenDAO)
         {
             _zitplaatsenDAO = zitplaatsenDAO;
         }
@@ -36,6 +37,11 @@ namespace ChampionsLeagueTickets.Services
         public async Task<IEnumerable<Zitplaatsen>?> GetAllAsync()
         {
             return await _zitplaatsenDAO.GetAllAsync();
+        }
+
+        public async Task<int> GetCountZitplaatsenByVakTypeAndStadion(Stadion stadion, VakType vaktype)
+        {
+            return await _zitplaatsenDAO.GetCountZitplaatsenByVakTypeAndStadion(stadion, vaktype);
         }
 
         public Task UpdateAsync(Zitplaatsen entity)
