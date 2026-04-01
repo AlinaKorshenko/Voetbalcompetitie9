@@ -1,6 +1,7 @@
 ﻿using ChampionsLeagueTickets.Domain.DataDB;
 using ChampionsLeagueTickets.Domain.EntitiesDB;
 using ChampionsLeagueTickets.Repositories.Interfaces;
+using ChampionsLeagueTickets.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

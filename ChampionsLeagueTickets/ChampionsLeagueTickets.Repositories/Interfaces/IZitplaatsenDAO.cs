@@ -1,11 +1,12 @@
 ﻿using ChampionsLeagueTickets.Domain.EntitiesDB;
+using ChampionsLeagueTickets.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChampionsLeagueTickets.Repositories.Interfaces
+namespace ChampionsLeagueTickets.Services.Interfaces
 {
     public interface IZitplaatsenDAO : IDAO<Zitplaatsen>
     {
