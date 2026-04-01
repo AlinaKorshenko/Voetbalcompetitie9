@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ChampionsLeagueTickets.Repositories
 {
-    public class ZitplaatsenDAO : IDAO<Zitplaatsen>
+    public class ZitplaatsenDAO : IZitplaatsenDAO
     {
         private readonly FootballDbContext _dbContext;
 
@@ -40,6 +40,21 @@ namespace ChampionsLeagueTickets.Repositories
             {
                 return await _dbContext.Zitplaatsens
                     .ToListAsync();
+            }
+            catch
+            {
+                Console.WriteLine("error in DAO");
+                throw;
+            }
+        }
+
+        public async Task<int> GetCountZitplaatsenByVakTypeAndStadion(Stadion stadion, VakType vaktype)
+        {
+            try
+            {
+                return await _dbContext.Zitplaatsens
+                    .Where(zitplaats => zitplaats.StadionId == stadion.StadionId && zitplaats.VakNummer == vaktype.VakNummer)
+                    .CountAsync();
             }
             catch
             {
