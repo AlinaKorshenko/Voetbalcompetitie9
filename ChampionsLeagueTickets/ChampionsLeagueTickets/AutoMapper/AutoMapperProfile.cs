@@ -19,8 +19,8 @@ namespace ChampionsLeagueTickets.AutoMapper
             .ForMember(dest => dest.stadionName,
                 opts => opts.MapFrom(src => src.ThuisTeam.Stadion.Naam));
 
-
             CreateMap<Stadion, StadionVM>();
+            CreateMap<VakType, VakTypeVM>();
         }
 
     }
