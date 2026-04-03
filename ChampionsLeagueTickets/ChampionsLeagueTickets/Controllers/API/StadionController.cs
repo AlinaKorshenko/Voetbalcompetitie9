@@ -10,10 +10,11 @@ namespace ChampionsLeagueTickets.Controllers.API
     [ApiController]
     public class StadionController : Controller
     {
+        private readonly IMapper _mapper;
         private IService<Stadion> _stadionService;
         private IService<VakType> _vakTypeService;
         private IZitplaatsenService _zitplaatsenService;
-        private readonly IMapper _mapper;
+
         public StadionController(IMapper mapper, IService<Stadion> stadionService, IService<VakType> vakTypeService, IZitplaatsenService zitplaatsenService)
         {
             _mapper = mapper;
@@ -59,7 +60,9 @@ namespace ChampionsLeagueTickets.Controllers.API
                 }
 
                 if (!data.Any())
+                {
                     return NotFound();
+                }
 
                 return Ok(data);
             }
