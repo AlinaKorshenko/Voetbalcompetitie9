@@ -5,6 +5,7 @@ using ChampionsLeagueTickets.Services.Interfaces;
 using ChampionsLeagueTickets.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ChampionsLeagueTickets.Controllers.API
 {
@@ -26,11 +27,10 @@ namespace ChampionsLeagueTickets.Controllers.API
         {
             try
             {
-                var listStadions = await _matchesService.GetAllMatchesFromTeamsAsync(homeClubId, awayClubId);
+                var list = await _matchesService.GetAllMatchesFromTeamsAsync(homeClubId, awayClubId);
+                List<MatchVM> data = _mapper.Map<List<MatchVM>>(list);
 
-                var data = new List<MatchVM>();
-
-                if (!data.Any())
+                if (data == null)
                 {
                     return NotFound();
                 }
