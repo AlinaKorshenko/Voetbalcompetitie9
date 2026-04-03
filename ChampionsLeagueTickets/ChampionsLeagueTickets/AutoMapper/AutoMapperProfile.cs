@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using ChampionsLeagueTickets.Domain.EntitiesDB;
-using Voetbalcompetitie9.ViewModels;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using ChampionsLeagueTickets.ViewModels;
 

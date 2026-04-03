@@ -2,9 +2,9 @@
 using ChampionsLeagueTickets.Domain.EntitiesDB;
 using ChampionsLeagueTickets.Services;
 using ChampionsLeagueTickets.Services.Interfaces;
+using ChampionsLeagueTickets.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using Voetbalcompetitie9.ViewModels;
 
 namespace Voetbalcompetitie9.Controllers
 {

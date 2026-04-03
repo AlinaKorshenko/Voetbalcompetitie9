@@ -3,6 +3,7 @@ using ChampionsLeagueTickets.Domain.EntitiesDB;
 using ChampionsLeagueTickets.Services;
 using ChampionsLeagueTickets.Services.Interfaces;
 using ChampionsLeagueTickets.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChampionsLeagueTickets.Controllers.API
@@ -18,6 +19,29 @@ namespace ChampionsLeagueTickets.Controllers.API
         {
             _mapper = mapper;
             _matchesService = matchesService;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<MatchVM>> Get(string homeClubId, string awayClubId)
+        {
+            try
+            {
+                var listStadions = await _matchesService.GetAllAsync();
+
+                var data = new List<StadionInformatieVM>();
+
+                if (!data.Any())
+                    return NotFound();
+
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    error = ex.Message
+                });
+            }
         }
     }
 }
