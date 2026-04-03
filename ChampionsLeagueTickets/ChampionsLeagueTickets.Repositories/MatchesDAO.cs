@@ -37,12 +37,20 @@ namespace ChampionsLeagueTickets.Repositories
 
         public async Task<IEnumerable<Match>?> GetAllAsync()
         {
-            return await _dbContext.Matches
-                .Include(m => m.ThuisTeam)
-                    .ThenInclude(t => t.Stadion)
-                .Include(m => m.BezoekendTeam)
-                .Where(m => m.DatumTijdStartMatch > DateTime.Now)
-                .ToListAsync();
+            try
+            {
+                return await _dbContext.Matches
+                    .Include(m => m.ThuisTeam)
+                        .ThenInclude(t => t.Stadion)
+                    .Include(m => m.BezoekendTeam)
+                    .Where(m => m.DatumTijdStartMatch > DateTime.Now)
+                    .ToListAsync();
+            }
+            catch
+            {
+                Console.WriteLine("error in DAO");
+                throw;
+            }
         }
 
         public async Task<IEnumerable<Match>?> GetAllMatchesFromTeamsAsync(string homeTeamId, string awayTeamId)
