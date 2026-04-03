@@ -59,7 +59,7 @@ namespace ChampionsLeagueTickets.Repositories
             {
                 return await _dbContext.Matches
                     .Include(m => m.ThuisTeam)
-                    .ThenInclude(t => t.Stadion)
+                        .ThenInclude(t => t.Stadion)
                     .Include(m => m.BezoekendTeam)
                     .Where(match => match.ThuisTeamId == homeTeamId && match.BezoekendTeamId == awayTeamId)
                     .ToListAsync();
