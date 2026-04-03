@@ -103,7 +103,7 @@ builder.Services.AddAutoMapper(typeof(Program));
 
 //DI
 builder.Services.AddScoped<IDAO<Match>, MatchesDAO>();
-builder.Services.AddScoped<IService<Match>, MatchesService>();
+builder.Services.AddScoped<IMatchService, MatchesService>();
 
 var cs = builder.Configuration.GetConnectionString("DefaultConnection");
 Debug.WriteLine("CONNECTION STRING:");
