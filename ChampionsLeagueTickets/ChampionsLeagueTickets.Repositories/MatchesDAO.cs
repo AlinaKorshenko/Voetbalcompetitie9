@@ -47,9 +47,17 @@ namespace ChampionsLeagueTickets.Repositories
 
         public async Task<IEnumerable<Match>?> GetAllMatchesFromTeamsAsync(string homeTeamId, string awayTeamId)
         {
-            return await _dbContext.Matches
-                .Where(match => match.ThuisTeamId == homeTeamId && match.BezoekendTeamId == awayTeamId)
-                .ToListAsync();
+            try
+            {
+                return await _dbContext.Matches
+                    .Where(match => match.ThuisTeamId == homeTeamId && match.BezoekendTeamId == awayTeamId)
+                    .ToListAsync();
+            }
+            catch
+            {
+                Console.WriteLine("error in DAO");
+                throw;
+            }
         }
 
         public Task UpdateAsync(Match entity)

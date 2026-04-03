@@ -11,10 +11,10 @@ namespace Voetbalcompetitie9.Controllers
     public class TicketController : Controller
     {
 
-        private readonly IService<Match> _matchesService;
+        private readonly IMatchService _matchesService;
         private readonly IMapper _mapper;
 
-        public TicketController(IService<Match> matchesService, IMapper mapper)
+        public TicketController(IMatchService matchesService, IMapper mapper)
         {
             _matchesService = matchesService;
             _mapper = mapper;
