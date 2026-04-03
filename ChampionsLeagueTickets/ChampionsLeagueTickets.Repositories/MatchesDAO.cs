@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ChampionsLeagueTickets.Repositories
 {
-    public class MatchesDAO : IDAO<Match>
+    public class MatchesDAO : IMatchDAO
     {
 
         private readonly FootballDbContext _dbContext;
@@ -42,6 +42,13 @@ namespace ChampionsLeagueTickets.Repositories
                     .ThenInclude(t => t.Stadion)
                 .Include(m => m.BezoekendTeam)
                 .Where(m => m.DatumTijdStartMatch > DateTime.Now)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Match>?> GetAllMatchesFromTeamsAsync(string homeTeamId, string awayTeamId)
+        {
+            return await _dbContext.Matches
+                .Where(match => match.ThuisTeamId == homeTeamId && match.BezoekendTeamId == awayTeamId)
                 .ToListAsync();
         }
 

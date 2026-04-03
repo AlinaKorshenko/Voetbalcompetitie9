@@ -13,9 +13,9 @@ namespace ChampionsLeagueTickets.Controllers.API
     public class MatchesController : Controller
     {
         private readonly IMapper _mapper;
-        private IService<Match> _matchesService;
+        private IMatchService _matchesService;
 
-        public MatchesController(IMapper mapper, IService<Match> matchesService)
+        public MatchesController(IMapper mapper, IMatchService matchesService)
         {
             _mapper = mapper;
             _matchesService = matchesService;
@@ -26,12 +26,14 @@ namespace ChampionsLeagueTickets.Controllers.API
         {
             try
             {
-                var listStadions = await _matchesService.GetAllAsync();
+                var listStadions = await _matchesService.GetAllMatchesFromTeamsAsync(homeClubId, awayClubId);
 
-                var data = new List<StadionInformatieVM>();
+                var data = new List<MatchVM>();
 
                 if (!data.Any())
+                {
                     return NotFound();
+                }
 
                 return Ok(data);
             }

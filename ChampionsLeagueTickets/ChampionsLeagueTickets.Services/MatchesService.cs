@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace ChampionsLeagueTickets.Services
 {
-    public class MatchesService : IService<Match>
+    public class MatchesService : IMatchService
     {
-        private IDAO<Match> _matchesDAO;
+        private IMatchDAO _matchesDAO;
 
-        public MatchesService(IDAO<Match> matchDAO)
+        public MatchesService(IMatchDAO matchDAO)
         {
             _matchesDAO = matchDAO;
         }
@@ -36,6 +36,11 @@ namespace ChampionsLeagueTickets.Services
         public async Task<IEnumerable<Match>?> GetAllAsync()
         {
             return await _matchesDAO.GetAllAsync();
+        }
+
+        public async Task<IEnumerable<Match>?> GetAllMatchesFromTeamsAsync(string homeTeamId, string awayTeamId)
+        {
+            return await _matchesDAO.GetAllMatchesFromTeamsAsync(homeTeamId, awayTeamId);
         }
 
         public Task UpdateAsync(Match entity)
