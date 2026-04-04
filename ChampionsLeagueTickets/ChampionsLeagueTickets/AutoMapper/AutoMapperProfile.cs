@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
+using ChampionsLeagueTickets.Domain.DTO;
 using ChampionsLeagueTickets.Domain.EntitiesDB;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using ChampionsLeagueTickets.ViewModels;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ChampionsLeagueTickets.AutoMapper
 {
@@ -20,6 +21,7 @@ namespace ChampionsLeagueTickets.AutoMapper
 
             CreateMap<Stadion, StadionVM>();
             CreateMap<VakType, VakTypeVM>();
+            CreateMap<AspNetUser, UserInfoResponse>();
         }
 
     }

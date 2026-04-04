@@ -70,6 +70,9 @@ builder.Services.AddScoped<IService<VakType>, VakTypeService>();
 builder.Services.AddScoped<IZitplaatsenDAO, ZitplaatsenDAO>();
 builder.Services.AddScoped<IZitplaatsenService, ZitplaatsenService>();
 
+//Users
+builder.Services.AddScoped<IUserService, UserService>();
+
 //Automapper
 builder.Services.AddAutoMapper(typeof(Program));
 

@@ -1,5 +1,8 @@
-﻿using ChampionsLeagueTickets.Domain.DTO;
+﻿using ChampionsLeagueTickets.Domain.DataDB;
+using ChampionsLeagueTickets.Domain.DTO;
 using ChampionsLeagueTickets.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,22 +11,22 @@ using System.Threading.Tasks;
 
 namespace ChampionsLeagueTickets.Services
 {
-    public class UserService : IUserInterface
+    public class UserService : IUserService
     {
-        UserManager _userManager;
+        private readonly FootballDbContext _context;
 
-        public UserService(UserManager userManager)
+        public UserService(FootballDbContext context)
         {
-            this._userManager = userManager;
+            _context = context;
         }
 
-        public Task<IEnumerable<UserInfoResponse?>> GetAllUsersAsync()
+        public async Task<IEnumerable<UserInfoResponse>> GetAllUsersAsync()
         {
-            var users = _userManager.Users.ToList();
-
-            return users.Select(u => new UserInfoResponse(
-                u.Email!
-            ));
+            return await _context.AspNetUsers
+                .Select(u => new UserInfoResponse(
+                    u.Email!
+                ))
+                .ToListAsync();
         }
     }
 }
