@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ChampionsLeagueTickets.Services.Interfaces
 {
-    public interface IUserInterface
+    public interface IUserService
     {
         Task<IEnumerable<UserInfoResponse?>> GetAllUsersAsync();
     }
