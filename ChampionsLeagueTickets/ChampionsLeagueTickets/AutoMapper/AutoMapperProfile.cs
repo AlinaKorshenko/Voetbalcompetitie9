@@ -21,7 +21,9 @@ namespace ChampionsLeagueTickets.AutoMapper
 
             CreateMap<Stadion, StadionVM>();
             CreateMap<VakType, VakTypeVM>();
+
             CreateMap<AspNetUser, UserInfoResponse>();
+            CreateMap<UserInfoResponse, UserVM>();
         }
 
     }
