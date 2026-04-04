@@ -8,14 +8,14 @@ namespace ChampionsLeagueTickets.Controllers.API
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StadionController : Controller
+    public class StadionsController : Controller
     {
         private readonly IMapper _mapper;
         private IService<Stadion> _stadionService;
         private IService<VakType> _vakTypeService;
         private IZitplaatsenService _zitplaatsenService;
 
-        public StadionController(IMapper mapper, IService<Stadion> stadionService, IService<VakType> vakTypeService, IZitplaatsenService zitplaatsenService)
+        public StadionsController(IMapper mapper, IService<Stadion> stadionService, IService<VakType> vakTypeService, IZitplaatsenService zitplaatsenService)
         {
             _mapper = mapper;
             _stadionService = stadionService;

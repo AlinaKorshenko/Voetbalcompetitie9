@@ -70,34 +70,6 @@ builder.Services.AddScoped<IService<VakType>, VakTypeService>();
 builder.Services.AddScoped<IZitplaatsenDAO, ZitplaatsenDAO>();
 builder.Services.AddScoped<IZitplaatsenService, ZitplaatsenService>();
 
-//Jwt
-builder.Services
-.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    //Gebruik JWT Bearer authentication als standaard authenticatiemethode.
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-});
-
-//JWT Bearer authentication configuration
-//.AddJwtBearer(cfg =>
-//{
-//    cfg.RequireHttpsMetadata = false;
-//    cfg.SaveToken = true;
-//    //Configureer de parameters voor het valideren van het token
-//    cfg.TokenValidationParameters = new TokenValidationParameters
-//    {
-//        ValidIssuer = builder.Configuration["JwtConfig:JwtIssuer"], // uitgever van het token
-//        ValidAudience = builder.Configuration["JwtConfig:JwtIssuer"],
-//        //de sleutel waarmee de token signature wordt gecontroleerd
-//        IssuerSigningKey = new
-//    SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtConfig:JwtKey"])),
-//        ClockSkew = TimeSpan.Zero // remove delay of token when expire
-//    };
-//});
-
-
 //Automapper
 builder.Services.AddAutoMapper(typeof(Program));
 
