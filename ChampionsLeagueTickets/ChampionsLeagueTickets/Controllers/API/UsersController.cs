@@ -3,6 +3,7 @@ using ChampionsLeagueTickets.Domain.EntitiesDB;
 using ChampionsLeagueTickets.Services;
 using ChampionsLeagueTickets.Services.Interfaces;
 using ChampionsLeagueTickets.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChampionsLeagueTickets.Controllers.API
@@ -20,6 +21,7 @@ namespace ChampionsLeagueTickets.Controllers.API
             _userService = userService;
         }
 
+        [Authorize(Policy = "Admin")]
         [HttpGet]
         public async Task<ActionResult<UserVM>> Get()
         {
