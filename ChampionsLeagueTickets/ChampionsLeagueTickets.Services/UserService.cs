@@ -22,11 +22,20 @@ namespace ChampionsLeagueTickets.Services
 
         public async Task<IEnumerable<UserInfoResponse>> GetAllUsersAsync()
         {
-            return await _context.AspNetUsers
-                .Select(u => new UserInfoResponse(
-                    u.Email!
-                ))
-                .ToListAsync();
+            try
+            {
+                return await _context.AspNetUsers
+                    .Select(u => new UserInfoResponse(
+                        u.UserName,
+                        u.Email
+                    ))
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in Servicelaag: " + ex.Message);
+                throw;
+            }
         }
     }
 }
