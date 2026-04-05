@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace ChampionsLeagueTickets.Domain.DTO
 {
     public record UserInfoResponse(
+        string UserName,
         string Email
     );
 }
