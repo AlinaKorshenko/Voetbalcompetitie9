@@ -22,6 +22,7 @@ namespace ChampionsLeagueTickets.Controllers.API
             _matchesService = matchesService;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<MatchVM>> Get(string homeClubId, string awayClubId)
         {
