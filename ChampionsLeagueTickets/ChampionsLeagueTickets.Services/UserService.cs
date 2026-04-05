@@ -27,7 +27,8 @@ namespace ChampionsLeagueTickets.Services
                 return await _context.AspNetUsers
                     .Select(u => new UserInfoResponse(
                         u.UserName,
-                        u.Email
+                        u.Email,
+                        u.Roles.Select(r => r.Name).FirstOrDefault() ?? "No Role"
                     ))
                     .ToListAsync();
             }

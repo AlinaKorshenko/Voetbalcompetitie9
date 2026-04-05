@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using ChampionsLeagueTickets.Domain.EntitiesDB;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace ChampionsLeagueTickets.Domain.DataDB;
 
@@ -27,10 +26,6 @@ public partial class FootballDbContext : DbContext
 
     public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
 
-    public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
-
-    public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
-
     public virtual DbSet<Match> Matches { get; set; }
 
     public virtual DbSet<Order> Orders { get; set; }
@@ -50,13 +45,13 @@ public partial class FootballDbContext : DbContext
     public virtual DbSet<Zitplaatsen> Zitplaatsens { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseSqlServer(
-            "Server = championsleagueticketsvivesilona.database.windows.net; Initial Catalog = ChampionsLeague; User ID = Beheerder; Password = MagneetRolstoelToetsenbord9!; MultipleActiveResultSets = True; Encrypt = True; TrustServerCertificate = True;"
-        );
-    }
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=championsleagueticketsvivesilona.database.windows.net; Database=ChampionsLeague; User ID = Beheerder; Password = MagneetRolstoelToetsenbord9!; TrustServerCertificate=True; MultipleActiveResultSets=true;");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.UseCollation("Latin1_General_CI_AS");
+
         modelBuilder.Entity<Abonnementen>(entity =>
         {
             entity.HasKey(e => new { e.AbonnementId, e.StadionId }).HasName("PK__Abonneme__CF3D39B38C8AC8F7");
@@ -156,31 +151,9 @@ public partial class FootballDbContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.AspNetUserClaims).HasForeignKey(d => d.UserId);
         });
 
-        modelBuilder.Entity<AspNetUserLogin>(entity =>
-        {
-            entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
-
-            entity.HasIndex(e => e.UserId, "IX_AspNetUserLogins_UserId");
-
-            entity.Property(e => e.LoginProvider).HasMaxLength(128);
-            entity.Property(e => e.ProviderKey).HasMaxLength(128);
-
-            entity.HasOne(d => d.User).WithMany(p => p.AspNetUserLogins).HasForeignKey(d => d.UserId);
-        });
-
-        modelBuilder.Entity<AspNetUserToken>(entity =>
-        {
-            entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
-
-            entity.Property(e => e.LoginProvider).HasMaxLength(128);
-            entity.Property(e => e.Name).HasMaxLength(128);
-
-            entity.HasOne(d => d.User).WithMany(p => p.AspNetUserTokens).HasForeignKey(d => d.UserId);
-        });
-
         modelBuilder.Entity<Match>(entity =>
         {
-            entity.HasKey(e => e.MatchId).HasName("PK__Matches__02C72A2DEAF6C73F");
+            entity.HasKey(e => e.MatchId).HasName("PK__Matches__02C72A2D6D040317");
 
             entity.Property(e => e.MatchId)
                 .HasMaxLength(5)
@@ -236,7 +209,7 @@ public partial class FootballDbContext : DbContext
 
         modelBuilder.Entity<Orderlijnen>(entity =>
         {
-            entity.HasKey(e => new { e.OrderId, e.OrderLijnNummer }).HasName("PK__Orderlij__BEA8F4E812DB7B16");
+            entity.HasKey(e => new { e.OrderId, e.OrderLijnNummer }).HasName("PK__Orderlij__BEA8F4E8FF672866");
 
             entity.ToTable("Orderlijnen");
 
@@ -281,7 +254,7 @@ public partial class FootballDbContext : DbContext
 
         modelBuilder.Entity<Seizoenen>(entity =>
         {
-            entity.HasKey(e => e.SeizoenId).HasName("PK__Seizoene__C0EC0D7B6C0EF1C2");
+            entity.HasKey(e => e.SeizoenId).HasName("PK__Seizoene__C0EC0D7B16A4F77F");
 
             entity.ToTable("Seizoenen");
 
@@ -299,7 +272,7 @@ public partial class FootballDbContext : DbContext
 
         modelBuilder.Entity<Stadion>(entity =>
         {
-            entity.HasKey(e => e.StadionId).HasName("PK__Stadions__56AECC45B9200B40");
+            entity.HasKey(e => e.StadionId).HasName("PK__Stadions__56AECC45BAFDAEA9");
 
             entity.Property(e => e.StadionId)
                 .HasMaxLength(5)
@@ -329,7 +302,7 @@ public partial class FootballDbContext : DbContext
 
         modelBuilder.Entity<Team>(entity =>
         {
-            entity.HasKey(e => e.TeamId).HasName("PK__Teams__5ED7534AFFD407CB");
+            entity.HasKey(e => e.TeamId).HasName("PK__Teams__5ED7534A07296CA1");
 
             entity.Property(e => e.TeamId)
                 .HasMaxLength(5)
@@ -352,7 +325,7 @@ public partial class FootballDbContext : DbContext
 
         modelBuilder.Entity<Ticket>(entity =>
         {
-            entity.HasKey(e => new { e.TicketId, e.MatchId }).HasName("PK__Tickets__F31FB4D2578E2FD9");
+            entity.HasKey(e => new { e.TicketId, e.MatchId }).HasName("PK__Tickets__F31FB4D279B38C40");
 
             entity.Property(e => e.TicketId)
                 .HasMaxLength(5)
@@ -392,7 +365,7 @@ public partial class FootballDbContext : DbContext
 
         modelBuilder.Entity<VakType>(entity =>
         {
-            entity.HasKey(e => e.VakNummer).HasName("PK__VakTypes__BBCA469A29F2F8E0");
+            entity.HasKey(e => e.VakNummer).HasName("PK__VakTypes__BBCA469A4C59D109");
 
             entity.Property(e => e.VakNummer)
                 .HasMaxLength(5)
@@ -407,7 +380,7 @@ public partial class FootballDbContext : DbContext
 
         modelBuilder.Entity<Zitplaatsen>(entity =>
         {
-            entity.HasKey(e => new { e.StadionId, e.ZitplaatsId }).HasName("PK__Zitplaat__76B42E87F426CA20");
+            entity.HasKey(e => new { e.StadionId, e.ZitplaatsId }).HasName("PK__Zitplaat__76B42E8743521A35");
 
             entity.ToTable("Zitplaatsen");
 
