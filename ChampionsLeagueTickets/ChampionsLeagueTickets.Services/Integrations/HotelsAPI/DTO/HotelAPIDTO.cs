@@ -9,11 +9,11 @@ namespace ChampionsLeagueTickets.Domain.Integrations.HotelsAPI.DTO
 {
     public class HotelAPIDTO
     {
-        [JsonProperty("succes")]
-        public Boolean Succes {  get; set; }
+        [JsonProperty("success")]
+        public Boolean? Succes {  get; set; }
 
         [JsonProperty("data")]
-        public List<HotelItem> Results { get; set; } = new();
+        public List<HotelItem>? Results { get; set; } = new();
 
         [JsonProperty("message")]
         public string? Message { get; set; }
@@ -25,38 +25,37 @@ namespace ChampionsLeagueTickets.Domain.Integrations.HotelsAPI.DTO
     public class HotelItem
     {
         [JsonProperty("id")]
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         [JsonProperty("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [JsonProperty("city")]
-        public string City { get; set; }
+        public string? City { get; set; }
 
         [JsonProperty("country")]
-        public string Country { get; set; }
-
+        public string? Country { get; set; }
 
         [JsonProperty("country_code")]
-        public string Country_code { get; set; }
+        public string? Country_code { get; set; }
 
 
         [JsonProperty("address")]
-        public string Address { get; set; }
+        public string? Address { get; set; }
 
 
         [JsonProperty("rating")]
-        public int Rating { get; set; }
+        public double? Rating { get; set; }
 
 
         [JsonProperty("lat")]
-        public double Lat { get; set; }
+        public double? Lat { get; set; }
 
 
         [JsonProperty("lng")]
-        public int Lng { get; set; }
+        public double? Lng { get; set; }
 
         [JsonProperty("amenities")]
-        public string[] Amenities { get; set; }
+        public string[]? Amenities { get; set; }
     }
 }
