@@ -106,6 +106,9 @@ builder.Services.AddScoped<IZitplaatsenService, ZitplaatsenService>();
 //Users
 builder.Services.AddScoped<IUserService, UserService>();
 
+//Hotel API
+builder.Services.AddScoped<IHotelService, HotelService>();
+
 //Automapper
 builder.Services.AddAutoMapper(typeof(Program));
 
