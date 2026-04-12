@@ -1,6 +1,6 @@
 ﻿using ChampionsLeagueTickets.Domain.DataDB;
 using ChampionsLeagueTickets.Domain.EntitiesDB;
-using ChampionsLeagueTickets.Repositories.Interface;
+using ChampionsLeagueTickets.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -20,6 +20,20 @@ namespace ChampionsLeagueTickets.Repositories
             _dbContext = dbContext;
         }
 
+        public Task AddAsync(Match entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteAsync(Match entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Match?> FindByIdAsync(int Id)
+        {
+            throw new NotImplementedException();
+        }
 
         public async Task<IEnumerable<Match>?> GetAllAsync()
         {
@@ -31,5 +45,9 @@ namespace ChampionsLeagueTickets.Repositories
                 .ToListAsync();
         }
 
+        public Task UpdateAsync(Match entity)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
