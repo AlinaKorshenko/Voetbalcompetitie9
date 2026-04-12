@@ -1,6 +1,7 @@
 ﻿using ChampionsLeagueTickets.Domain.DataDB;
 using ChampionsLeagueTickets.Domain.EntitiesDB;
 using ChampionsLeagueTickets.Repositories.Interfaces;
+using ChampionsLeagueTickets.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,40 +11,35 @@ using System.Threading.Tasks;
 
 namespace ChampionsLeagueTickets.Repositories
 {
-    public class MatchesDAO : IMatchDAO
+    public class ZitplaatsenDAO : IZitplaatsenDAO
     {
-
         private readonly FootballDbContext _dbContext;
 
-        public MatchesDAO(FootballDbContext dbContext)
+        public ZitplaatsenDAO(FootballDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public Task AddAsync(Match entity)
+        public Task AddAsync(Zitplaatsen entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task DeleteAsync(Match entity)
+        public Task DeleteAsync(Zitplaatsen entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Match?> FindByIdAsync(int Id)
+        public Task<Zitplaatsen?> FindByIdAsync(int Id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Match>?> GetAllAsync()
+        public async Task<IEnumerable<Zitplaatsen>?> GetAllAsync()
         {
             try
             {
-                return await _dbContext.Matches
-                    .Include(m => m.ThuisTeam)
-                        .ThenInclude(t => t.Stadion)
-                    .Include(m => m.BezoekendTeam)
-                    .Where(m => m.DatumTijdStartMatch > DateTime.Now)
+                return await _dbContext.Zitplaatsens
                     .ToListAsync();
             }
             catch
@@ -53,16 +49,13 @@ namespace ChampionsLeagueTickets.Repositories
             }
         }
 
-        public async Task<IEnumerable<Match>?> GetAllMatchesFromTeamsAsync(string homeTeamId, string awayTeamId)
+        public async Task<int> GetCountZitplaatsenByVakTypeAndStadion(Stadion stadion, VakType vaktype)
         {
             try
             {
-                return await _dbContext.Matches
-                    .Include(m => m.ThuisTeam)
-                        .ThenInclude(t => t.Stadion)
-                    .Include(m => m.BezoekendTeam)
-                    .Where(match => match.ThuisTeamId == homeTeamId && match.BezoekendTeamId == awayTeamId)
-                    .ToListAsync();
+                return await _dbContext.Zitplaatsens
+                    .Where(zitplaats => zitplaats.StadionId == stadion.StadionId && zitplaats.VakNummer == vaktype.VakNummer)
+                    .CountAsync();
             }
             catch
             {
@@ -71,7 +64,7 @@ namespace ChampionsLeagueTickets.Repositories
             }
         }
 
-        public Task UpdateAsync(Match entity)
+        public Task UpdateAsync(Zitplaatsen entity)
         {
             throw new NotImplementedException();
         }

@@ -1,34 +1,40 @@
 ﻿using AutoMapper;
 using ChampionsLeagueTickets.Domain.EntitiesDB;
+using ChampionsLeagueTickets.Services;
 using ChampionsLeagueTickets.Services.Interfaces;
 using ChampionsLeagueTickets.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChampionsLeagueTickets.Controllers.API
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StadionController : Controller
+    public class UsersController : Controller
     {
-        private IService<Stadion> _stadionService;
         private readonly IMapper _mapper;
-        public StadionController(IMapper mapper, IService<Stadion> stadionService)
+        private IUserService _userService;
+
+        public UsersController(IMapper mapper, IUserService userService)
         {
             _mapper = mapper;
-            _stadionService = stadionService;
+            _userService = userService;
         }
 
+        [Authorize(Policy = "Admin")]
         [HttpGet]
-        public async Task<ActionResult<StadionVM>> Get()
+        public async Task<ActionResult<UserVM>> Get()
         {
             try
             {
-                var list = await _stadionService.GetAllAsync();
-                List<StadionVM> data = _mapper.Map<List<StadionVM>>(list);
+                var list = await _userService.GetAllUsersAsync();
+                List<UserVM> data = _mapper.Map<List<UserVM>>(list);
+
                 if (data == null)
                 {
                     return NotFound();
                 }
+
                 return Ok(data);
             }
             catch (Exception ex)

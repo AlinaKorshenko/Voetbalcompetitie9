@@ -4,6 +4,7 @@ using ChampionsLeagueTickets.Domain.EntitiesDB;
 using ChampionsLeagueTickets.Repositories;
 using ChampionsLeagueTickets.Repositories.Interfaces;
 using ChampionsLeagueTickets.Services;
+using ChampionsLeagueTickets.Repositories.Interfaces;
 using ChampionsLeagueTickets.Domain.DataDB;
 using ChampionsLeagueTickets.Domain.EntitiesDB;
 using ChampionsLeagueTickets.Services;
@@ -16,6 +17,7 @@ using Microsoft.OpenApi;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Diagnostics;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,8 +32,15 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = true;
+})
+.AddEntityFrameworkStores<ApplicationDbContext>()
+.AddDefaultTokenProviders();
+
+builder.Services.AddRazorPages();
+
 builder.Services.AddControllers();
 
 //Swagger
@@ -55,6 +64,31 @@ builder.Services.AddSwaggerGen(c =>
             Url = new Uri("https://example.com/license"),
         }
     });
+
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter 'Bearer {token}'"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
 });
 
 //Automapper
@@ -69,45 +103,69 @@ builder.Services.AddScoped<IService<Stadion>, StadionService>();
 builder.Services.AddScoped<IDAO<VakType>, VakTypeDAO>();
 builder.Services.AddScoped<IService<VakType>, VakTypeService>();
 
-//Jwt
-builder.Services
-.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    //Gebruik JWT Bearer authentication als standaard authenticatiemethode.
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-});
+//Zitplaatsen
+builder.Services.AddScoped<IZitplaatsenDAO, ZitplaatsenDAO>();
+builder.Services.AddScoped<IZitplaatsenService, ZitplaatsenService>();
 
-//JWT Bearer authentication configuration
-//.AddJwtBearer(cfg =>
-//{
-//    cfg.RequireHttpsMetadata = false;
-//    cfg.SaveToken = true;
-//    //Configureer de parameters voor het valideren van het token
-//    cfg.TokenValidationParameters = new TokenValidationParameters
-//    {
-//        ValidIssuer = builder.Configuration["JwtConfig:JwtIssuer"], // uitgever van het token
-//        ValidAudience = builder.Configuration["JwtConfig:JwtIssuer"],
-//        //de sleutel waarmee de token signature wordt gecontroleerd
-//        IssuerSigningKey = new
-//    SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtConfig:JwtKey"])),
-//        ClockSkew = TimeSpan.Zero // remove delay of token when expire
-//    };
-//});
+//Users
+builder.Services.AddScoped<IUserService, UserService>();
 
+//Hotel API
+builder.Services.AddScoped<IHotelService, HotelService>();
 
 //Automapper
 builder.Services.AddAutoMapper(typeof(Program));
 
 //DI
-builder.Services.AddScoped<IDAO<Match>, MatchesDAO>();
-builder.Services.AddScoped<IService<Match>, MatchesService>();
+builder.Services.AddScoped<IMatchDAO, MatchesDAO>();
+builder.Services.AddScoped<IMatchService, MatchesService>();
+
+//JWT
+builder.Services
+.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+
+.AddJwtBearer(cfg =>
+{
+    cfg.RequireHttpsMetadata = false;
+    cfg.SaveToken = true;
+    cfg.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidIssuer = builder.Configuration["JwtConfig:Issuer"],
+        ValidAudience = builder.Configuration["JwtConfig:Audience"],
+        IssuerSigningKey = new
+                SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtConfig:JwtKey"])),
+        ClockSkew = TimeSpan.Zero
+    };
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin", policy =>
+    {
+        policy.RequireRole("Admin");
+    });
+    options.AddPolicy("User", policy =>
+    {
+        policy.RequireRole("User");
+    });
+});
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder => builder.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod());
+});
 
 var cs = builder.Configuration.GetConnectionString("DefaultConnection");
 Debug.WriteLine("CONNECTION STRING:");
 Debug.WriteLine(cs);
-
 
 try
 {
@@ -123,7 +181,6 @@ catch (Exception ex)
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
@@ -131,12 +188,13 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 app.UseRouting();
+
+app.UseCors("AllowAll");
 
 app.UseSwagger();
 app.UseSwaggerUI();

@@ -33,9 +33,9 @@ namespace ChampionsLeagueTickets.Services
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<VakType>?> GetAllAsync()
+        public async Task<IEnumerable<VakType>?> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _vakTypeDAO.GetAllAsync();
         }
 
         public Task UpdateAsync(VakType entity)

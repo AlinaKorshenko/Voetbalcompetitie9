@@ -1,4 +1,4 @@
-﻿namespace Voetbalcompetitie9.ViewModels
+﻿namespace ChampionsLeagueTickets.ViewModels
 {
     public class MatchVM
     {
