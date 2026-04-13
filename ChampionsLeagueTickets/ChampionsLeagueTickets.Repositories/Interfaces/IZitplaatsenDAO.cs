@@ -1,4 +1,5 @@
 ﻿using ChampionsLeagueTickets.Domain.EntitiesDB;
+using ChampionsLeagueTickets.Repositories.integrations.VrijeZitplaats.DTO;
 using ChampionsLeagueTickets.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -11,5 +12,8 @@ namespace ChampionsLeagueTickets.Services.Interfaces
     public interface IZitplaatsenDAO : IDAO<Zitplaatsen>
     {
         Task<int> GetCountZitplaatsenByVakTypeAndStadion(Stadion stadion, VakType vaktype);
+        Task<List<string>> GetRowsForMatchAndSectionAsync(string matchId, string vakNummer);
+
+        Task<List<ZitplaatsDto>> GetSeatsForMatchSectionAndRowAsync(string matchId, string vakNummer, string rijNummer);
     }
 }

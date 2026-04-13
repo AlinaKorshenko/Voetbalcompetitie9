@@ -30,9 +30,19 @@ namespace ChampionsLeagueTickets.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<Match?> FindByIdAsync(int Id)
+        public async Task<Match?> FindByIdAsync(string Id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _dbContext.Matches
+                    .Include(m => m.ThuisTeam)
+                    .ThenInclude(t => t.Stadion)
+                    .FirstOrDefaultAsync(m => m.MatchId == Id);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public async Task<IEnumerable<Match>?> GetAllAsync()

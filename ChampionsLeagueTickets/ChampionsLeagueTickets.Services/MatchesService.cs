@@ -30,7 +30,7 @@ namespace ChampionsLeagueTickets.Services
 
         public Task<Match?> FindByIdAsync(int Id)
         {
-            throw new NotImplementedException();
+            return _matchesDAO.FindByIdAsync(Id);
         }
 
         public async Task<IEnumerable<Match>?> GetAllAsync()

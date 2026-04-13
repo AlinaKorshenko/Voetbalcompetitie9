@@ -1,0 +1,79 @@
+﻿@model ChampionsLeagueTickets.View_Models.TicketVM
+
+@{
+    ViewData["Title"] = "ChooseSeats";
+}
+
+<h1>Kies een plaats</h1>
+
+<form asp-action="ChooseSeats" method="post" id="seatForm">
+    <input type="hidden" asp-for="MatchID" />
+
+    <div class="mb-3">
+        <label asp-for="StadionVak" class="form-label">Vak</label>
+        <select asp-for="StadionVak"
+                asp-items="Model.VakenLijst"
+                class="form-control"
+                id="StadionVak">
+            <option value="">-- Kies vak --</option>
+        </select>
+    </div>
+
+    @if (Model.RijenLijst != null)
+    {
+        <div class="mb-3">
+            <label asp-for="RijNummer" class="form-label">Rij</label>
+            <select asp-for="RijNummer"
+                    asp-items="Model.RijenLijst"
+                    class="form-control"
+                    id="RijNummer">
+                <option value="">-- Kies rij --</option>
+            </select>
+        </div>
+    }
+
+    @if (Model.StoelenLijst != null)
+    {
+        <div class="mb-3">
+            <label asp-for="GeselecteerdeZitplaatsId" class="form-label">Stoel</label>
+            <select asp-for="GeselecteerdeZitplaatsId"
+                    asp-items="Model.StoelenLijst"
+                    class="form-control"
+                    id="GeselecteerdeZitplaatsId">
+                <option value="">-- Kies stoel --</option>
+            </select>
+        </div>
+    }
+</form>
+
+@if (!string.IsNullOrEmpty(Model.GeselecteerdeZitplaatsId))
+{
+    <form asp-action="AddToCart" method="post">
+        <input type="hidden" asp-for="MatchID" />
+        <input type="hidden" asp-for="StadionVak" />
+        <input type="hidden" asp-for="RijNummer" />
+        <input type="hidden" asp-for="GeselecteerdeZitplaatsId" />
+
+        <button type="submit" class="btn btn-success">
+            Verder gaan
+        </button>
+    </form>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#StadionVak').on('change', function () {
+                $('#seatForm').submit();
+            });
+
+            $('#RijNummer').on('change', function () {
+                $('#seatForm').submit();
+            });
+
+            $('#GeselecteerdeZitplaatsId').on('change', function () {
+                $('#seatForm').submit();
+            });
+        });
+    </script>
+}

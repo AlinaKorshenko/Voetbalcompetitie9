@@ -1,5 +1,6 @@
 ﻿using ChampionsLeagueTickets.Domain.EntitiesDB;
 using ChampionsLeagueTickets.Repositories;
+using ChampionsLeagueTickets.Repositories.integrations.VrijeZitplaats.DTO;
 using ChampionsLeagueTickets.Repositories.Interfaces;
 using ChampionsLeagueTickets.Services.Interfaces;
 using System;
@@ -42,6 +43,16 @@ namespace ChampionsLeagueTickets.Services
         public async Task<int> GetCountZitplaatsenByVakTypeAndStadion(Stadion stadion, VakType vaktype)
         {
             return await _zitplaatsenDAO.GetCountZitplaatsenByVakTypeAndStadion(stadion, vaktype);
+        }
+
+        public Task<List<string>> GetRowsForMatchAndSectionAsync(string matchId, string vakNummer)
+        {
+            return _zitplaatsenDAO.GetRowsForMatchAndSectionAsync(matchId, vakNummer);
+        }
+
+        public Task<List<ZitplaatsDto>> GetSeatsForMatchSectionAndRowAsync(string matchId, string vakNummer, string rijNummer)
+        {
+            return _zitplaatsenDAO.GetSeatsForMatchSectionAndRowAsync(matchId, vakNummer, rijNummer);
         }
 
         public Task UpdateAsync(Zitplaatsen entity)
