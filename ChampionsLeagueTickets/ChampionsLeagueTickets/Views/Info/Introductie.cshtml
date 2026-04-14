@@ -41,8 +41,12 @@
                 <strong>En ú kunt erbij zijn. Mis het niet.</strong>
             </p>
             <div class="cta-row">
-                <button class="btn-ucl btn-gold" asp-controller="Ticket" asp-action="Matches">Wedstrijden bekijken</button>
-                <button class="btn-ucl btn-ghost">Meer info</button>
+                <a class="btn-ucl btn-gold" asp-controller="Ticket" asp-action="Matches">
+                    Wedstrijden bekijken
+                </a>
+                <a class="btn-ucl btn-gold" asp-controller="Info" asp-action="OverOns">
+                    Over Ons
+                </a>
             </div>
         </div>
 
@@ -71,6 +75,8 @@
         <div class="section-tag">Agenda</div>
         <h2>Mis de Topwedstrijden Niet</h2>
         <p>Bekijk alle aankomende wedstrijden en bestel uw tickets.</p>
-        <button asp-controller="Ticket" asp-action="Matches" class="btn-ucl btn-gold">Wedstrijden</button>
+        <a asp-controller="Ticket" asp-action="Matches" class="btn-ucl btn-gold">
+            Wedstrijden
+        </a>
     </section>
 </div>
