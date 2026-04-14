@@ -31,7 +31,6 @@ body {
   text-align: start;
 }
 
-
 .blockIntro {
     display: flex;
     justify-content: space-between;
@@ -59,19 +58,20 @@ body {
     border-spacing: 0 10px;
 }
 
-    #matchesTable td {
-        border: none;
-        padding: 0;
-    }
+#matchesTable td {
+    border: none;
+    padding: 0;
+}
 
 .match-card .card {
     border-radius: 12px;
     transition: 0.2s;
 }
 
-    .match-card .card:hover {
-        transform: scale(1.02);
-    }
+.match-card .card:hover {
+    transform: scale(1.02);
+}
+
 .badge {
     background-color: #000;
     border-radius: 8px;

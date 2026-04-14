@@ -7,21 +7,15 @@ namespace ChampionsLeagueTickets.Controllers
     public class ShoppingCartController : Controller
     {
         private const string CartKey = "ShoppingCart";
+
         public IActionResult Index()
         {
-
             var cart = GetShoppingCart();
-
             return View(cart);
         }
 
-        
-
         public IActionResult AddToCart(ShoppingCartVM vm)
         {
-            
-            
-
             return RedirectToAction("Index");
         }
 
@@ -29,11 +23,10 @@ namespace ChampionsLeagueTickets.Controllers
         {
             var vm = HttpContext.Session.GetObject<ShoppingCartVM>(CartKey);
             return vm;
-
         }
+
         private void SaveShoppingCart(ShoppingCartVM cart)
         {
-
             HttpContext.Session.SetObject(CartKey, cart);
         }
 

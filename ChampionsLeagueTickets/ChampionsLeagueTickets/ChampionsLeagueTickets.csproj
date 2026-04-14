@@ -23,4 +23,8 @@
     <ProjectReference Include="..\ChampionsLeagueTickets.Services\ChampionsLeagueTickets.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\homepage\" />
+  </ItemGroup>
+
 </Project>

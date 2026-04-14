@@ -17,6 +17,7 @@ namespace Voetbalcompetitie9.Controllers
         private readonly IService<VakType> _vakService;
         private readonly IMapper _mapper;
         private readonly IZitplaatsenService _zitplatsenService;
+
         public TicketController(IMatchService matchesService, IMapper mapper, IService<VakType> vakService, IZitplaatsenService zitplaatsenService)
         {
             _matchesService = matchesService;
@@ -33,11 +34,9 @@ namespace Voetbalcompetitie9.Controllers
             return View(matches);
         }
 
-
-
         public async Task<IActionResult> ChooseSeats(string matchID) {
 
-        var vakTypes = (await _vakService.GetAllAsync())
+            var vakTypes = (await _vakService.GetAllAsync())
              .Select(v => new
                 {
                   v.VakNummer,
@@ -58,7 +57,6 @@ namespace Voetbalcompetitie9.Controllers
         [HttpPost]
         public async Task<IActionResult> ChooseSeats(TicketVM ticketVM)
         {
-
             var vakTypes = (await _vakService.GetAllAsync())
              .Select(v => new
              {
@@ -93,8 +91,6 @@ namespace Voetbalcompetitie9.Controllers
             return View(ticketVM);
         }
 
-
-
         public async Task<IActionResult> OverzichtInfoTicket(TicketVM vm)
         {
 
@@ -108,7 +104,7 @@ namespace Voetbalcompetitie9.Controllers
                 return NotFound("Match niet gevonden");
             }
 
-            var zitplaats = await _zitplatsenService.FindByIdAsync(vm.GeselecteerdeZitplaatsId);
+            var zitplaats = await _zitplatsenService.FindByIdAsync(vm.GeselecteerdeZitplaatsId);           
 
             if (zitplaats == null)
             {
@@ -123,18 +119,7 @@ namespace Voetbalcompetitie9.Controllers
                 Zitplaats = zitplaats
             };
 
-
-
-
             return View(zitplaatsInfoVM);
-
-        
         }
-
-
-
-
-
-
     }
 }

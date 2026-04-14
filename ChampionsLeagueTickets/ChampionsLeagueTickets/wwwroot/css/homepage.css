@@ -1,0 +1,247 @@
+﻿.ucl {
+    font-family: 'Barlow', sans-serif;
+    background: #0d0e1a;
+    color: #e8eaf6;
+    overflow: hidden;
+}
+
+.hero {
+    position: relative;
+    min-height: 540px;
+    display: flex;
+    align-items: center;
+    background: #0d0e1a;
+    overflow: hidden;
+}
+
+.hero-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 70% 50%, #1a1f5e 0%, #0d0e1a 65%);
+}
+
+.stars {
+    position: absolute;
+    inset: 0;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 3.5rem 2.5rem;
+    max-width: 560px;
+}
+
+.ucl-emblem {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.star-row {
+    display: flex;
+    gap: 3px;
+}
+
+.star {
+    width: 12px;
+    height: 12px;
+}
+
+.ucl-wordmark {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 4px;
+    color: #c9aa71;
+}
+
+.hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3.2rem, 9vw, 6.5rem);
+    line-height: .9;
+    color: #fff;
+    margin: 0 0 .5rem;
+}
+
+.hero h1 .gold {
+    color: #c9aa71;
+}
+
+.hero h1 .blue {
+    color: #8b9fe8;
+}
+
+.hero-sub {
+    font-size: 1rem;
+    line-height: 1.75;
+    color: #8b9cc8;
+    max-width: 400px;
+    margin-bottom: 2rem;
+    font-style: italic;
+}
+
+.hero-sub strong {
+    color: #e8eaf6;
+    font-style: normal;
+}
+
+.btn-ucl {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Barlow', sans-serif;
+    font-size: .9rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: .85rem 2rem;
+    border-radius: 3px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all .2s;
+}
+
+.btn-gold {
+    background: #c9aa71;
+    color: #0d0e1a;
+}
+
+.btn-gold:hover {
+    background: #dfc088;
+}
+
+.btn-ghost {
+    background: transparent;
+    color: #c9aa71;
+    border: 1.5px solid #c9aa71;
+}
+
+.btn-ghost:hover {
+    background: rgba(201,170,113,.12);
+}
+
+.cta-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.player-wrap {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 44%;
+    max-width: 400px;
+    z-index: 1;
+}
+
+.player-wrap img {
+    width: 100%;
+    height: 460px;
+    object-fit: cover;
+    object-position: top;
+    -webkit-mask-image: linear-gradient(to left, black 40%, transparent 90%);
+    mask-image: linear-gradient(to left, black 40%, transparent 90%);
+    filter: brightness(.85) contrast(1.1);
+}
+
+.divider {
+    height: 3px;
+    background: linear-gradient(to right, #c9aa71 0%, #8b9fe8 50%, #c9aa71 100%);
+}
+
+.info-band {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 320px;
+}
+
+.info-text {
+    background: #12153a;
+    padding: 3rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.section-tag {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #c9aa71;
+    margin-bottom: 1rem;
+}
+
+.info-text h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.8rem;
+    color: #fff;
+    margin: 0 0 1rem;
+    line-height: 1;
+}
+
+.info-text p {
+    color: #8b9cc8;
+    line-height: 1.75;
+    margin-bottom: 1.5rem;
+    font-size: .95rem;
+}
+
+.info-img {
+    position: relative;
+    overflow: hidden;
+}
+
+.info-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(.6) saturate(1.3);
+}
+
+.info-img::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, #12153a 0%, transparent 45%);
+}
+
+.matches-band {
+    background: #0d0e1a;
+    padding: 3rem 2.5rem;
+}
+
+.matches-band h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.8rem;
+    color: #fff;
+    margin: 0 0 .5rem;
+    line-height: 1;
+}
+
+.matches-band p {
+    color: #8b9cc8;
+    margin-bottom: 2rem;
+    max-width: 480px;
+}
+
+.matches-band img {
+    width: 100%;
+    max-height: 360px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(201,170,113,.25);
+    filter: brightness(.7) saturate(1.2);
+}
+
+.info-band {
+    grid-template-columns: 1fr;
+}
+
+.info-band {
+    grid-template-columns: 1fr
+}
