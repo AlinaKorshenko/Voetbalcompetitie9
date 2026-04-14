@@ -1,4 +1,8 @@
-﻿using System;
+﻿using ChampionsLeagueTickets.Domain.DataDB;
+using ChampionsLeagueTickets.Domain.EntitiesDB;
+using ChampionsLeagueTickets.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +10,47 @@ using System.Threading.Tasks;
 
 namespace ChampionsLeagueTickets.Repositories
 {
-    internal class SeizoenenDAO
+    public class SeizoenenDAO : IDAO<Seizoenen>
     {
+        private readonly FootballDbContext _dbContext;
+
+        public SeizoenenDAO(FootballDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
+        public Task AddAsync(Seizoenen entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteAsync(Seizoenen entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Seizoenen?> FindByIdAsync(string Id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<Seizoenen>?> GetAllAsync()
+        {
+            try
+            {
+                return await _dbContext.Seizoenens
+                    .ToListAsync();
+            }
+            catch
+            {
+                Console.WriteLine("error in DAO");
+                throw;
+            }
+        }
+
+        public Task UpdateAsync(Seizoenen entity)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
