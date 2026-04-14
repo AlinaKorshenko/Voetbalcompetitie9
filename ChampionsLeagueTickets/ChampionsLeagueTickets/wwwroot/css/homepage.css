@@ -1,4 +1,8 @@
-﻿.ucl {
+﻿body {
+    background: #0d0e1a;
+}
+
+.ucl {
     font-family: 'Barlow', sans-serif;
     background: #0d0e1a;
     color: #e8eaf6;
@@ -210,7 +214,7 @@
 }
 
 .matches-band {
-    background: #0d0e1a;
+    background: #1d1b53;
     padding: 3rem 2.5rem;
 }
 
