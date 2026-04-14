@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChampionsLeagueTickets.Domain.Integrations.HotelsAPI.DTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace ChampionsLeagueTickets.Services.Interfaces
 {
-    internal interface Interface1
+    public interface IHotelService
     {
+        Task<List<HotelItem>?> GetHotelsFromCountryAndCity(string country, string city);
     }
 }

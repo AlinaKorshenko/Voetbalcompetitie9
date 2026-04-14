@@ -13,7 +13,7 @@ namespace ChampionsLeagueTickets.Domain.Integrations.HotelsAPI.DTO
         public Boolean? Succes {  get; set; }
 
         [JsonProperty("data")]
-        public List<HotelItem>? Results { get; set; } = new();
+        public List<HotelItem>? Data { get; set; } = new();
 
         [JsonProperty("message")]
         public string? Message { get; set; }
