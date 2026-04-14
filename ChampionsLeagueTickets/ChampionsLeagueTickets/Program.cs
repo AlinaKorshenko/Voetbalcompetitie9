@@ -2,8 +2,8 @@ using ChampionsLeagueTickets.Data;
 using ChampionsLeagueTickets.Domain.DataDB;
 using ChampionsLeagueTickets.Domain.EntitiesDB;
 using ChampionsLeagueTickets.Repositories;
-using ChampionsLeagueTickets.Services;
 using ChampionsLeagueTickets.Repositories.Interfaces;
+using ChampionsLeagueTickets.Services;
 using ChampionsLeagueTickets.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
@@ -107,7 +107,7 @@ builder.Services.AddScoped<IZitplaatsenService, ZitplaatsenService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 //Hotel API
-builder.Services.AddScoped<IHotelService, HotelService>();
+//builder.Services.AddScoped<IHotelService, HotelService>();
 
 //Automapper
 builder.Services.AddAutoMapper(typeof(Program));
@@ -115,6 +115,9 @@ builder.Services.AddAutoMapper(typeof(Program));
 //DI
 builder.Services.AddScoped<IMatchDAO, MatchesDAO>();
 builder.Services.AddScoped<IMatchService, MatchesService>();
+
+builder.Services.AddScoped<ITicketDAO, TicketDAO>();
+builder.Services.AddScoped<ITicketService, TicketService>();
 
 //JWT
 builder.Services
@@ -174,6 +177,14 @@ catch (Exception ex)
     Debug.WriteLine("SQL FOUT:");
     Debug.WriteLine(ex.Message);
 }
+
+//session
+builder.Services.AddSession(options =>
+{
+    options.Cookie.Name = "be.ChampionsLeagueTickets.Session";
+    options.IdleTimeout = TimeSpan.FromSeconds(60);
+});
+
 
 var app = builder.Build();
 

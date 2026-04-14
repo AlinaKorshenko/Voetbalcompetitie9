@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ChampionsLeagueTickets.Services
 {
-    public class HotelService : IHotelService
+    public class HotelService // :IHotelService
     {
         private readonly IConfiguration _configuration;
         private readonly string _baseUrl;
@@ -44,7 +44,7 @@ namespace ChampionsLeagueTickets.Services
 
                     var root = JsonConvert.DeserializeObject<HotelAPIDTO>(apiResponse);
 
-                    var hotels = root?.Data ?? new List<HotelItem>();
+                    var hotels = /*root?.Data ?? */new List<HotelItem>();
 
                     return hotels;
                 }

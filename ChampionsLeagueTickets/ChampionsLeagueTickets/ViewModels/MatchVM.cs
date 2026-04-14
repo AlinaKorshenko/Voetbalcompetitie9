@@ -3,6 +3,7 @@
     public class MatchVM
     {
 
+        public string MatchId { get; set; }
         public string homeTeamName { get; set; }
         public string awayTeamName { get; set; }
         public string stadionName { get; set; }

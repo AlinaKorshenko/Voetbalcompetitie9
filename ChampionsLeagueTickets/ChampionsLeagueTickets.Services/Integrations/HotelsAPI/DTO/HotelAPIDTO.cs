@@ -9,6 +9,7 @@ namespace ChampionsLeagueTickets.Domain.Integrations.HotelsAPI.DTO
 {
     public class HotelAPIDTO
     {
+
         [JsonProperty("success")]
         public Boolean? Succes {  get; set; }
 

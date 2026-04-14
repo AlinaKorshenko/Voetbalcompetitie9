@@ -28,7 +28,7 @@ namespace ChampionsLeagueTickets.Services
             throw new NotImplementedException();
         }
 
-        public Task<Stadion?> FindByIdAsync(int Id)
+        public Task<Stadion?> FindByIdAsync(string Id)
         {
             throw new NotImplementedException();
         }
