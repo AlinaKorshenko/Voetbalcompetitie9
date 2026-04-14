@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ChampionsLeagueTickets.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ChampionsLeagueTickets.Controllers
 {
