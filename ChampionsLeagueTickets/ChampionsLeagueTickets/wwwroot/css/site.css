@@ -76,6 +76,11 @@ body {
     border-radius: 8px;
 }
 
-.football-header {
+.football-header, .football-footer {
     background-color: #dfc088;
+}
+
+.football-header {
+    color: #0d0e1a;
+    font-size: 1.2em;
 }
