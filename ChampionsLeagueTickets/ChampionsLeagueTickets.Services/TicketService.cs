@@ -9,36 +9,36 @@ using System.Threading.Tasks;
 
 namespace ChampionsLeagueTickets.Services
 {
-    public class VakTypeService : IService<VakType>
+    public class TicketService : ITicketService
     {
-        private IDAO<VakType> _vakTypeDAO;
 
-        public VakTypeService(IDAO<VakType> vakTypeDAO)
+        private ITicketDAO _ticketsDAO;
+
+        public TicketService(ITicketDAO ticketsDAO)
         {
-            _vakTypeDAO = vakTypeDAO;
+            _ticketsDAO = ticketsDAO;
         }
-
-        public Task AddAsync(VakType entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task DeleteAsync(VakType entity)
+        public Task AddAsync(Ticket entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task<VakType?> FindByIdAsync(string Id)
+        public Task DeleteAsync(Ticket entity)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<VakType>?> GetAllAsync()
+        public Task<Ticket?> FindByIdAsync(string Id)
         {
-            return await _vakTypeDAO.GetAllAsync();
+            throw new NotImplementedException();
         }
 
-        public Task UpdateAsync(VakType entity)
+        public async Task<IEnumerable<Ticket>?> GetAllAsync()
+        {
+            return await _ticketsDAO.GetAllAsync();
+        }
+
+        public Task UpdateAsync(Ticket entity)
         {
             throw new NotImplementedException();
         }

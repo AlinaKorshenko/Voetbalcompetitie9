@@ -12,6 +12,6 @@ namespace ChampionsLeagueTickets.Repositories.Interfaces
         Task AddAsync(T entity);
         Task DeleteAsync(T entity);
         Task UpdateAsync(T entity);
-        Task<T?> FindByIdAsync(int Id);
+        Task<T?> FindByIdAsync(string Id);
     }
 }

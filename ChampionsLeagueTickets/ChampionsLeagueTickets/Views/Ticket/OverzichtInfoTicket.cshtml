@@ -1,0 +1,80 @@
+﻿@model ChampionsLeagueTickets.ViewModels.TicketInfoVM
+
+@{
+    ViewData["Title"] = "OverzichtInfoTicket";
+}
+
+<div class="container mt-5">
+    <div class="card shadow rounded-4">
+
+        <!-- Header -->
+        <div class="card-header bg-dark text-white text-center">
+            <h3 class="mb-0">
+                <i class="bi bi-ticket-perforated"></i> Ticketoverzicht
+            </h3>
+        </div>
+
+        <div class="card-body p-4">
+
+            <!-- Teams -->
+            <div class="text-center mb-4">
+                <h4 class="fw-bold">
+                    ⚽ @Model.ThuisTeam 
+                    <span class="text-muted">vs</span> 
+                    @Model.BezoekTeam
+                </h4>
+            </div>
+
+            <!-- Wedstrijd info -->
+            <div class="mb-4">
+                <h5 class="fw-bold text-primary">
+                    <i class="bi bi-info-circle"></i> Wedstrijdinformatie
+                </h5>
+                <hr />
+                <p>
+                    <i class="bi bi-geo-alt-fill text-danger"></i>
+                    <strong>Stadion:</strong> @Model.Stadion
+                </p>
+            </div>
+
+            <!-- Plaats info -->
+            <div class="mb-4">
+                <h5 class="fw-bold text-primary">
+                    <i class="bi bi-grid"></i> Gekozen plaats
+                </h5>
+                <hr />
+
+                <p>
+                    <i class="bi bi-layers-fill text-warning"></i>
+                    <strong>Vak:</strong> @Model.Zitplaats.VakNummerNavigation.Omschrijving
+                </p>
+
+                <p>
+                    <i class="bi bi-list-ol text-info"></i>
+                    <strong>Rij:</strong> @Model.Zitplaats.RijNummer
+                </p>
+
+                <p>
+                    <i class="bi bi-person-seat text-success"></i>
+                    <strong>Stoel:</strong> @Model.Zitplaats.StoelNummer
+                </p>
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex justify-content-between mt-4">
+                <a asp-action="ChooseSeats" class="btn btn-outline-secondary px-4">
+                    <i class="bi bi-arrow-left"></i> Terug
+                </a>
+
+                <form asp-action="BevestigTicket" method="post">
+                    <input type="hidden" name="ZitplaatsId" value="@Model.Zitplaats.ZitplaatsId" />
+                    <button type="submit" class="btn btn-success px-4">
+                        <i class="bi bi-check-circle"></i> Bevestigen
+                    </button>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+</div>

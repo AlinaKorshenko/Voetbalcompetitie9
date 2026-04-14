@@ -48,7 +48,7 @@
 
 @if (!string.IsNullOrEmpty(Model.GeselecteerdeZitplaatsId))
 {
-    <form asp-action="AddToCart" method="post">
+    <form asp-action="OverzichtInfoTicket" method="post">
         <input type="hidden" asp-for="MatchID" />
         <input type="hidden" asp-for="StadionVak" />
         <input type="hidden" asp-for="RijNummer" />

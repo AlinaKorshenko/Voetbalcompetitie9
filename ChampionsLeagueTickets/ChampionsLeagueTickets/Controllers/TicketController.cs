@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ChampionsLeagueTickets.Domain.EntitiesDB;
+using ChampionsLeagueTickets.Services;
 using ChampionsLeagueTickets.Services.Interfaces;
 using ChampionsLeagueTickets.View_Models;
 using ChampionsLeagueTickets.ViewModels;
@@ -15,8 +16,7 @@ namespace Voetbalcompetitie9.Controllers
         private readonly IMatchService _matchesService;
         private readonly IService<VakType> _vakService;
         private readonly IMapper _mapper;
-        private readonly IZitplaatsenService _zitplatsenService;  
-
+        private readonly IZitplaatsenService _zitplatsenService;
         public TicketController(IMatchService matchesService, IMapper mapper, IService<VakType> vakService, IZitplaatsenService zitplaatsenService)
         {
             _matchesService = matchesService;
@@ -95,14 +95,42 @@ namespace Voetbalcompetitie9.Controllers
 
 
 
-        public Task<IActionResult> OverzichtInfoTicket(TicketVM vm) {
+        public async Task<IActionResult> OverzichtInfoTicket(TicketVM vm)
+        {
+
+            var match = await _matchesService.FindByIdAsync(vm.MatchID);
+            var thuisTeamNaam = match.ThuisTeam?.Naam;
+            var bezoekTeamNaam = match.BezoekendTeam?.Naam;
+            var stadionNaam = match.ThuisTeam?.Stadion?.Naam;
+
+            if (match == null)
+            {
+                return NotFound("Match niet gevonden");
+            }
+
+            var zitplaats = await _zitplatsenService.FindByIdAsync(vm.GeselecteerdeZitplaatsId);
+
+            if (zitplaats == null)
+            {
+                return NotFound("Zitplaats niet gevonden");
+            }
+
+            var zitplaatsInfoVM = new TicketInfoVM
+            {
+                ThuisTeam = thuisTeamNaam ?? "",
+                BezoekTeam = bezoekTeamNaam ?? "",
+                Stadion = stadionNaam ?? "",
+                Zitplaats = zitplaats
+            };
 
 
 
-            return View();
+
+            return View(zitplaatsInfoVM);
 
         
         }
+
 
 
 

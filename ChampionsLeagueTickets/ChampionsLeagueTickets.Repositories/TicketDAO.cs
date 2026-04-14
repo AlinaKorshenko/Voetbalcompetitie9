@@ -10,45 +10,52 @@ using System.Threading.Tasks;
 
 namespace ChampionsLeagueTickets.Repositories
 {
-    public class VakTypeDAO : IDAO<VakType>
+    public class TicketDAO : ITicketDAO
     {
+
         private readonly FootballDbContext _dbContext;
 
-        public VakTypeDAO(FootballDbContext dbContext)
+        public TicketDAO(FootballDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public Task AddAsync(VakType entity)
+        public Task AddAsync(Ticket entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task DeleteAsync(VakType entity)
+        public Task DeleteAsync(Ticket entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task<VakType?> FindByIdAsync(string Id)
+        public Task<Ticket?> FindByIdAsync(string Id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<VakType>?> GetAllAsync()
+        public async Task<Ticket?> FindByMatchAndSeatAsync(string matchId, string seatId)
         {
             try
             {
-                return await _dbContext.VakTypes
-                    .ToListAsync();
+                return await _dbContext.Tickets
+                    .FirstOrDefaultAsync(t => t.MatchId == matchId && t.ZitplaatsId == seatId);
             }
             catch
             {
-                Console.WriteLine("error in DAO");
-                throw;
+                return null;
             }
         }
 
-        public Task UpdateAsync(VakType entity)
+        public async Task<IEnumerable<Ticket>?> GetAllAsync()
+        {
+            return await _dbContext.Tickets
+                   
+                   .ToListAsync();
+        }
+
+        public Task UpdateAsync(Ticket entity)
         {
             throw new NotImplementedException();
         }
