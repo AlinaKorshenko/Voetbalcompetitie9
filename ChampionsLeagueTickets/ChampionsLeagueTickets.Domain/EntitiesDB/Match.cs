@@ -18,4 +18,6 @@ public partial class Match
     public virtual Team ThuisTeam { get; set; } = null!;
 
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
+
+    public virtual ICollection<TicketsPrijs> TicketsPrijs { get; set; } = new List<TicketsPrijs>();
 }

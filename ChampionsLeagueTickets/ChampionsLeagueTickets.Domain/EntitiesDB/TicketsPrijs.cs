@@ -10,4 +10,8 @@ public partial class TicketsPrijs
     public string VakNummer { get; set; } = null!;
 
     public decimal Prijs { get; set; }
+
+    public virtual Match Match { get; set; } = null!;
+
+    public virtual VakType VakNummerNavigation { get; set; } = null!;
 }

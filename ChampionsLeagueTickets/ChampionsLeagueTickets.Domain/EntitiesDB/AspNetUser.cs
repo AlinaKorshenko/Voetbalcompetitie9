@@ -37,8 +37,6 @@ public partial class AspNetUser
 
     public virtual ICollection<Abonnementen> Abonnementens { get; set; } = new List<Abonnementen>();
 
-    public virtual ICollection<AspNetUserClaim> AspNetUserClaims { get; set; } = new List<AspNetUserClaim>();
-
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
     public virtual ICollection<AspNetRole> Roles { get; set; } = new List<AspNetRole>();

@@ -1,8 +1,7 @@
-﻿using ChampionsLeagueTickets.Domain.EntitiesDB;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using ChampionsLeagueTickets.Domain.EntitiesDB;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChampionsLeagueTickets.Domain.DataDB;
 
@@ -21,11 +20,7 @@ public partial class FootballDbContext : DbContext
 
     public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
 
-    public virtual DbSet<AspNetRoleClaim> AspNetRoleClaims { get; set; }
-
     public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
-
-    public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
 
     public virtual DbSet<Match> Matches { get; set; }
 
@@ -41,24 +36,15 @@ public partial class FootballDbContext : DbContext
 
     public virtual DbSet<Ticket> Tickets { get; set; }
 
+    public virtual DbSet<TicketsPrijs> TicketsPrijs { get; set; }
+
     public virtual DbSet<VakType> VakTypes { get; set; }
 
     public virtual DbSet<Zitplaatsen> Zitplaatsens { get; set; }
 
-    public virtual DbSet<TicketsPrijs> TicketsPrijs { get; set; }
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (!optionsBuilder.IsConfigured)
-        {
-            IConfigurationRoot configuration = new ConfigurationBuilder()
-                  .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                  .AddJsonFile("appsettings.json")
-                  .Build();
-
-            optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
-        }
-    }
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=championsleagueticketsvivesilona.database.windows.net; Database=ChampionsLeague; User ID=Beheerder; Password=MagneetRolstoelToetsenbord9!; MultipleActiveResultSets=true;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -123,13 +109,6 @@ public partial class FootballDbContext : DbContext
             entity.Property(e => e.NormalizedName).HasMaxLength(256);
         });
 
-        modelBuilder.Entity<AspNetRoleClaim>(entity =>
-        {
-            entity.HasIndex(e => e.RoleId, "IX_AspNetRoleClaims_RoleId");
-
-            entity.HasOne(d => d.Role).WithMany(p => p.AspNetRoleClaims).HasForeignKey(d => d.RoleId);
-        });
-
         modelBuilder.Entity<AspNetUser>(entity =>
         {
             entity.HasIndex(e => e.NormalizedEmail, "EmailIndex");
@@ -154,13 +133,6 @@ public partial class FootballDbContext : DbContext
                         j.ToTable("AspNetUserRoles");
                         j.HasIndex(new[] { "RoleId" }, "IX_AspNetUserRoles_RoleId");
                     });
-        });
-
-        modelBuilder.Entity<AspNetUserClaim>(entity =>
-        {
-            entity.HasIndex(e => e.UserId, "IX_AspNetUserClaims_UserId");
-
-            entity.HasOne(d => d.User).WithMany(p => p.AspNetUserClaims).HasForeignKey(d => d.UserId);
         });
 
         modelBuilder.Entity<Match>(entity =>
@@ -375,6 +347,33 @@ public partial class FootballDbContext : DbContext
                 .HasConstraintName("fk_zitplaatsID_Tickets");
         });
 
+        modelBuilder.Entity<TicketsPrijs>(entity =>
+        {
+            entity.HasKey(e => new { e.MatchId, e.VakNummer }).HasName("PK__TicketsP__B97B8E44CB171748");
+
+            entity.Property(e => e.MatchId)
+                .HasMaxLength(5)
+                .IsUnicode(false)
+                .HasColumnName("matchID");
+            entity.Property(e => e.VakNummer)
+                .HasMaxLength(5)
+                .IsUnicode(false)
+                .HasColumnName("vakNummer");
+            entity.Property(e => e.Prijs)
+                .HasColumnType("decimal(10, 2)")
+                .HasColumnName("prijs");
+
+            entity.HasOne(d => d.Match).WithMany(p => p.TicketsPrijs)
+                .HasForeignKey(d => d.MatchId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_matchIDTicketsPrijs");
+
+            entity.HasOne(d => d.VakNummerNavigation).WithMany(p => p.TicketsPrijs)
+                .HasForeignKey(d => d.VakNummer)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_vakNummerTicketsPrijs");
+        });
+
         modelBuilder.Entity<VakType>(entity =>
         {
             entity.HasKey(e => e.VakNummer).HasName("PK__VakTypes__BBCA469A4C59D109");
@@ -426,20 +425,6 @@ public partial class FootballDbContext : DbContext
                 .HasForeignKey(d => d.VakNummer)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_vakNummer_Zitplaatsen");
-        });
-
-        modelBuilder.Entity<TicketsPrijs>(entity =>
-        {
-            entity.HasKey(e => new { e.MatchId, e.VakNummer }).HasName("PK__TicketsPrij__");
-
-            entity.Property(e => e.MatchId)
-                .HasMaxLength(5)
-                .IsUnicode(false)
-                .HasColumnName("matchID");
-            entity.Property(e => e.VakNummer)
-                .HasMaxLength(5)
-                .IsUnicode(false)
-                .HasColumnName("vakNummer");
         });
 
         OnModelCreatingPartial(modelBuilder);
