@@ -418,6 +418,9 @@ public partial class FootballDbContext : DbContext
                 .HasConstraintName("fk_vakNummer_Zitplaatsen");
         });
 
+        modelBuilder.Entity<TicketsPrijs>()
+            .HasKey(t => new { t.MatchId, t.VakNummer });
+
         OnModelCreatingPartial(modelBuilder);
     }
 
