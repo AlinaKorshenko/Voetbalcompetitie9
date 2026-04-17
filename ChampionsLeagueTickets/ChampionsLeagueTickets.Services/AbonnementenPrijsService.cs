@@ -33,9 +33,9 @@ namespace ChampionsLeagueTickets.Services
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<AbonnementenPrijs>?> GetAllAsync()
+        public async Task<IEnumerable<AbonnementenPrijs>?> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _abonnementenPrijsDAO.GetAllAsync();
         }
 
         public Task UpdateAsync(AbonnementenPrijs entity)
