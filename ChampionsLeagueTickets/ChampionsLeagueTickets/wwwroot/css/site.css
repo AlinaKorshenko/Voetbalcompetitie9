@@ -63,9 +63,13 @@ body {
     border: none;
 }
 
+.card-header {
+    background-color: #c9aa71;
+    color: black;
+}
+
 .card-footer {
-    background-color: #12132080;
-    border-top: 1px solid #2a2b3e;
+    background-color: #c9aa71;
 }
 
 /* Matches table */
@@ -118,7 +122,8 @@ body {
     }
 
 .badge {
-    background-color: #000;
+    background-color: #191d58;
+    color: white;
     border-radius: 8px;
 }
 
