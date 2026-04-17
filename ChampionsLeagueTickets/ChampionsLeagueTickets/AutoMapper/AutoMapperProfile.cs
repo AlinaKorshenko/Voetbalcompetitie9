@@ -11,6 +11,7 @@ namespace ChampionsLeagueTickets.AutoMapper
 
         public AutoMapperProfile()
         {
+            //matches info page
             CreateMap<Match, MatchVM>()
             .ForMember(dest => dest.homeTeamName,
                 opts => opts.MapFrom(src => src.ThuisTeam.Naam))
@@ -19,18 +20,22 @@ namespace ChampionsLeagueTickets.AutoMapper
             .ForMember(dest => dest.stadionName,
                 opts => opts.MapFrom(src => src.ThuisTeam.Stadion.Naam));
 
-            CreateMap<Stadion, StadionVM>();
-            CreateMap<VakType, VakTypeVM>();
-
-            CreateMap<AspNetUser, UserInfoResponse>();
-            CreateMap<UserInfoResponse, UserVM>();
-
+            //abonnementen info page
             CreateMap<AbonnementenPrijs, AbonnementenInformatieVM>()
                 .ForMember(dest => dest.StadionNaam, opt => opt.MapFrom(src => src.Stadion.Naam))
                 .ForMember(dest => dest.SeizoenNaam, opt => opt.MapFrom(src => src.Seizoen.Naam))
                 .ForMember(dest => dest.StartDatum, opt => opt.MapFrom(src => src.Seizoen.StartDatum))
                 .ForMember(dest => dest.EindDatum, opt => opt.MapFrom(src => src.Seizoen.EindDatum))
                 .ForMember(dest => dest.Prijs, opt => opt.MapFrom(src => src.Prijs));
+
+            //api
+            //stadion
+            CreateMap<Stadion, StadionVM>();
+            CreateMap<VakType, VakTypeVM>();
+
+            //users
+            CreateMap<AspNetUser, UserInfoResponse>();
+            CreateMap<UserInfoResponse, UserVM>();
         }
 
     }
