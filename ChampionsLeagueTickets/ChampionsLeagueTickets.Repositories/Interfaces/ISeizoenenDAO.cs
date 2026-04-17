@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChampionsLeagueTickets.Domain.EntitiesDB;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace ChampionsLeagueTickets.Repositories.Interfaces
 {
-    internal interface ISeizoenenDAO
+    public interface ISeizoenenDAO : IDAO<Seizoenen>
     {
+        Task<IEnumerable<Seizoenen>?> GetCurrentSeizoen();
     }
 }

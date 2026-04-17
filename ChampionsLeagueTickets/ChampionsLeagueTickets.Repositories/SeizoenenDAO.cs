@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ChampionsLeagueTickets.Repositories
 {
-    public class SeizoenenDAO : IDAO<Seizoenen>
+    public class SeizoenenDAO : ISeizoenenDAO
     {
         private readonly FootballDbContext _dbContext;
 
@@ -39,6 +39,23 @@ namespace ChampionsLeagueTickets.Repositories
             try
             {
                 return await _dbContext.Seizoenens
+                    .ToListAsync();
+            }
+            catch
+            {
+                Console.WriteLine("error in DAO");
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Seizoenen>?> GetCurrentSeizoen()
+        {
+            try
+            {
+                int currentYear = DateTime.Now.Year;
+
+                return await _dbContext.Seizoenens
+                    .Where(s => s.EindDatum.Year >= currentYear)
                     .ToListAsync();
             }
             catch
