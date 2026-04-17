@@ -19,7 +19,7 @@ public partial class FootballDbContext : DbContext
 
     public virtual DbSet<Abonnementen> Abonnementens { get; set; }
 
-    public virtual DbSet<AbonnementenPrij> AbonnementenPrijs { get; set; }
+    public virtual DbSet<AbonnementenPrijs> AbonnementenPrijs { get; set; }
 
     public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
 
@@ -39,7 +39,7 @@ public partial class FootballDbContext : DbContext
 
     public virtual DbSet<Ticket> Tickets { get; set; }
 
-    public virtual DbSet<TicketsPrij> TicketsPrijs { get; set; }
+    public virtual DbSet<TicketsPrijs> TicketsPrijs { get; set; }
 
     public virtual DbSet<VakType> VakTypes { get; set; }
 
@@ -112,7 +112,7 @@ public partial class FootballDbContext : DbContext
                 .HasConstraintName("fk_zitplaatsID_Abonnementen");
         });
 
-        modelBuilder.Entity<AbonnementenPrij>(entity =>
+        modelBuilder.Entity<AbonnementenPrijs>(entity =>
         {
             entity.HasKey(e => new { e.StadionId, e.SeizoenId }).HasName("PK__Abonneme__FAA00C928D8B5A8E");
 
@@ -387,7 +387,7 @@ public partial class FootballDbContext : DbContext
                 .HasConstraintName("fk_zitplaatsID_Tickets");
         });
 
-        modelBuilder.Entity<TicketsPrij>(entity =>
+        modelBuilder.Entity<TicketsPrijs>(entity =>
         {
             entity.HasKey(e => new { e.MatchId, e.VakNummer }).HasName("PK__TicketsP__B97B8E44CB171748");
 
