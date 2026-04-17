@@ -1,22 +1,21 @@
-﻿using ChampionsLeagueTickets.Domain.DataDB;
-using ChampionsLeagueTickets.Domain.EntitiesDB;
+﻿using ChampionsLeagueTickets.Domain.EntitiesDB;
 using ChampionsLeagueTickets.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
+using ChampionsLeagueTickets.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChampionsLeagueTickets.Repositories
+namespace ChampionsLeagueTickets.Services
 {
-    internal class AbonnementenPrijsDAO : IDAO<AbonnementenPrijs>
+    internal class AbonnementenPrijsService : IService<AbonnementenPrijs>
     {
-        private readonly FootballDbContext _dbContext;
+        private IDAO<AbonnementenPrijs> _abonnementenPrijsDAO;
 
-        public AbonnementenPrijsDAO(FootballDbContext dbContext)
+        public AbonnementenPrijsService(IDAO<AbonnementenPrijs> abonnementenPrijsDAO)
         {
-            _dbContext = dbContext;
+            _abonnementenPrijsDAO = abonnementenPrijsDAO;
         }
 
         public Task AddAsync(AbonnementenPrijs entity)
@@ -34,18 +33,9 @@ namespace ChampionsLeagueTickets.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<AbonnementenPrijs>?> GetAllAsync()
+        public Task<IEnumerable<AbonnementenPrijs>?> GetAllAsync()
         {
-            try
-            {
-                return await _dbContext.AbonnementenPrijs
-                    .ToListAsync();
-            }
-            catch
-            {
-                Console.WriteLine("error in DAO");
-                throw;
-            }
+            throw new NotImplementedException();
         }
 
         public Task UpdateAsync(AbonnementenPrijs entity)
