@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ChampionsLeagueTickets.Domain.EntitiesDB;
 
-public partial class TicketsPrijs
+public partial class TicketsPrij
 {
     public string MatchId { get; set; } = null!;
 

@@ -17,7 +17,7 @@ public partial class Stadion
 
     public string Gemeente { get; set; } = null!;
 
-    public virtual ICollection<AbonnementenPrij> AbonnementenPrijs { get; set; } = new List<AbonnementenPrij>();
+    public virtual ICollection<AbonnementenPrijs> AbonnementenPrijs { get; set; } = new List<AbonnementenPrijs>();
 
     public virtual ICollection<Abonnementen> Abonnementens { get; set; } = new List<Abonnementen>();
 
