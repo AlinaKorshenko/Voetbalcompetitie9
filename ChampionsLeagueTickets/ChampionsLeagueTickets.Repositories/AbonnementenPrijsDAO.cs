@@ -39,6 +39,8 @@ namespace ChampionsLeagueTickets.Repositories
             try
             {
                 return await _dbContext.AbonnementenPrijs
+                    .Include(ap => ap.Stadion)
+                    .Include(ap => ap.Seizoen)
                     .ToListAsync();
             }
             catch

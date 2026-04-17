@@ -103,6 +103,14 @@ builder.Services.AddScoped<IService<VakType>, VakTypeService>();
 builder.Services.AddScoped<IZitplaatsenDAO, ZitplaatsenDAO>();
 builder.Services.AddScoped<IZitplaatsenService, ZitplaatsenService>();
 
+//Seizoenen
+builder.Services.AddScoped<ISeizoenenDAO, SeizoenenDAO>();
+builder.Services.AddScoped<ISeizoenenService, SeizoenenService>();
+
+//AbonnementenPrijs
+builder.Services.AddScoped<IDAO<AbonnementenPrijs>, AbonnementenPrijsDAO>();
+builder.Services.AddScoped<IService<AbonnementenPrijs>, AbonnementenPrijsService>();
+
 //Users
 builder.Services.AddScoped<IUserService, UserService>();
 

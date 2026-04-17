@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ChampionsLeagueTickets.Services
 {
-    internal class AbonnementenPrijsService : IService<AbonnementenPrijs>
+    public class AbonnementenPrijsService : IService<AbonnementenPrijs>
     {
         private IDAO<AbonnementenPrijs> _abonnementenPrijsDAO;
 
