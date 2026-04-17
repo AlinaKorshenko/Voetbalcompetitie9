@@ -13,5 +13,7 @@ public partial class Seizoenen
 
     public DateOnly EindDatum { get; set; }
 
+    public virtual ICollection<AbonnementenPrij> AbonnementenPrijs { get; set; } = new List<AbonnementenPrij>();
+
     public virtual ICollection<Abonnementen> Abonnementens { get; set; } = new List<Abonnementen>();
 }

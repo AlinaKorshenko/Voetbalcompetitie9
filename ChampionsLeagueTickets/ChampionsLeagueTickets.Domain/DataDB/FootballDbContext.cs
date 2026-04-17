@@ -19,6 +19,8 @@ public partial class FootballDbContext : DbContext
 
     public virtual DbSet<Abonnementen> Abonnementens { get; set; }
 
+    public virtual DbSet<AbonnementenPrij> AbonnementenPrijs { get; set; }
+
     public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
 
     public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
@@ -37,12 +39,11 @@ public partial class FootballDbContext : DbContext
 
     public virtual DbSet<Ticket> Tickets { get; set; }
 
-    public virtual DbSet<TicketsPrijs> TicketsPrijs { get; set; }
+    public virtual DbSet<TicketsPrij> TicketsPrijs { get; set; }
 
     public virtual DbSet<VakType> VakTypes { get; set; }
 
     public virtual DbSet<Zitplaatsen> Zitplaatsens { get; set; }
-
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -92,6 +93,7 @@ public partial class FootballDbContext : DbContext
 
             entity.HasOne(d => d.Seizoen).WithMany(p => p.Abonnementens)
                 .HasForeignKey(d => d.SeizoenId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_seizoenID_Abonnementen");
 
             entity.HasOne(d => d.Stadion).WithMany(p => p.Abonnementens)
@@ -108,6 +110,33 @@ public partial class FootballDbContext : DbContext
                 .HasForeignKey(d => new { d.StadionId, d.ZitplaatsId })
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_zitplaatsID_Abonnementen");
+        });
+
+        modelBuilder.Entity<AbonnementenPrij>(entity =>
+        {
+            entity.HasKey(e => new { e.StadionId, e.SeizoenId }).HasName("PK__Abonneme__FAA00C928D8B5A8E");
+
+            entity.Property(e => e.StadionId)
+                .HasMaxLength(5)
+                .IsUnicode(false)
+                .HasColumnName("stadionID");
+            entity.Property(e => e.SeizoenId)
+                .HasMaxLength(5)
+                .IsUnicode(false)
+                .HasColumnName("seizoenID");
+            entity.Property(e => e.Prijs)
+                .HasColumnType("decimal(10, 2)")
+                .HasColumnName("prijs");
+
+            entity.HasOne(d => d.Seizoen).WithMany(p => p.AbonnementenPrijs)
+                .HasForeignKey(d => d.SeizoenId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_seizoenIDAbonnementenPrijs");
+
+            entity.HasOne(d => d.Stadion).WithMany(p => p.AbonnementenPrijs)
+                .HasForeignKey(d => d.StadionId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_stadionIDAbonnementenPrijs");
         });
 
         modelBuilder.Entity<AspNetRole>(entity =>
@@ -358,7 +387,7 @@ public partial class FootballDbContext : DbContext
                 .HasConstraintName("fk_zitplaatsID_Tickets");
         });
 
-        modelBuilder.Entity<TicketsPrijs>(entity =>
+        modelBuilder.Entity<TicketsPrij>(entity =>
         {
             entity.HasKey(e => new { e.MatchId, e.VakNummer }).HasName("PK__TicketsP__B97B8E44CB171748");
 

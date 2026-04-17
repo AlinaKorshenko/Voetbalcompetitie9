@@ -19,11 +19,11 @@ public partial class Abonnementen
 
     public bool Status { get; set; }
 
-    public string? SeizoenId { get; set; }
+    public string SeizoenId { get; set; } = null!;
 
     public virtual ICollection<Orderlijnen> Orderlijnens { get; set; } = new List<Orderlijnen>();
 
-    public virtual Seizoenen? Seizoen { get; set; }
+    public virtual Seizoenen Seizoen { get; set; } = null!;
 
     public virtual Stadion Stadion { get; set; } = null!;
 
