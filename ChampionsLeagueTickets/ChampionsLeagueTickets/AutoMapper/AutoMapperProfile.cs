@@ -24,6 +24,13 @@ namespace ChampionsLeagueTickets.AutoMapper
 
             CreateMap<AspNetUser, UserInfoResponse>();
             CreateMap<UserInfoResponse, UserVM>();
+
+            CreateMap<AbonnementenPrijs, AbonnementenInformatieVM>()
+                .ForMember(dest => dest.StadionNaam, opt => opt.MapFrom(src => src.Stadion.Naam))
+                .ForMember(dest => dest.SeizoenNaam, opt => opt.MapFrom(src => src.Seizoen.Naam))
+                .ForMember(dest => dest.StartDatum, opt => opt.MapFrom(src => src.Seizoen.StartDatum))
+                .ForMember(dest => dest.EindDatum, opt => opt.MapFrom(src => src.Seizoen.EindDatum))
+                .ForMember(dest => dest.Prijs, opt => opt.MapFrom(src => src.Prijs));
         }
 
     }
