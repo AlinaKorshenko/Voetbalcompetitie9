@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ChampionsLeagueTickets.Repositories
 {
-    internal class AbonnementenPrijsDAO : IDAO<AbonnementenPrijs>
+    public class AbonnementenPrijsDAO : IDAO<AbonnementenPrijs>
     {
         private readonly FootballDbContext _dbContext;
 
