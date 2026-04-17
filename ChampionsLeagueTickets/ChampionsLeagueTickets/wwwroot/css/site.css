@@ -129,13 +129,6 @@ body {
     font-size: 1.2em;
 }
 
-.football-footer {
-    color: #0d0e1a;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-}
-
 /* Fix DataTables white header box */
 .dataTables_wrapper .dataTables_scroll,
 div.dataTables_wrapper {
@@ -161,4 +154,23 @@ thead {
     background-color: #ffffff;
     color: #0d0e1a;
     border: none;
+}
+
+body {
+    background-color: #0d0e1a;
+    color: white;
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container.main-container {
+    flex: 1;
+}
+
+.football-footer {
+    background-color: #ffffff;
+    color: #0d0e1a;
+    margin-top: auto;
 }
