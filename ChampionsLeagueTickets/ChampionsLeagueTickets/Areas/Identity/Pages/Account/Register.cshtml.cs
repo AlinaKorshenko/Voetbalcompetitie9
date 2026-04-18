@@ -76,8 +76,8 @@ namespace ChampionsLeagueTickets.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Required(ErrorMessage = "E-mailadres is verplicht in te vullen.")]
-            [EmailAddress]
-            [Display(Name = "Email")]
+            [EmailAddress(ErrorMessage = "Geen geldig e-mailadres.")]
+            [Display(Name = "E-mail")]
             public string Email { get; set; }
 
             /// <summary>
@@ -85,7 +85,7 @@ namespace ChampionsLeagueTickets.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Required(ErrorMessage = "Wachtwoord is verplicht in te vullen.")]
-            [StringLength(100, ErrorMessage = "De {0} moet ten minste {2} en maximum {1} karakters lang zijn.", MinimumLength = 6)]
+            [StringLength(100, ErrorMessage = "Het wachtwoord moet ten minste {2} en maximum {1} karakters lang zijn.", MinimumLength = 6)]
             [DataType(DataType.Password)]
             [Display(Name = "Wachtwoord")]
             public string Password { get; set; }
@@ -155,7 +155,18 @@ namespace ChampionsLeagueTickets.Areas.Identity.Pages.Account
                 }
                 foreach (var error in result.Errors)
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    var message = error.Code switch
+                    {
+                        "DuplicateUserName" => "Dit e-mailadres is al in gebruik.",
+                        "DuplicateEmail" => "Dit e-mailadres is al in gebruik.",
+                        "PasswordTooShort" => "Wachtwoord moet minstens 6 tekens lang zijn.",
+                        "PasswordRequiresNonAlphanumeric" => "Wachtwoord moet minstens één speciaal teken bevatten.",
+                        "PasswordRequiresDigit" => "Wachtwoord moet minstens één cijfer bevatten.",
+                        "PasswordRequiresUpper" => "Wachtwoord moet minstens één hoofdletter bevatten.",
+                        "PasswordRequiresLower" => "Wachtwoord moet minstens één kleine letter bevatten.",
+                        _ => error.Description
+                    };
+                    ModelState.AddModelError(string.Empty, message);
                 }
             }
 

@@ -47,7 +47,7 @@ namespace ChampionsLeagueTickets.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Required]
-            [EmailAddress]
+            [EmailAddress(ErrorMessage = "Geen geldig e-mailadres.")]
             public string Email { get; set; }
         }
 
@@ -65,7 +65,7 @@ namespace ChampionsLeagueTickets.Areas.Identity.Pages.Account
             var user = await _userManager.FindByEmailAsync(Input.Email);
             if (user == null)
             {
-                ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
+                ModelState.AddModelError(string.Empty, "Verificatiemail verzonden. Bekijk alstublieft uw E-mailinbox.");
                 return Page();
             }
 
@@ -83,7 +83,7 @@ namespace ChampionsLeagueTickets.Areas.Identity.Pages.Account
                 EmailTemplateService.ConfirmEmail(callbackUrl)
             );
 
-            ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
+            ModelState.AddModelError(string.Empty, "Verificatiemail verzonden. Bekijk alstublieft uw E-mailinbox.");
             return Page();
         }
     }

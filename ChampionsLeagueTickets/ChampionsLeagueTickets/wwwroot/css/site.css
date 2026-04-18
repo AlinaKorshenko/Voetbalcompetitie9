@@ -13,11 +13,16 @@ html {
 }
 
 .btn-golden {
-    color: white;
+    font-size: 1.2em;
+    color: black;
     background-color: #c9aa71;
     padding: 10px;
     border: none;
     border-radius: 6px;
+}
+
+.btn-golden:hover {
+    background-color: #d8c28f;
 }
 
 .form-control:focus {

@@ -40,26 +40,29 @@ namespace ChampionsLeagueTickets.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
-            [EmailAddress]
+            [Required(ErrorMessage = "E-mailadres is verplicht in te vullen.")]
+            [EmailAddress(ErrorMessage = "E-mailadres is verplicht in te vullen.")]
+            [Display(Name = "E-mail")]
             public string Email { get; set; }
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [Required(ErrorMessage = "Wachtwoord is verplicht in te vullen.")]
+            [StringLength(100, ErrorMessage = "Het wachtwoord moet ten minste {2} en maximum {1} karakters lang zijn.", MinimumLength = 6)]
             [DataType(DataType.Password)]
+            [Display(Name = "Wachtwoord")]
             public string Password { get; set; }
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
+            [Required(ErrorMessage = "Wachtwoordbevestiging is verplicht in te vullen.")]
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Compare("Password", ErrorMessage = "Het wachtwoord en de bevestiging zijn niet gelijk aan elkaar.")]
+            [Display(Name = "Bevestig wachtwoord")]
             public string ConfirmPassword { get; set; }
 
             /// <summary>
@@ -75,7 +78,7 @@ namespace ChampionsLeagueTickets.Areas.Identity.Pages.Account
         {
             if (code == null)
             {
-                return BadRequest("A code must be supplied for password reset.");
+                return BadRequest("Een code moet gegeven worden voor de wachtwoord reset.");
             }
             else
             {
@@ -109,7 +112,18 @@ namespace ChampionsLeagueTickets.Areas.Identity.Pages.Account
 
             foreach (var error in result.Errors)
             {
-                ModelState.AddModelError(string.Empty, error.Description);
+                var message = error.Code switch
+                {
+                    "DuplicateUserName" => "Dit e-mailadres is al in gebruik.",
+                    "DuplicateEmail" => "Dit e-mailadres is al in gebruik.",
+                    "PasswordTooShort" => "Wachtwoord moet minstens 6 tekens lang zijn.",
+                    "PasswordRequiresNonAlphanumeric" => "Wachtwoord moet minstens één speciaal teken bevatten.",
+                    "PasswordRequiresDigit" => "Wachtwoord moet minstens één cijfer bevatten.",
+                    "PasswordRequiresUpper" => "Wachtwoord moet minstens één hoofdletter bevatten.",
+                    "PasswordRequiresLower" => "Wachtwoord moet minstens één kleine letter bevatten.",
+                    _ => error.Description
+                };
+                ModelState.AddModelError(string.Empty, message);
             }
             return Page();
         }
