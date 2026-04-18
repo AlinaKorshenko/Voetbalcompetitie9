@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ChampionsLeagueTickets.Services.Interfaces
+{
+    public interface IAppEmailSender
+    {
+        Task SendEmailAsync(string email, string subject, string htmlMessage);
+
+        Task SendOrderConfirmationAsync(string email, string userName, string matchName, int ticketCount);
+    }
+}
