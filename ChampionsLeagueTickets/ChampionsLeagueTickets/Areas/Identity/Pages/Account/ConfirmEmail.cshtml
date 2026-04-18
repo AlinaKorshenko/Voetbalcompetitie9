@@ -6,10 +6,9 @@
 
 <div class="row justify-content-center">
     <h1>@ViewData["Title"]</h1>
-    <partial name="_StatusMessage" model="Model.StatusMessage" />
     <p>
         Uw E-mail is bevestigd. Dankuwel! U kunt nu doorgaan naar de applicatie.
     </p>
-    <a class="btn btn-primary mt-2" asp-page="/Account/Login" asp-area="Identity">Ga naar login</a>
-    <img src="~/images/blije_voetballers.jpg" alt="Blije voetballers" />
+    <a class="w-100 btn btn-lg btn-primary" asp-page="/Account/Login" asp-area="Identity">Ga naar login</a>
+    <img src="~/images/blije_voetballers.jpg" alt="Blije voetballers" class="img-fluid rounded" />
 </div>

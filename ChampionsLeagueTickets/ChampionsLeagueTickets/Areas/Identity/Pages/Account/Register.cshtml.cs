@@ -75,7 +75,7 @@ namespace ChampionsLeagueTickets.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
+            [Required(ErrorMessage = "E-mailadres is verplicht in te vullen.")]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
@@ -84,19 +84,20 @@ namespace ChampionsLeagueTickets.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [Required(ErrorMessage = "Wachtwoord is verplicht in te vullen.")]
+            [StringLength(100, ErrorMessage = "De {0} moet ten minste {2} en maximum {1} karakters lang zijn.", MinimumLength = 6)]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
+            [Display(Name = "Wachtwoord")]
             public string Password { get; set; }
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
+            [Required(ErrorMessage = "Wachtwoordbevestiging is verplicht in te vullen.")]
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Display(Name = "Bevestig wachtwoord")]
+            [Compare("Password", ErrorMessage = "Het wachtwoord en de bevestiging zijn niet gelijk aan elkaar.")]
             public string ConfirmPassword { get; set; }
         }
 
@@ -158,7 +159,6 @@ namespace ChampionsLeagueTickets.Areas.Identity.Pages.Account
                 }
             }
 
-            // If we got this far, something failed, redisplay form
             return Page();
         }
 
