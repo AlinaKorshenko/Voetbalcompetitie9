@@ -202,6 +202,18 @@ builder.Services.AddSession(options =>
 
 var app = builder.Build();
 
+//rollen
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    string[] roles = { "Admin", "User" };
+    foreach (var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+            await roleManager.CreateAsync(new IdentityRole(role));
+    }
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();

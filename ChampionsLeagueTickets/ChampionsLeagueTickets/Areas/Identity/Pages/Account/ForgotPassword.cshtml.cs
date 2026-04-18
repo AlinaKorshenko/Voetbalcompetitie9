@@ -2,17 +2,18 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
+using ChampionsLeagueTickets.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
+using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 
 namespace ChampionsLeagueTickets.Areas.Identity.Pages.Account
 {
@@ -72,8 +73,9 @@ namespace ChampionsLeagueTickets.Areas.Identity.Pages.Account
 
                 await _emailSender.SendEmailAsync(
                     Input.Email,
-                    "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    "Wachtwoord vergeten - Champions League Tickets",
+                    EmailTemplateService.ForgotPassword(callbackUrl)
+                );
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }

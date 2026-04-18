@@ -123,6 +123,8 @@ namespace ChampionsLeagueTickets.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
+                    await _userManager.AddToRoleAsync(user, "User");
+
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -136,7 +138,7 @@ namespace ChampionsLeagueTickets.Areas.Identity.Pages.Account
                     //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
                     await _emailSender.SendEmailAsync(
                         Input.Email,
-                        "Confirm your email — UCL Tickets",
+                        "Bevestig uw E-mail — Champions League Tickets",
                         EmailTemplateService.ConfirmEmail(callbackUrl)
                     );
 

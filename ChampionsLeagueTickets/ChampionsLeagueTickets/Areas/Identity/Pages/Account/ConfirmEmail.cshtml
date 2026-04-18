@@ -1,14 +1,15 @@
 ﻿@page
 @model ConfirmEmailModel
 @{
-    ViewData["Title"] = "Confirm email";
+    ViewData["Title"] = "E-mail is bevestigd";
 }
 
-<div class="row justify-content-center mt-5">
-    <div class="col-md-6 text-center">
-        <h1>⚽ Email Confirmed!</h1>
-        <partial name="_StatusMessage" model="Model.StatusMessage" />
-        <p class="mt-3">Your email has been confirmed. You can now log in to UCL Tickets.</p>
-        <a class="btn btn-primary mt-2" asp-page="/Account/Login" asp-area="Identity">Go to login</a>
-    </div>
+<div class="row justify-content-center">
+    <h1>@ViewData["Title"]</h1>
+    <partial name="_StatusMessage" model="Model.StatusMessage" />
+    <p>
+        Uw E-mail is bevestigd. Dankuwel! U kunt nu doorgaan naar de applicatie.
+    </p>
+    <a class="btn btn-primary mt-2" asp-page="/Account/Login" asp-area="Identity">Ga naar login</a>
+    <img src="~/images/blije_voetballers.jpg" alt="Blije voetballers" />
 </div>
