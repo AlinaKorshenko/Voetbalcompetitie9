@@ -33,7 +33,13 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     options.SignIn.RequireConfirmedAccount = true;
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
+.AddDefaultUI()
 .AddDefaultTokenProviders();
+
+builder.Services.AddTransient<IAppEmailSender, EmailSender>();
+builder.Services.AddTransient<Microsoft.AspNetCore.Identity.UI.Services.IEmailSender>(
+    sp => (Microsoft.AspNetCore.Identity.UI.Services.IEmailSender)sp.GetRequiredService<IAppEmailSender>()
+);
 
 builder.Services.AddRazorPages();
 
