@@ -117,6 +117,10 @@ builder.Services.AddScoped<ISeizoenenService, SeizoenenService>();
 builder.Services.AddScoped<IDAO<AbonnementenPrijs>, AbonnementenPrijsDAO>();
 builder.Services.AddScoped<IService<AbonnementenPrijs>, AbonnementenPrijsService>();
 
+//TicketPrijs
+builder.Services.AddScoped<ITicketPrijsDAO, TicketPrijsDAO>();
+builder.Services.AddScoped<ITicketPrijsService, TicketsPrijsService>();
+
 //Users
 builder.Services.AddScoped<IUserService, UserService>();
 
@@ -132,6 +136,14 @@ builder.Services.AddScoped<IMatchService, MatchesService>();
 
 builder.Services.AddScoped<ITicketDAO, TicketDAO>();
 builder.Services.AddScoped<ITicketService, TicketService>();
+
+//Session
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.Cookie.Name = "be.ChampionsLeagueTickets.Session";
+    options.IdleTimeout = TimeSpan.FromMinutes(15);
+});
 
 //JWT
 builder.Services
@@ -192,12 +204,6 @@ catch (Exception ex)
     Debug.WriteLine(ex.Message);
 }
 
-//session
-builder.Services.AddSession(options =>
-{
-    options.Cookie.Name = "be.ChampionsLeagueTickets.Session";
-    options.IdleTimeout = TimeSpan.FromSeconds(60);
-});
 
 
 var app = builder.Build();
@@ -227,6 +233,8 @@ else
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseSession();
+
 app.UseCors("AllowAll");
 
 app.UseSwagger();
@@ -234,6 +242,7 @@ app.UseSwaggerUI();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 
 app.MapStaticAssets();
 

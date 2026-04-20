@@ -46,10 +46,16 @@
     }
 </form>
 
+@if (Model.Prijs.HasValue)
+{
+    <p>prijs : @Model.Prijs</p>
+}
+
 @if (!string.IsNullOrEmpty(Model.GeselecteerdeZitplaatsId))
 {
     <form asp-action="OverzichtInfoTicket" method="post">
         <input type="hidden" asp-for="MatchID" />
+        <input type="hidden" asp-for="Prijs" />
         <input type="hidden" asp-for="StadionVak" />
         <input type="hidden" asp-for="RijNummer" />
         <input type="hidden" asp-for="GeselecteerdeZitplaatsId" />

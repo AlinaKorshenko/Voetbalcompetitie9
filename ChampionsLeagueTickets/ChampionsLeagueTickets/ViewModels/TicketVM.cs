@@ -10,6 +10,7 @@ namespace ChampionsLeagueTickets.View_Models
     {
         [Required]
         public string MatchID { get; set; }
+        public decimal? Prijs { get; set; }
 
         public string? StadionVak { get; set; }
         public string? RijNummer { get; set; }

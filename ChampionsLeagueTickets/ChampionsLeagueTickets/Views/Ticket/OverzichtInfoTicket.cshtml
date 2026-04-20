@@ -55,19 +55,25 @@
                 </p>
 
                 <p>
-                    <i class="bi bi-person-seat text-success"></i>
+                    <i class="bi bi-person text-info"></i>
                     <strong>Stoel:</strong> @Model.Zitplaats.StoelNummer
+                </p>
+                <p> 
+                    <i class="bi bi-cash-coin text-success"></i>
+                    <span>Prijs: @Model.Prijs</span>
                 </p>
             </div>
 
             <!-- Buttons -->
             <div class="d-flex justify-content-between mt-4">
-                <a asp-action="ChooseSeats" class="btn btn-outline-secondary px-4">
+                <a asp-action="Matches" class="btn btn-outline-secondary px-4">
                     <i class="bi bi-arrow-left"></i> Terug
                 </a>
 
                 <form asp-action="BevestigTicket" method="post">
-                    <input type="hidden" name="ZitplaatsId" value="@Model.Zitplaats.ZitplaatsId" />
+                    <input type="hidden" name="ZitplaatsID" value="@Model.Zitplaats.ZitplaatsId" />
+                    <input type="hidden" name="MatchID" value="@Model.MatchID" />
+
                     <button type="submit" class="btn btn-success px-4">
                         <i class="bi bi-check-circle"></i> Bevestigen
                     </button>

@@ -51,7 +51,7 @@ namespace ChampionsLeagueTickets.Repositories
         public async Task<IEnumerable<Ticket>?> GetAllAsync()
         {
             return await _dbContext.Tickets
-                   
+                     
                    .ToListAsync();
         }
 

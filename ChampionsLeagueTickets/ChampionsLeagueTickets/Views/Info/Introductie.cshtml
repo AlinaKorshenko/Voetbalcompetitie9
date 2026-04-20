@@ -79,3 +79,9 @@
         </a>
     </section>
 </div>
+@if (TempData["CartMessage"] != null)
+{
+    <script>
+        alert('@TempData["CartMessage"]');
+    </script>
+}

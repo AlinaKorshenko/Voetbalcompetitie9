@@ -1,0 +1,115 @@
+﻿@model ChampionsLeagueTickets.ViewModels.ShoppingCartVM
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="container py-5">
+    <div class="mb-4">
+        <h1 class="cart-page-title">
+            <i class="bi bi-cart3 text-primary"></i> Winkelmandje
+        </h1>
+        <p class="cart-page-subtitle">
+            Controleer je geselecteerde tickets en ga verder naar afrekenen.
+        </p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <section class="mb-4">
+                <div class="section-title">
+                    <i class="bi bi-ticket-perforated text-info"></i>
+                    <h3>Wedstrijdtickets</h3>
+                </div>
+
+                @if (Model.Tickets != null && Model.Tickets.Any())
+                {
+                    @foreach (var item in Model.Tickets)
+                    {
+                        <div class="cart-ticket-card">
+                            <div class="cart-ticket-card__header">
+                                <div>
+                                    <h4>@item.ThuisTeam - @item.UitTeam</h4>
+                                    <span class="cart-badge">Matchticket</span>
+                                </div>
+
+                                <div class="cart-ticket-price">
+                                    €@item.Prijs
+                                </div>
+                                <div class="cart-amount">
+                                    x @item.Aantal
+                                </div>
+
+                            </div>
+
+                            <div class="cart-ticket-grid">
+                                <div class="cart-info-box">
+                                    <i class="bi bi-calendar-event text-primary"></i>
+                                    <span>@item.MatchDateTime</span>
+                                </div>
+
+                                <div class="cart-info-box">
+                                    <i class="bi bi-geo-alt text-danger"></i>
+                                    <span>@item.Stadion</span>
+                                </div>
+
+                                <div class="cart-info-box">
+                                    <i class="bi bi-grid text-warning"></i>
+                                    <span>Vak: @item.Vak</span>
+                                </div>
+
+                                <div class="cart-info-box">
+                                    <i class="bi bi-layout-text-window text-secondary"></i>
+                                    <span>Rij: @item.Rij</span>
+                                </div>
+
+                                <div class="cart-info-box">
+                                    <i class="bi bi-ticket-detailed text-info"></i>
+                                    <span>Stoel: @item.Stoel</span>
+                                </div>
+                            </div>
+
+                            <div class="cart-ticket-actions">
+                                <form asp-action="RemoveTicket" method="post">
+                                   @*  <input type="hidden" name="MatchId" value="@item.MatchId" />
+                                    <input type="hidden" name="ZitplaatsId" value="@item.ZitplaatsId" /> *@
+
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                                        <i class="bi bi-trash"></i> Verwijderen
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="empty-cart-box">
+                        <i class="bi bi-cart-x"></i>
+                        <p>Er zitten nog geen tickets in je winkelmandje.</p>
+                    </div>
+                }
+            </section>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="cart-summary-box">
+                <h3><i class="bi bi-receipt text-success"></i> Overzicht</h3>
+
+                <div class="summary-line">
+                    <span>Aantal tickets</span>
+                    <strong>@(Model.Tickets?.Count ?? 0)</strong>
+                </div>
+
+                <div class="summary-line total-line">
+                    <span>Totaal</span>
+                    <strong>€@(Model.Tickets?.Sum(x => x.Prijs) ?? 0)</strong>
+                </div>
+
+                <button class="btn btn-success w-100 mt-3">
+                    <i class="bi bi-credit-card"></i> Verder naar afrekenen
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
