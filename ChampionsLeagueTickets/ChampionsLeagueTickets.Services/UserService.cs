@@ -34,7 +34,7 @@ namespace ChampionsLeagueTickets.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error in Servicelaag: " + ex.Message);
+                Console.WriteLine("Error in servicelaag: " + ex.Message);
                 throw;
             }
         }
