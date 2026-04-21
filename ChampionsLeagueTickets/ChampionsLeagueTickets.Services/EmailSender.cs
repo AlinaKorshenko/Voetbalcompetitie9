@@ -29,21 +29,29 @@ namespace ChampionsLeagueTickets.Services
 
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
-            var s = _config.GetSection("EmailSettings");
+            try
+            {
+                var s = _config.GetSection("EmailSettings");
 
-            var message = new MimeMessage();
-            message.From.Add(new MailboxAddress(s["SenderName"], s["SenderEmail"]));
-            message.To.Add(MailboxAddress.Parse(email));
-            message.Subject = subject;
-            message.Body = new BodyBuilder { HtmlBody = htmlMessage }.ToMessageBody();
+                var message = new MimeMessage();
+                message.From.Add(new MailboxAddress(s["SenderName"], s["SenderEmail"]));
+                message.To.Add(MailboxAddress.Parse(email));
+                message.Subject = subject;
+                message.Body = new BodyBuilder { HtmlBody = htmlMessage }.ToMessageBody();
 
-            using var smtp = new SmtpClient();
-            await smtp.ConnectAsync(s["MailServer"], int.Parse(s["MailPort"]!), SecureSocketOptions.StartTls);
-            await smtp.AuthenticateAsync(s["Username"], s["Password"]);
-            await smtp.SendAsync(message);
-            await smtp.DisconnectAsync(true);
+                using var smtp = new SmtpClient();
+                await smtp.ConnectAsync(s["MailServer"], int.Parse(s["MailPort"]!), SecureSocketOptions.StartTls);
+                await smtp.AuthenticateAsync(s["Username"], s["Password"]);
+                await smtp.SendAsync(message);
+                await smtp.DisconnectAsync(true);
 
-            _logger.LogInformation("Email sent to {Email} — {Subject}", email, subject);
+                _logger.LogInformation("Email sent to {Email} — {Subject}", email, subject);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to send email to {Email} — {Subject}", email, subject);
+                throw; // belangrijk!
+            }
         }
 
         public Task SendOrderConfirmationAsync(string email, string userName, string matchName, int ticketCount)
