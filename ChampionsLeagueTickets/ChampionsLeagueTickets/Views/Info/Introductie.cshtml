@@ -38,7 +38,8 @@
             </h1>
             <p class="hero-sub">
                 Alle topteams. De iconische beker.<br />
-                <strong>En ú kunt erbij zijn. Mis het niet.</strong>
+                <strong>En ú kunt erbij zijn. Mis het niet.</strong><br />
+                Beleef de spanning van elke minuut, van de eerste aftrap tot de laatste seconde.
             </p>
             <div class="cta-row">
                 <a class="btn-ucl btn-gold" asp-controller="Ticket" asp-action="Matches">
@@ -61,7 +62,10 @@
         <div class="info-text">
             <div class="section-tag">Het toernooi</div>
             <h2>32 clubs. Één beker.</h2>
-            <p>Van de groepsfase tot de iconische finale — elke wedstrijd telt. De beste clubs uit Europa strijden om de meest begeerde prijs in het clubvoetbal.</p>
+            <p>
+                Van de groepsfase tot de iconische finale — elke wedstrijd telt. De beste clubs uit Europa strijden om de meest begeerde prijs in het clubvoetbal.
+                Legendarische avonden, onvergetelijke doelpunten en historische comebacks maken dit toernooi uniek in de voetbalwereld.
+            </p>
         </div>
         <div class="info-img">
             <img src="~/images/stadion.jpg" alt="Stadion" />
@@ -74,11 +78,13 @@
         <div class="section-tag">Agenda</div>
         <h2>Mis de Topwedstrijden Niet</h2>
         <p>Bekijk alle aankomende wedstrijden en bestel uw tickets.</p>
+        <p>Van groepsduels tot knock-outfases — elke match brengt spanning, drama en wereldklasse voetbal op het hoogste niveau.</p>
         <a asp-controller="Ticket" asp-action="Matches" class="btn-ucl btn-gold">
             Wedstrijden
         </a>
     </section>
 </div>
+
 @if (TempData["CartMessage"] != null)
 {
     <script>
