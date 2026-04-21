@@ -9,11 +9,9 @@ namespace Voetbalcompetitie9.Controllers
             return View();
         }
         
-
         public IActionResult OverOns()
         {
             return View();
         }
-
     }
 }

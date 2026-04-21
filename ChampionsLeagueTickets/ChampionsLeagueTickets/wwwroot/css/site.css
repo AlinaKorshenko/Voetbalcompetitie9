@@ -184,3 +184,11 @@ thead {
 .container.main-container {
     flex: 1;
 }
+
+.prijsDisplay {
+    font-size: 1.2em;
+    color: black;
+    background-color: #c9aa71;
+    border-radius: 8px;
+    text-align: center;
+}

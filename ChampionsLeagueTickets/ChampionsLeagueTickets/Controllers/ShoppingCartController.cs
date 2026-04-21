@@ -46,13 +46,12 @@ namespace ChampionsLeagueTickets.Controllers
             var tickets = new List<ShoppingCartTicketVM>();
 
             if (cartTickets == null || !cartTickets.Any())
+            {
                 return result;
+            }
 
             foreach (var item in cartTickets)
-
-
             {
-
                 var match = await _matchesService.FindByIdAsync(item.MatchId);
                 var zitplaats = await _zitplatsenService.FindByIdAsync(item.ZitplaatsId);
                 if (zitplaats == null || match == null || zitplaats.VakNummerNavigation == null)
@@ -78,11 +77,7 @@ namespace ChampionsLeagueTickets.Controllers
                         Prijs = prijs,
                         Aantal = item.Aantal
                     });
-
-
                 }
-
-               
             }
             return result;
         }
@@ -91,6 +86,5 @@ namespace ChampionsLeagueTickets.Controllers
         {
             HttpContext.Session.SetObject(CartKey, cart);
         }
-
     }
 }

@@ -48,7 +48,7 @@
 
 @if (Model.Prijs.HasValue)
 {
-    <p>prijs : @Model.Prijs</p>
+    <p class="prijsDisplay">Prijs : &#8364; @Model.Prijs</p>
 }
 
 @if (!string.IsNullOrEmpty(Model.GeselecteerdeZitplaatsId))

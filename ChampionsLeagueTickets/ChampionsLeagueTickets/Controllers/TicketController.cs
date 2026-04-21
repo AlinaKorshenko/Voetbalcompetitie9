@@ -38,7 +38,6 @@ namespace Voetbalcompetitie9.Controllers
         }
 
         public async Task<IActionResult> ChooseSeats(string matchID) {
-
             var vakTypes = (await _vakService.GetAllAsync())
              .Select(v => new
                 {
@@ -52,14 +51,16 @@ namespace Voetbalcompetitie9.Controllers
                 MatchID = matchID
             }; 
 
-
             return View(ticketVM);
-
         }
 
         [HttpPost]
         public async Task<IActionResult> ChooseSeats(TicketVM ticketVM)
         {
+            if (!ModelState.IsValid) {
+                return View(ticketVM);
+            }
+
             var vakTypes = (await _vakService.GetAllAsync())
              .Select(v => new
              {
@@ -92,21 +93,16 @@ namespace Voetbalcompetitie9.Controllers
                 ticketVM.StoelenLijst = new SelectList(vrijeStoelen, "ZitplaatsId", "DisplayName", ticketVM.GeselecteerdeZitplaatsId);
             }
 
-
-
-
             return View(ticketVM);
         }
 
         public async Task<IActionResult> OverzichtInfoTicket(TicketVM vm)
         {
-
             var match = await _matchesService.FindByIdAsync(vm.MatchID);
             var thuisTeamNaam = match.ThuisTeam?.Naam;
             var bezoekTeamNaam = match.BezoekendTeam?.Naam;
             var stadionNaam = match.ThuisTeam?.Stadion?.Naam;
             var datum = match.DatumTijdStartMatch;    
-
 
             if (match == null)
             {
@@ -136,6 +132,11 @@ namespace Voetbalcompetitie9.Controllers
         }
 
         public async Task<IActionResult> BevestigTicket(string ZitplaatsID, string MatchID) {
+            if (string.IsNullOrEmpty(ZitplaatsID) || string.IsNullOrEmpty(MatchID))
+            {
+                return BadRequest();
+            }
+
             var cart = HttpContext.Session.GetObject<List<ShoppingCartItemKortVM>>("ShoppingCart")
                        ?? new List<ShoppingCartItemKortVM>();
 
