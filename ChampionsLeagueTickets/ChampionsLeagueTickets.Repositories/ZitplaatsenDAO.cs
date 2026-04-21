@@ -40,9 +40,10 @@ namespace ChampionsLeagueTickets.Repositories
                     .Include(z => z.VakNummerNavigation)
                     .FirstOrDefaultAsync(m => m.ZitplaatsId == Id);
             }
-            catch
+            catch (Exception ex)
             {
-                return null;
+                Console.WriteLine("Error in DAO: " + ex.Message);
+                throw;
             }
         }
 
@@ -53,9 +54,9 @@ namespace ChampionsLeagueTickets.Repositories
                 return await _dbContext.Zitplaatsens
                     .ToListAsync();
             }
-            catch
+            catch (Exception ex)
             {
-                Console.WriteLine("error in DAO");
+                Console.WriteLine("Error in DAO: " + ex.Message);
                 throw;
             }
         }
@@ -77,26 +78,36 @@ namespace ChampionsLeagueTickets.Repositories
 
         public async Task<List<string>> GetRowsForMatchAndSectionAsync(string matchId, string vakNummer)
         {
-            var match = await _dbContext.Matches
-                .Include(m => m.ThuisTeam)
-                .FirstOrDefaultAsync(m => m.MatchId == matchId);
+            try
+            {
+                var match = await _dbContext.Matches
+                    .Include(m => m.ThuisTeam)
+                    .FirstOrDefaultAsync(m => m.MatchId == matchId);
 
-            if (match == null)
-                throw new Exception("Match niet gevonden.");
+                if (match == null)
+                {
+                    throw new Exception("Match niet gevonden.");
+                }
 
-            var stadionId = match.ThuisTeam.StadionId;
+                var stadionId = match.ThuisTeam.StadionId;
 
-            var rijen = await _dbContext.Zitplaatsens
-                .Where(z => z.StadionId == stadionId && z.VakNummer == vakNummer)
-                .Select(z => z.RijNummer)
-                .Distinct()
-                .ToListAsync();
+                var rijen = await _dbContext.Zitplaatsens
+                    .Where(z => z.StadionId == stadionId && z.VakNummer == vakNummer)
+                    .Select(z => z.RijNummer)
+                    .Distinct()
+                    .ToListAsync();
 
-            rijen = rijen
-                .OrderBy(r => ParseNumber(r))
-                .ToList();
+                rijen = rijen
+                    .OrderBy(r => ParseNumber(r))
+                    .ToList();
 
-            return rijen;
+                return rijen;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in DAO: " + ex.Message);
+                throw;
+            }
         }
 
       
