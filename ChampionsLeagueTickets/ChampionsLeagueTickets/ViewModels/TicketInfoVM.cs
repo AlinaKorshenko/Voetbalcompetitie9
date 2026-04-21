@@ -1,6 +1,4 @@
 ﻿using ChampionsLeagueTickets.Domain.EntitiesDB;
-using ChampionsLeagueTickets.Repositories.integrations.VrijeZitplaats.DTO;
-
 namespace ChampionsLeagueTickets.ViewModels
 {
     public class TicketInfoVM

@@ -1,6 +1,5 @@
 ﻿using ChampionsLeagueTickets.Domain.DataDB;
 using ChampionsLeagueTickets.Domain.EntitiesDB;
-using ChampionsLeagueTickets.Repositories.integrations.VrijeZitplaats.DTO;
 using ChampionsLeagueTickets.Repositories.Interfaces;
 using ChampionsLeagueTickets.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;

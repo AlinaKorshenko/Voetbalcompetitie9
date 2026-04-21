@@ -1,5 +1,4 @@
 ﻿using ChampionsLeagueTickets.Domain.EntitiesDB;
-using ChampionsLeagueTickets.Repositories.integrations.VrijeZitplaats.DTO;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Principal;

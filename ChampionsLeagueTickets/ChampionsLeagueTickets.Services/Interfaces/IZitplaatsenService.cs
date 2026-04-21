@@ -1,6 +1,6 @@
 ﻿using ChampionsLeagueTickets.Domain.EntitiesDB;
-using ChampionsLeagueTickets.Repositories.integrations.VrijeZitplaats.DTO;
 using ChampionsLeagueTickets.Repositories.Interfaces;
+using ChampionsLeagueTickets.Services.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
