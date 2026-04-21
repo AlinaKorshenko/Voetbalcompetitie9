@@ -50,7 +50,7 @@ namespace ChampionsLeagueTickets.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to send email to {Email} — {Subject}", email, subject);
-                throw; // belangrijk!
+                throw;
             }
         }
 
