@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -36,9 +37,16 @@ namespace ChampionsLeagueTickets.Repositories
 
             try
             {
-                return await _dbContext.Zitplaatsens
+                var zitplaats = await _dbContext.Zitplaatsens
                     .Include(z => z.VakNummerNavigation)
                     .FirstOrDefaultAsync(m => m.ZitplaatsId == Id);
+
+                if(zitplaats == null)
+                {
+                    throw new Exception("De ingegeven zitplaats is niet gevonden");
+                }
+
+                return zitplaats;
             }
             catch (Exception ex)
             {
@@ -121,7 +129,9 @@ namespace ChampionsLeagueTickets.Repositories
                     .FirstOrDefaultAsync(m => m.MatchId == matchId);
 
                 if (match == null)
+                {
                     throw new Exception("Match niet gevonden.");
+                }
 
                 var stadionId = match.ThuisTeam.StadionId;
                 var matchDate = DateOnly.FromDateTime(match.DatumTijdStartMatch);
