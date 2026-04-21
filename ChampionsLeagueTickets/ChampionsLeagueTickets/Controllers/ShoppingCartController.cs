@@ -32,9 +32,13 @@ namespace ChampionsLeagueTickets.Controllers
 
         public IActionResult AddToCart(ShoppingCartVM vm)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(vm);
+            }
+
             return RedirectToAction("Index");
         }
-
         private async Task<ShoppingCartVM> GetShoppingCart()
         {
             var cartTickets = HttpContext.Session.GetObject<List<ShoppingCartItemKortVM>>(CartKey);
