@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace ChampionsLeagueTickets.Services.Interfaces
 {
-    public interface ITicketPrijsService
+    public interface ITicketPrijsService : IService<ZitplaatsenService>
     {
-
         Task<decimal> GetTicketPrijsByMatchAndSectionAsync(string MatchID, string VakNummer);
     }
 }

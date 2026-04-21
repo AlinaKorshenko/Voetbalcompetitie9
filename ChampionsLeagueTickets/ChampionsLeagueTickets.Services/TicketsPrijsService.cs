@@ -18,9 +18,34 @@ namespace ChampionsLeagueTickets.Services
             _ticketPrijsDAO = ticketPrijsDAO;
         }
 
+        public Task AddAsync(ZitplaatsenService entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteAsync(ZitplaatsenService entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ZitplaatsenService?> FindByIdAsync(string Id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<ZitplaatsenService>?> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<decimal> GetTicketPrijsByMatchAndSectionAsync(string MatchID, string VakNummer)
         {
             return _ticketPrijsDAO.GetTicketPrijsByMatchAndSectionAsync(MatchID, VakNummer);
+        }
+
+        public Task UpdateAsync(ZitplaatsenService entity)
+        {
+            throw new NotImplementedException();
         }
     }
 }
