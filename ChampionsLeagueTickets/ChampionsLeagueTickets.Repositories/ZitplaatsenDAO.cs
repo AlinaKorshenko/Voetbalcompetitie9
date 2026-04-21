@@ -114,55 +114,61 @@ namespace ChampionsLeagueTickets.Repositories
 
         public async Task<List<ZitplaatsDto>> GetSeatsForMatchSectionAndRowAsync(string matchId, string vakNummer, string rijNummer)
         {
-            var match = await _dbContext.Matches
-           .Include(m => m.ThuisTeam)
-           .FirstOrDefaultAsync(m => m.MatchId == matchId);
+            try
+            {
+                var match = await _dbContext.Matches
+                    .Include(m => m.ThuisTeam)
+                    .FirstOrDefaultAsync(m => m.MatchId == matchId);
 
-            if (match == null)
-                throw new Exception("Match niet gevonden.");
+                if (match == null)
+                    throw new Exception("Match niet gevonden.");
 
-            var stadionId = match.ThuisTeam.StadionId;
-            var matchDate = DateOnly.FromDateTime(match.DatumTijdStartMatch);
+                var stadionId = match.ThuisTeam.StadionId;
+                var matchDate = DateOnly.FromDateTime(match.DatumTijdStartMatch);
 
-            var seizoen = await _dbContext.Seizoenens
-    .FirstOrDefaultAsync(s =>
-        s.StartDatum <= matchDate &&
-        s.EindDatum >= matchDate);
+                var seizoen = await _dbContext.Seizoenens
+                    .FirstOrDefaultAsync(s =>
+                    s.StartDatum <= matchDate &&
+                    s.EindDatum >= matchDate);
 
-            var seizoenId = seizoen?.SeizoenId;
+                var seizoenId = seizoen?.SeizoenId;
 
-            var seats = await _dbContext.Zitplaatsens
-                .Where(z =>
-                    z.StadionId == stadionId &&
-                    z.VakNummer == vakNummer &&
-                    z.RijNummer == rijNummer)
-                .Select(z => new ZitplaatsDto
-                {
-                    ZitplaatsId = z.ZitplaatsId,
-                    VakNummer = z.VakNummer,
-                    RijNummer = z.RijNummer,
-                    StoelNummer = z.StoelNummer,
-                    IsBezet =
-                        (seizoenId != null &&
-                         _dbContext.Abonnementens.Any(a =>
-                            a.ZitplaatsId == z.ZitplaatsId &&
-                            a.SeizoenId == seizoenId &&
-                            _dbContext.Orderlijnens.Any(ol => ol.AbonnementId == a.AbonnementId)))
-                        ||
-                        _dbContext.Tickets.Any(t =>
-                            t.MatchId == matchId &&
-                            t.ZitplaatsId == z.ZitplaatsId &&
-                            _dbContext.Orderlijnens.Any(ol => ol.TicketId == t.TicketId))
-                })
-                .ToListAsync();
+                var seats = await _dbContext.Zitplaatsens
+                    .Where(z =>
+                        z.StadionId == stadionId &&
+                        z.VakNummer == vakNummer &&
+                        z.RijNummer == rijNummer)
+                    .Select(z => new ZitplaatsDto
+                    {
+                        ZitplaatsId = z.ZitplaatsId,
+                        VakNummer = z.VakNummer,
+                        RijNummer = z.RijNummer,
+                        StoelNummer = z.StoelNummer,
+                        IsBezet =
+                            (seizoenId != null &&
+                             _dbContext.Abonnementens.Any(a =>
+                                a.ZitplaatsId == z.ZitplaatsId &&
+                                a.SeizoenId == seizoenId &&
+                                _dbContext.Orderlijnens.Any(ol => ol.AbonnementId == a.AbonnementId)))
+                            ||
+                            _dbContext.Tickets.Any(t =>
+                                t.MatchId == matchId &&
+                                t.ZitplaatsId == z.ZitplaatsId &&
+                                _dbContext.Orderlijnens.Any(ol => ol.TicketId == t.TicketId))
+                    })
+                    .ToListAsync();
 
-            seats = seats
-                .OrderBy(z => ParseNumber(z.StoelNummer))
-                .ToList();
+                seats = seats
+                    .OrderBy(z => ParseNumber(z.StoelNummer))
+                    .ToList();
 
-            return seats;
-
-
+                return seats;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in DAO: " + ex.Message);
+                throw;
+            }
         }
 
         private static int ParseNumber(string value)

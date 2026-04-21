@@ -66,5 +66,5 @@ namespace ChampionsLeagueTickets.Repositories
             throw new NotImplementedException();
         }
     }
-    }
+}
 

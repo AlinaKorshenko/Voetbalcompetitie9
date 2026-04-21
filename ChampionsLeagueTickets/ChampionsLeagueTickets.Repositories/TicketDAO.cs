@@ -39,8 +39,15 @@ namespace ChampionsLeagueTickets.Repositories
         {
             try
             {
-                return await _dbContext.Tickets
+                var tickets = await _dbContext.Tickets
                     .FirstOrDefaultAsync(t => t.MatchId == matchId && t.ZitplaatsId == seatId);
+
+                if(tickets == null)
+                {
+                    throw new Exception("Tickets niet gevonden.");
+                }
+
+                return tickets;
             }
             catch (Exception ex)
             {

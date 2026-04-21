@@ -44,6 +44,8 @@ namespace ChampionsLeagueTickets.Repositories
                 {
                     throw new Exception("Match niet gevonden.");
                 }
+
+                return matches;
             }
             catch
             {
