@@ -34,11 +34,16 @@ namespace ChampionsLeagueTickets.Repositories
         {
             try
             {
-                return await _dbContext.Matches
+                var matches = await _dbContext.Matches
                     .Include(m => m.ThuisTeam)
                     .ThenInclude(t => t.Stadion)
                     .Include(m => m.BezoekendTeam)
                     .FirstOrDefaultAsync(m => m.MatchId == Id);
+
+                if (matches == null)
+                {
+                    throw new Exception("Match niet gevonden.");
+                }
             }
             catch
             {
