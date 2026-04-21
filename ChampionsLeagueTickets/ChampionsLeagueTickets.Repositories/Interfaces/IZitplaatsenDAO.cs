@@ -14,6 +14,6 @@ namespace ChampionsLeagueTickets.Services.Interfaces
         Task<int> GetCountZitplaatsenByVakTypeAndStadion(Stadion stadion, VakType vaktype);
         Task<List<string>> GetRowsForMatchAndSectionAsync(string matchId, string vakNummer);
 
-        Task<List<ZitplaatsDto>> GetSeatsForMatchSectionAndRowAsync(string matchId, string vakNummer, string rijNummer);
+        Task<List<(Zitplaatsen Zitplaats, bool IsBezet)>> GetSeatsForMatchSectionAndRowAsync(string matchId, string vakNummer, string rijNummer);
     }
 }

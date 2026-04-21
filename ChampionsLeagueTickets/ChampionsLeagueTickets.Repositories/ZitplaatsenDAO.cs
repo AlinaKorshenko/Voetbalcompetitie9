@@ -181,7 +181,6 @@ namespace ChampionsLeagueTickets.Repositories
         //    }
         //}
 
-        // In ZitplaatsenDAO — no more ZitplaatsDto reference
         public async Task<List<(Zitplaatsen Zitplaats, bool IsBezet)>> GetSeatsForMatchSectionAndRowAsync(
             string matchId, string vakNummer, string rijNummer)
         {
@@ -227,7 +226,6 @@ namespace ChampionsLeagueTickets.Repositories
                 .Select(z => (z.Zitplaats, z.IsBezet))
                 .ToList();
         }
-
 
         private static int ParseNumber(string value)
         {
