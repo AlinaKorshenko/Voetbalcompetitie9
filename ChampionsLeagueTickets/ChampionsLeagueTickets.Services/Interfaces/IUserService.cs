@@ -1,4 +1,4 @@
-﻿using ChampionsLeagueTickets.Domain.DTO;
+﻿using ChampionsLeagueTickets.Services.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;

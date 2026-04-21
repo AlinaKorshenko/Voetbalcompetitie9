@@ -1,5 +1,5 @@
 ﻿using ChampionsLeagueTickets.Domain.DataDB;
-using ChampionsLeagueTickets.Domain.DTO;
+using ChampionsLeagueTickets.Services.DTO;
 using ChampionsLeagueTickets.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +20,7 @@ namespace ChampionsLeagueTickets.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<UserInfoResponse>> GetAllUsersAsync()
+        async Task<IEnumerable<UserInfoResponse?>> IUserService.GetAllUsersAsync()
         {
             try
             {

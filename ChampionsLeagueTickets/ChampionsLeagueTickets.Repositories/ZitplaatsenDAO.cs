@@ -118,68 +118,116 @@ namespace ChampionsLeagueTickets.Repositories
             }
         }
 
-      
 
-        public async Task<List<ZitplaatsDto>> GetSeatsForMatchSectionAndRowAsync(string matchId, string vakNummer, string rijNummer)
+
+        //public async Task<List<ZitplaatsDto>> GetSeatsForMatchSectionAndRowAsync(string matchId, string vakNummer, string rijNummer)
+        //{
+        //    try
+        //    {
+        //        var match = await _dbContext.Matches
+        //            .Include(m => m.ThuisTeam)
+        //            .FirstOrDefaultAsync(m => m.MatchId == matchId);
+
+        //        if (match == null)
+        //        {
+        //            throw new Exception("Match niet gevonden.");
+        //        }
+
+        //        var stadionId = match.ThuisTeam.StadionId;
+        //        var matchDate = DateOnly.FromDateTime(match.DatumTijdStartMatch);
+
+        //        var seizoen = await _dbContext.Seizoenens
+        //            .FirstOrDefaultAsync(s =>
+        //            s.StartDatum <= matchDate &&
+        //            s.EindDatum >= matchDate);
+
+        //        var seizoenId = seizoen?.SeizoenId;
+
+        //        var seats = await _dbContext.Zitplaatsens
+        //            .Where(z =>
+        //                z.StadionId == stadionId &&
+        //                z.VakNummer == vakNummer &&
+        //                z.RijNummer == rijNummer)
+        //            .Select(z => new ZitplaatsDto
+        //            {
+        //                ZitplaatsId = z.ZitplaatsId,
+        //                VakNummer = z.VakNummer,
+        //                RijNummer = z.RijNummer,
+        //                StoelNummer = z.StoelNummer,
+        //                IsBezet =
+        //                    (seizoenId != null &&
+        //                     _dbContext.Abonnementens.Any(a =>
+        //                        a.ZitplaatsId == z.ZitplaatsId &&
+        //                        a.SeizoenId == seizoenId &&
+        //                        _dbContext.Orderlijnens.Any(ol => ol.AbonnementId == a.AbonnementId)))
+        //                    ||
+        //                    _dbContext.Tickets.Any(t =>
+        //                        t.MatchId == matchId &&
+        //                        t.ZitplaatsId == z.ZitplaatsId &&
+        //                        _dbContext.Orderlijnens.Any(ol => ol.TicketId == t.TicketId))
+        //            })
+        //            .ToListAsync();
+
+        //        seats = seats
+        //            .OrderBy(z => ParseNumber(z.StoelNummer))
+        //            .ToList();
+
+        //        return seats;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine("Error in DAO: " + ex.Message);
+        //        throw;
+        //    }
+        //}
+
+        // In ZitplaatsenDAO — no more ZitplaatsDto reference
+        public async Task<List<(Zitplaatsen Zitplaats, bool IsBezet)>> GetSeatsForMatchSectionAndRowAsync(
+            string matchId, string vakNummer, string rijNummer)
         {
-            try
-            {
-                var match = await _dbContext.Matches
-                    .Include(m => m.ThuisTeam)
-                    .FirstOrDefaultAsync(m => m.MatchId == matchId);
+            var match = await _dbContext.Matches
+                .Include(m => m.ThuisTeam)
+                .FirstOrDefaultAsync(m => m.MatchId == matchId);
 
-                if (match == null)
+            if (match == null)
+                throw new Exception("Match niet gevonden.");
+
+            var stadionId = match.ThuisTeam.StadionId;
+            var matchDate = DateOnly.FromDateTime(match.DatumTijdStartMatch);
+
+            var seizoen = await _dbContext.Seizoenens
+                .FirstOrDefaultAsync(s => s.StartDatum <= matchDate && s.EindDatum >= matchDate);
+
+            var seizoenId = seizoen?.SeizoenId;
+
+            var seats = await _dbContext.Zitplaatsens
+                .Where(z =>
+                    z.StadionId == stadionId &&
+                    z.VakNummer == vakNummer &&
+                    z.RijNummer == rijNummer)
+                .Select(z => new
                 {
-                    throw new Exception("Match niet gevonden.");
-                }
+                    Zitplaats = z,
+                    IsBezet =
+                        (seizoenId != null &&
+                         _dbContext.Abonnementens.Any(a =>
+                            a.ZitplaatsId == z.ZitplaatsId &&
+                            a.SeizoenId == seizoenId &&
+                            _dbContext.Orderlijnens.Any(ol => ol.AbonnementId == a.AbonnementId)))
+                        ||
+                        _dbContext.Tickets.Any(t =>
+                            t.MatchId == matchId &&
+                            t.ZitplaatsId == z.ZitplaatsId &&
+                            _dbContext.Orderlijnens.Any(ol => ol.TicketId == t.TicketId))
+                })
+                .ToListAsync();
 
-                var stadionId = match.ThuisTeam.StadionId;
-                var matchDate = DateOnly.FromDateTime(match.DatumTijdStartMatch);
-
-                var seizoen = await _dbContext.Seizoenens
-                    .FirstOrDefaultAsync(s =>
-                    s.StartDatum <= matchDate &&
-                    s.EindDatum >= matchDate);
-
-                var seizoenId = seizoen?.SeizoenId;
-
-                var seats = await _dbContext.Zitplaatsens
-                    .Where(z =>
-                        z.StadionId == stadionId &&
-                        z.VakNummer == vakNummer &&
-                        z.RijNummer == rijNummer)
-                    .Select(z => new ZitplaatsDto
-                    {
-                        ZitplaatsId = z.ZitplaatsId,
-                        VakNummer = z.VakNummer,
-                        RijNummer = z.RijNummer,
-                        StoelNummer = z.StoelNummer,
-                        IsBezet =
-                            (seizoenId != null &&
-                             _dbContext.Abonnementens.Any(a =>
-                                a.ZitplaatsId == z.ZitplaatsId &&
-                                a.SeizoenId == seizoenId &&
-                                _dbContext.Orderlijnens.Any(ol => ol.AbonnementId == a.AbonnementId)))
-                            ||
-                            _dbContext.Tickets.Any(t =>
-                                t.MatchId == matchId &&
-                                t.ZitplaatsId == z.ZitplaatsId &&
-                                _dbContext.Orderlijnens.Any(ol => ol.TicketId == t.TicketId))
-                    })
-                    .ToListAsync();
-
-                seats = seats
-                    .OrderBy(z => ParseNumber(z.StoelNummer))
-                    .ToList();
-
-                return seats;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error in DAO: " + ex.Message);
-                throw;
-            }
+            return seats
+                .OrderBy(z => ParseNumber(z.Zitplaats.StoelNummer))
+                .Select(z => (z.Zitplaats, z.IsBezet))
+                .ToList();
         }
+
 
         private static int ParseNumber(string value)
         {
