@@ -28,17 +28,23 @@ namespace ChampionsLeagueTickets.Controllers.API
         public async Task<IActionResult> Post([FromBody] LoginDto model)
         {
             if (!ModelState.IsValid)
+            {
                 return BadRequest(ModelState);
+            }
 
             var user = await _userManager.FindByEmailAsync(model.Email);
 
             if (user == null)
+            {
                 return Unauthorized("Invalid login");
+            }
 
             var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, false, false);
 
             if (!result.Succeeded)
+            {
                 return Unauthorized("Invalid login");
+            }
 
             var token = await GenerateJwtToken(model.Email, user);
 
@@ -80,6 +86,7 @@ namespace ChampionsLeagueTickets.Controllers.API
         {
             [Required]
             public string? Email { get; set; }
+
             [Required]
             public string? Password { get; set; }
         }
