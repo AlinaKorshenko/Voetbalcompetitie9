@@ -42,17 +42,25 @@ namespace ChampionsLeagueTickets.Repositories
                 return await _dbContext.Tickets
                     .FirstOrDefaultAsync(t => t.MatchId == matchId && t.ZitplaatsId == seatId);
             }
-            catch
+            catch (Exception ex)
             {
-                return null;
+                Console.WriteLine("Error in DAO: " + ex.Message);
+                throw;
             }
         }
 
         public async Task<IEnumerable<Ticket>?> GetAllAsync()
         {
-            return await _dbContext.Tickets
-                     
-                   .ToListAsync();
+            try
+            {
+                return await _dbContext.Tickets
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in DAO: " + ex.Message);
+                throw;
+            }
         }
 
         public Task UpdateAsync(Ticket entity)

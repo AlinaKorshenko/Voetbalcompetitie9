@@ -41,9 +41,9 @@ namespace ChampionsLeagueTickets.Repositories
                 return await _dbContext.Abonnementens
                     .ToListAsync();
             }
-            catch
+            catch(Exception ex)
             {
-                Console.WriteLine("error in DAO");
+                Console.WriteLine("Error in DAO: " + ex.Message);
                 throw;
             }
         }

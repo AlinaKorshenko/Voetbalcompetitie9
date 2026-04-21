@@ -43,9 +43,9 @@ namespace ChampionsLeagueTickets.Repositories
                     .Include(ap => ap.Seizoen)
                     .ToListAsync();
             }
-            catch
+            catch (Exception ex)
             {
-                Console.WriteLine("error in DAO");
+                Console.WriteLine("Error in DAO: " + ex.Message);
                 throw;
             }
         }

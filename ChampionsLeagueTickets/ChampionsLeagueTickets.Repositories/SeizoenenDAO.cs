@@ -41,9 +41,9 @@ namespace ChampionsLeagueTickets.Repositories
                 return await _dbContext.Seizoenens
                     .ToListAsync();
             }
-            catch
+            catch (Exception ex)
             {
-                Console.WriteLine("error in DAO");
+                Console.WriteLine("Error in DAO: " + ex.Message);
                 throw;
             }
         }
@@ -58,9 +58,9 @@ namespace ChampionsLeagueTickets.Repositories
                     .Where(s => s.EindDatum.Year >= currentYear)
                     .ToListAsync();
             }
-            catch
+            catch (Exception ex)
             {
-                Console.WriteLine("error in DAO");
+                Console.WriteLine("Error in DAO: " + ex.Message);
                 throw;
             }
         }

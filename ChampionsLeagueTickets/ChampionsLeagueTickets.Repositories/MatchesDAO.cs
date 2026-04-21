@@ -57,9 +57,9 @@ namespace ChampionsLeagueTickets.Repositories
                     .Where(m => m.DatumTijdStartMatch > DateTime.Now)
                     .ToListAsync();
             }
-            catch
+            catch (Exception ex)
             {
-                Console.WriteLine("error in DAO");
+                Console.WriteLine("Error in DAO: " + ex.Message);
                 throw;
             }
         }
@@ -75,9 +75,9 @@ namespace ChampionsLeagueTickets.Repositories
                     .Where(match => match.ThuisTeamId == homeTeamId && match.BezoekendTeamId == awayTeamId)
                     .ToListAsync();
             }
-            catch
+            catch (Exception ex)
             {
-                Console.WriteLine("error in DAO");
+                Console.WriteLine("Error in DAO: " + ex.Message);
                 throw;
             }
         }

@@ -1,4 +1,5 @@
 ﻿using ChampionsLeagueTickets.Domain.DataDB;
+using ChampionsLeagueTickets.Domain.EntitiesDB;
 using ChampionsLeagueTickets.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -18,12 +19,33 @@ namespace ChampionsLeagueTickets.Repositories
         {
             _dbContext = dbContext;
         }
+
+        public Task AddAsync(TicketsPrijs entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteAsync(TicketsPrijs entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<TicketsPrijs?> FindByIdAsync(string Id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<TicketsPrijs>?> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<decimal> GetTicketPrijsByMatchAndSectionAsync(string MatchID, string VakNummer)
         {
 
             try {
                 var ticket = await _dbContext.TicketsPrijs
-    .FirstOrDefaultAsync(tp => tp.MatchId == MatchID && tp.VakNummer == VakNummer);
+                    .FirstOrDefaultAsync(tp => tp.MatchId == MatchID && tp.VakNummer == VakNummer);
 
                 if (ticket == null)
                 {
@@ -32,12 +54,17 @@ namespace ChampionsLeagueTickets.Repositories
 
                 return ticket.Prijs;
             }
-            catch
+            catch (Exception ex)
             {
-                Console.WriteLine("error in DAO");
+                Console.WriteLine("Error in DAO: " + ex.Message);
                 throw;
             }
         }
-}
+
+        public Task UpdateAsync(TicketsPrijs entity)
+        {
+            throw new NotImplementedException();
+        }
+    }
     }
 
