@@ -44,7 +44,7 @@ namespace ChampionsLeagueTickets.Repositories
 
                 if(tickets == null)
                 {
-                    throw new Exception("Tickets niet gevonden.");
+                    throw new Exception("Tickets met het ingegeven match- en seatId niet gevonden.");
                 }
 
                 return tickets;
