@@ -5,15 +5,17 @@ using ChampionsLeagueTickets.Repositories;
 using ChampionsLeagueTickets.Repositories.Interfaces;
 using ChampionsLeagueTickets.Services;
 using ChampionsLeagueTickets.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.OpenApi;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using System.Diagnostics;
+using Microsoft.OpenApi;
 using Microsoft.OpenApi.Models;
+using System.Diagnostics;
+using System.Globalization;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,6 +46,13 @@ builder.Services.AddTransient<Microsoft.AspNetCore.Identity.UI.Services.IEmailSe
 builder.Services.AddRazorPages();
 
 builder.Services.AddControllers();
+
+//localization
+builder.Services.AddControllersWithViews()
+    .AddViewLocalization()
+    .AddDataAnnotationsLocalization();
+
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
 //Swagger
 builder.Services.AddSwaggerGen(c =>
@@ -204,9 +213,21 @@ catch (Exception ex)
     Debug.WriteLine(ex.Message);
 }
 
-
-
 var app = builder.Build();
+
+//localization
+var supportedLanguages = new[] {
+    new CultureInfo("nl"),
+    new CultureInfo("en"),
+    new CultureInfo("fr")
+};
+
+app.UseRequestLocalization(new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture("nl"),
+    SupportedCultures = supportedLanguages,
+    SupportedUICultures = supportedLanguages
+});
 
 //rollen
 using (var scope = app.Services.CreateScope())
