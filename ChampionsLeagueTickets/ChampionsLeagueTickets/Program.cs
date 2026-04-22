@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using Microsoft.OpenApi.Models;
@@ -47,12 +48,28 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddControllers();
 
-//localization
-builder.Services.AddControllersWithViews()
-    .AddViewLocalization()
-    .AddDataAnnotationsLocalization();
+//Localization
+builder.Services.AddLocalization();
 
-builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[]
+    {
+        new CultureInfo("nl"),
+        new CultureInfo("en"),
+        new CultureInfo("fr")
+    };
+
+    options.DefaultRequestCulture = new RequestCulture("nl");
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+
+    options.RequestCultureProviders = new List<IRequestCultureProvider>
+    {
+        new QueryStringRequestCultureProvider(),
+        new CookieRequestCultureProvider()
+    };
+});
 
 //Swagger
 builder.Services.AddSwaggerGen(c =>
@@ -215,20 +232,6 @@ catch (Exception ex)
 
 var app = builder.Build();
 
-//localization
-var supportedLanguages = new[] {
-    new CultureInfo("nl"),
-    new CultureInfo("en"),
-    new CultureInfo("fr")
-};
-
-app.UseRequestLocalization(new RequestLocalizationOptions
-{
-    DefaultRequestCulture = new RequestCulture("nl"),
-    SupportedCultures = supportedLanguages,
-    SupportedUICultures = supportedLanguages
-});
-
 //rollen
 using (var scope = app.Services.CreateScope())
 {
@@ -264,6 +267,8 @@ app.UseSwaggerUI();
 app.UseAuthentication();
 app.UseAuthorization();
 
+var locOptions = app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value;
+app.UseRequestLocalization(locOptions);
 
 app.MapStaticAssets();
 
