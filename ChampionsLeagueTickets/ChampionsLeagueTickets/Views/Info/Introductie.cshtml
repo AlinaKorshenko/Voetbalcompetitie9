@@ -1,4 +1,8 @@
-﻿<link href="~/css/homepage.css" rel="stylesheet" />
+﻿@using ChampionsLeagueTickets.Resources
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizer
+
+<link href="~/css/homepage.css" rel="stylesheet" />
 
 <div class="ucl">
     <h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Champions League homepagina</h2>
@@ -32,7 +36,7 @@
             </div>
 
             <h1>
-                Het Grootste<br />
+                @Localizer["TitlePartOne"]<br />
                 <span class="gold">Podium</span> van<br />
                 <span class="blue">Europa</span>
             </h1>
