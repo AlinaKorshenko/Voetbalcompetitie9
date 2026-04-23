@@ -37,20 +37,21 @@
 
             <h1>
                 @Localizer["TitlePartOne"]<br />
-                <span class="gold">Podium</span> van<br />
-                <span class="blue">Europa</span>
+                <span class="gold">@Localizer["TitlePartTwo"]</span>
+                @Localizer["TitlePartThree"]<br />
+                <span class="blue">@Localizer["TitlePartFour"]</span>
             </h1>
             <p class="hero-sub">
-                Alle topteams. De iconische beker.<br />
-                <strong>En ú kunt erbij zijn. Mis het niet.</strong><br />
-                Beleef de spanning van elke minuut, van de eerste aftrap tot de laatste seconde.
+                @Localizer["SubTitlePartOne"]<br />
+                <strong>@Localizer["SubTitlePartTwo"]</strong><br />
+                @Localizer["SubTitlePartThree"]
             </p>
             <div class="cta-row">
                 <a class="btn-ucl btn-gold" asp-controller="Ticket" asp-action="Matches">
-                    Wedstrijden bekijken
+                    @Localizer["ViewMatches"]
                 </a>
                 <a class="btn-ucl btn-gold" asp-controller="Info" asp-action="OverOns">
-                    Over Ons
+                    @Localizer["AboutUs"]
                 </a>
             </div>
         </div>
@@ -64,11 +65,10 @@
 
     <section class="info-band">
         <div class="info-text">
-            <div class="section-tag">Het toernooi</div>
-            <h2>32 clubs. Één beker.</h2>
+            <div class="section-tag">@Localizer["TournamentInfoTitle"]</div>
+            <h2>@Localizer["TournamentInfoSubTitle"]</h2>
             <p>
-                Van de groepsfase tot de iconische finale — elke wedstrijd telt. De beste clubs uit Europa strijden om de meest begeerde prijs in het clubvoetbal.
-                Legendarische avonden, onvergetelijke doelpunten en historische comebacks maken dit toernooi uniek in de voetbalwereld.
+                @Localizer["TournamentInfoDescription"]
             </p>
         </div>
         <div class="info-img">
@@ -79,12 +79,12 @@
     <div class="divider"></div>
 
     <section class="matches-band">
-        <div class="section-tag">Agenda</div>
-        <h2>Mis de Topwedstrijden Niet</h2>
-        <p>Bekijk alle aankomende wedstrijden en bestel uw tickets.</p>
-        <p>Van groepsduels tot knock-outfases — elke match brengt spanning, drama en wereldklasse voetbal op het hoogste niveau.</p>
+        <div class="section-tag">@Localizer["AgendaInfoTitle"]</div>
+        <h2>@Localizer["AgendaInfoSubTitle"]</h2>
+        <p>@Localizer["AgendaInfoDescriptionPartOne"]</p>
+        <p>@Localizer["AgendaInfoDescriptionPartTwo"]</p>
         <a asp-controller="Ticket" asp-action="Matches" class="btn-ucl btn-gold">
-            Wedstrijden
+            @Localizer["Matches"]
         </a>
     </section>
 </div>

@@ -117,7 +117,55 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AboutUs" xml:space="preserve">
+    <value>Over ons</value>
+  </data>
+  <data name="AgendaInfoDescriptionPartOne" xml:space="preserve">
+    <value>Bekijk alle aankomende wedstrijden en bestel uw tickets.</value>
+  </data>
+  <data name="AgendaInfoDescriptionPartTwo" xml:space="preserve">
+    <value>Van groepsduels tot knock-outfases — elke match brengt spanning, drama en wereldklasse voetbal op het hoogste niveau.</value>
+  </data>
+  <data name="AgendaInfoSubTitle" xml:space="preserve">
+    <value>Mis de Topwedstrijden niet</value>
+  </data>
+  <data name="AgendaInfoTitle" xml:space="preserve">
+    <value>Agenda</value>
+  </data>
+  <data name="Matches" xml:space="preserve">
+    <value>Wedstrijden</value>
+  </data>
+  <data name="SubTitlePartOne" xml:space="preserve">
+    <value>Alle topteams. De iconische beker.</value>
+  </data>
+  <data name="SubTitlePartThree" xml:space="preserve">
+    <value>Beleef de spanning van elke minuut, van de eerste aftrap tot de laatste seconde.</value>
+  </data>
+  <data name="SubTitlePartTwo" xml:space="preserve">
+    <value>En ú kunt erbij zijn. Mis het niet.</value>
+  </data>
+  <data name="TitlePartFour" xml:space="preserve">
+    <value>Europa</value>
+  </data>
   <data name="TitlePartOne" xml:space="preserve">
-    <value>The Greatest</value>
+    <value>Het Grootste</value>
+  </data>
+  <data name="TitlePartThree" xml:space="preserve">
+    <value>Van</value>
+  </data>
+  <data name="TitlePartTwo" xml:space="preserve">
+    <value>Podium</value>
+  </data>
+  <data name="TournamentInfoDescription" xml:space="preserve">
+    <value>Van de groepsfase tot de iconische finale — elke wedstrijd telt. De beste clubs uit Europa strijden om de meest begeerde prijs in het clubvoetbal. Legendarische avonden, onvergetelijke doelpunten en historische comebacks maken dit toernooi uniek in de voetbalwereld.</value>
+  </data>
+  <data name="TournamentInfoSubTitle" xml:space="preserve">
+    <value>32 clubs. Één beker.</value>
+  </data>
+  <data name="TournamentInfoTitle" xml:space="preserve">
+    <value>Het toernooi</value>
+  </data>
+  <data name="ViewMatches" xml:space="preserve">
+    <value>Wedstrijden bekijken</value>
   </data>
 </root>

@@ -117,7 +117,55 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AboutUs" xml:space="preserve">
+    <value>À propos de nous</value>
+  </data>
+  <data name="AgendaInfoDescriptionPartOne" xml:space="preserve">
+    <value>Consultez tous les matchs à venir et commandez vos billets.</value>
+  </data>
+  <data name="AgendaInfoDescriptionPartTwo" xml:space="preserve">
+    <value>Des matchs de poule aux phases éliminatoires, chaque rencontre promet du suspense, du suspense et du football de classe mondiale au plus haut niveau.</value>
+  </data>
+  <data name="AgendaInfoSubTitle" xml:space="preserve">
+    <value>Ne manquez pas les meilleurs Matchs</value>
+  </data>
+  <data name="AgendaInfoTitle" xml:space="preserve">
+    <value>Ordre du jour</value>
+  </data>
+  <data name="Matches" xml:space="preserve">
+    <value>Les Matchs</value>
+  </data>
+  <data name="SubTitlePartOne" xml:space="preserve">
+    <value>Toutes les meilleures équipes. La coupe mythique.</value>
+  </data>
+  <data name="SubTitlePartThree" xml:space="preserve">
+    <value>Vivez l'intensité de chaque minute, du coup d'envoi à la dernière seconde.</value>
+  </data>
+  <data name="SubTitlePartTwo" xml:space="preserve">
+    <value>Et vous pouvez y être. Ne ratez pas ça.</value>
+  </data>
+  <data name="TitlePartFour" xml:space="preserve">
+    <value>d'Europe</value>
+  </data>
   <data name="TitlePartOne" xml:space="preserve">
-    <value>Le Plus Grand</value>
+    <value>La Plus Grande</value>
+  </data>
+  <data name="TitlePartThree" xml:space="preserve">
+    <value> </value>
+  </data>
+  <data name="TitlePartTwo" xml:space="preserve">
+    <value>Scène</value>
+  </data>
+  <data name="TournamentInfoDescription" xml:space="preserve">
+    <value>Des phases de groupes à la finale mythique, chaque match compte. Les meilleurs clubs d'Europe s'affrontent pour le trophée le plus prestigieux du football de clubs. Des soirées légendaires, des buts inoubliables et des remontées historiques font de ce tournoi un événement unique dans le monde du football.</value>
+  </data>
+  <data name="TournamentInfoSubTitle" xml:space="preserve">
+    <value>32 clubs. Une coupe.</value>
+  </data>
+  <data name="TournamentInfoTitle" xml:space="preserve">
+    <value>Le tournoi</value>
+  </data>
+  <data name="ViewMatches" xml:space="preserve">
+    <value>Les matches</value>
   </data>
 </root>
