@@ -120,6 +120,9 @@
   <data name="AboutUs" xml:space="preserve">
     <value>About us</value>
   </data>
+  <data name="AboutUsDescription" xml:space="preserve">
+    <value>We are students at a university of applied sciences studying Applied Informatics with a specialization in Software Development. As part of our study project, we have developed this web application. The goal of this project is to improve our programming skills and gain practical experience in developing modern web applications. During this project, we work together in a team to design and develop a platform where supporters can easily watch football matches and purchase tickets or season tickets. We use various technologies and programming languages ​​to create a user-friendly, clear, and modern website. This project helps us gain experience in software development, teamwork, and building realistic digital solutions.</value>
+  </data>
   <data name="AgendaInfoDescriptionPartOne" xml:space="preserve">
     <value>View all upcoming matches and order your tickets.</value>
   </data>

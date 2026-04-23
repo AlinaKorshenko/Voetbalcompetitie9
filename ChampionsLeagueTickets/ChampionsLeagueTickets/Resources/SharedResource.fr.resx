@@ -120,6 +120,9 @@
   <data name="AboutUs" xml:space="preserve">
     <value>À propos de nous</value>
   </data>
+  <data name="AboutUsDescription" xml:space="preserve">
+    <value>Nous sommes étudiants en informatique appliquée, spécialisés en développement logiciel, dans une haute école spécialisée. Dans le cadre de notre projet d'études, nous avons développé cette application web. L'objectif de ce projet est de perfectionner nos compétences en programmation et d'acquérir une expérience pratique du développement d'applications web modernes. Nous avons travaillé en équipe pour concevoir et développer une plateforme permettant aux supporters de regarder facilement les matchs de football et d'acheter des billets ou des abonnements. Nous avons utilisé différentes technologies et langages de programmation pour créer un site web convivial, clair et moderne. Ce projet nous a permis d'acquérir de l'expérience en développement logiciel, en travail d'équipe et en création de solutions numériques concrètes.</value>
+  </data>
   <data name="AgendaInfoDescriptionPartOne" xml:space="preserve">
     <value>Consultez tous les matchs à venir et commandez vos billets.</value>
   </data>
