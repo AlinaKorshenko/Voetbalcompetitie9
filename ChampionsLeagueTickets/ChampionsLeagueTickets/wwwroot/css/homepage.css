@@ -7,6 +7,14 @@
     background: #0d0e1a;
     color: #e8eaf6;
     overflow: hidden;
+    position: relative;
+}
+
+.lang-switch {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
 }
 
 .hero {

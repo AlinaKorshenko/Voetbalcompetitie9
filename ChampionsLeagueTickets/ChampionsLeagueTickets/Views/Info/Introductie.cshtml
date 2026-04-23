@@ -1,10 +1,24 @@
 ﻿@using ChampionsLeagueTickets.Resources
+@using Microsoft.AspNetCore.Localization
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<SharedResource> Localizer
+
+@{
+    var cultureFeature = Context.Features.Get<IRequestCultureFeature>();
+    var currentCulture = cultureFeature?.RequestCulture.Culture.Name ?? "nl";
+}
 
 <link href="~/css/homepage.css" rel="stylesheet" />
 
 <div class="ucl">
+    <div class="lang-switch">
+        <select onchange="setCulture(this.value)">
+            <option value="nl" selected="@(currentCulture == "nl")">NL</option>
+            <option value="fr" selected="@(currentCulture == "fr")">FR</option>
+            <option value="en" selected="@(currentCulture == "en")">EN</option>
+        </select>
+    </div>
+
     <h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Champions League homepagina</h2>
 
     <section class="hero">
@@ -89,6 +103,13 @@
     </section>
 </div>
 
+<script>
+    function setCulture(culture) {
+        const url = new URL(window.location.href);
+        url.searchParams.set("culture", culture);
+        window.location.href = url.toString();
+    }
+</script>
 @if (TempData["CartMessage"] != null)
 {
     <script>
