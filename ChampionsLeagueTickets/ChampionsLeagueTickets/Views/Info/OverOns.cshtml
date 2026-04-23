@@ -5,14 +5,35 @@
 
 @{
     ViewData["Title"] = "AboutUs";
+
+    var cultureFeature = Context.Features.Get<IRequestCultureFeature>();
+    var currentCulture = cultureFeature?.RequestCulture.Culture.Name ?? "nl";
 }
 
-<h1>@Localizer["AboutUs"]</h1>
-<div class="blockIntro">
-<div class="textBlockIntro">
-        <p>@Localizer["AboutUsDescription"]</p>
-</div>
-<div class="imgBlockIntro">
-<img  src="~/images/developers.png" />
-</div>
-</div>
+<main class="aboutUs">
+    <div class="lang-switch">
+        <select onchange="setCulture(this.value)">
+            <option value="nl" selected="@(currentCulture == "nl")">NL</option>
+            <option value="fr" selected="@(currentCulture == "fr")">FR</option>
+            <option value="en" selected="@(currentCulture == "en")">EN</option>
+        </select>
+    </div>
+
+    <h1>@Localizer["AboutUs"]</h1>
+    <div class="blockIntro">
+    <div class="textBlockIntro">
+            <p>@Localizer["AboutUsDescription"]</p>
+    </div>
+    <div class="imgBlockIntro">
+    <img  src="~/images/developers.png" />
+    </div>
+    </div>
+</main>
+
+<script>
+    function setCulture(culture) {
+        const url = new URL(window.location.href);
+        url.searchParams.set("culture", culture);
+        window.location.href = url.toString();
+    }
+</script>
