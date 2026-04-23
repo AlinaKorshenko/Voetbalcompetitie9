@@ -1,17 +1,9 @@
 ﻿using ChampionsLeagueTickets.Services.Interfaces;
-using MailKit;
 using MailKit.Security;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using MimeKit;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
 using SmtpClient = MailKit.Net.Smtp.SmtpClient;
 
 namespace ChampionsLeagueTickets.Services
@@ -33,6 +25,8 @@ namespace ChampionsLeagueTickets.Services
             {
                 var s = _config.GetSection("EmailSettings");
 
+                var password = _config["EmailSettingsPassword"];
+
                 var message = new MimeMessage();
                 message.From.Add(new MailboxAddress(s["SenderName"], s["SenderEmail"]));
                 message.To.Add(MailboxAddress.Parse(email));
@@ -41,11 +35,12 @@ namespace ChampionsLeagueTickets.Services
 
                 using var smtp = new SmtpClient();
                 await smtp.ConnectAsync(s["MailServer"], int.Parse(s["MailPort"]!), SecureSocketOptions.StartTls);
-                await smtp.AuthenticateAsync(s["Username"], s["Password"]);
+
+                // 🔐 hier mix je appsettings + Key Vault
+                await smtp.AuthenticateAsync(s["Username"], password);
+
                 await smtp.SendAsync(message);
                 await smtp.DisconnectAsync(true);
-
-                _logger.LogInformation("Email sent to {Email} — {Subject}", email, subject);
             }
             catch (Exception ex)
             {
