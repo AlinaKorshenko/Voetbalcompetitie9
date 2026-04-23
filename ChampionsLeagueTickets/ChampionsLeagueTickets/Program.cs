@@ -88,20 +88,13 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "API for Champions League Tickets application",
+        Title = "API voor Champions League Tickets applicatie",
         Version = "version 1",
-        Description = "An API to perform Get operations on Champions League Tickets information",
-        TermsOfService = new Uri("https://example.com/terms"),
+        Description = "Een API om GET-requests uit te voeren op de Champions League Tickets applicatie. U moet ingelogd zijn om deze API te kunnen gebruiken (zie login endpoint).",
         Contact = new OpenApiContact
         {
-            Name = "ID",
-            Email = "ilona.defevere@student.vives.be",
-            Url = new Uri("https://vives.be"),
-        },
-        License = new OpenApiLicense
-        {
-            Name = "ChampionsLeague API LICX",
-            Url = new Uri("https://example.com/license"),
+            Name = "Ilona Defevere & Alina Korshenko",
+            Email = "championsleagueticketsstudapp@gmail.com"
         }
     });
 
