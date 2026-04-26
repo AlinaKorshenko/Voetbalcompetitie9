@@ -67,13 +67,13 @@ namespace ChampionsLeagueTickets.Controllers.API
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtConfig:JwtKey"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expires = DateTime.UtcNow.AddDays(Convert.ToDouble(_configuration["JwtConfig:JwtExpireDays"]));
 
             var token = new JwtSecurityToken(
-                _configuration["JwtConfig:Issuer"],
-                _configuration["JwtConfig:Audience"],
+                _configuration["JwtIssuer"],
+                _configuration["JwtAudience"],
                 claims,
                 expires: expires,
                 signingCredentials: creds

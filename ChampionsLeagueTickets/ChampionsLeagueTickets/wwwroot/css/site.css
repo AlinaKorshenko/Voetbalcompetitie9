@@ -192,3 +192,14 @@ thead {
     border-radius: 8px;
     text-align: center;
 }
+
+.aboutUs {
+    position: relative;
+}
+
+    .aboutUs .lang-switch {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 10;
+    }

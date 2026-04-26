@@ -1,3 +1,4 @@
+using Azure.Identity;
 using ChampionsLeagueTickets.Data;
 using ChampionsLeagueTickets.Domain.DataDB;
 using ChampionsLeagueTickets.Domain.EntitiesDB;
@@ -5,20 +6,34 @@ using ChampionsLeagueTickets.Repositories;
 using ChampionsLeagueTickets.Repositories.Interfaces;
 using ChampionsLeagueTickets.Services;
 using ChampionsLeagueTickets.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.OpenApi;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using System.Diagnostics;
+using Microsoft.OpenApi;
 using Microsoft.OpenApi.Models;
+using System.Diagnostics;
+using System.Globalization;
+using System.Text;
+using Azure.Identity;
+using Azure.Extensions.AspNetCore.Configuration.Secrets;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//Keyvault
+var keyVaultUrl = builder.Configuration["KeyVault:Url"]
+    ?? throw new InvalidOperationException("KeyVault URL ontbreekt");
+
+builder.Configuration.AddAzureKeyVault(
+    new Uri(keyVaultUrl),
+    new DefaultAzureCredential()
+);
+
 //Services
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+var connectionString = builder.Configuration["DefaultConnection"] ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
@@ -45,25 +60,41 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddControllers();
 
+//Localization
+builder.Services.AddLocalization();
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[]
+    {
+        new CultureInfo("nl"),
+        new CultureInfo("en"),
+        new CultureInfo("fr")
+    };
+
+    options.DefaultRequestCulture = new RequestCulture("nl");
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+
+    options.RequestCultureProviders = new List<IRequestCultureProvider>
+    {
+        new QueryStringRequestCultureProvider(),
+        new CookieRequestCultureProvider()
+    };
+});
+
 //Swagger
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "API for Champions League Tickets application",
+        Title = "API voor Champions League Tickets applicatie",
         Version = "version 1",
-        Description = "An API to perform Get operations on Champions League Tickets information",
-        TermsOfService = new Uri("https://example.com/terms"),
+        Description = "Een API om GET-requests uit te voeren op de Champions League Tickets applicatie. U moet ingelogd zijn om deze API te kunnen gebruiken (zie login endpoint).",
         Contact = new OpenApiContact
         {
-            Name = "ID",
-            Email = "ilona.defevere@student.vives.be",
-            Url = new Uri("https://vives.be"),
-        },
-        License = new OpenApiLicense
-        {
-            Name = "ChampionsLeague API LICX",
-            Url = new Uri("https://example.com/license"),
+            Name = "Ilona Defevere & Alina Korshenko",
+            Email = "championsleagueticketsstudapp@gmail.com"
         }
     });
 
@@ -164,10 +195,10 @@ builder.Services
     cfg.SaveToken = true;
     cfg.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidIssuer = builder.Configuration["JwtConfig:Issuer"],
-        ValidAudience = builder.Configuration["JwtConfig:Audience"],
+        ValidIssuer = builder.Configuration["JwtIssuer"],
+        ValidAudience = builder.Configuration["JwtAudience"],
         IssuerSigningKey = new
-                SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtConfig:JwtKey"])),
+                SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtKey"])),
         ClockSkew = TimeSpan.Zero
     };
 });
@@ -208,8 +239,6 @@ catch (Exception ex)
     Debug.WriteLine(ex.Message);
 }
 
-
-
 var app = builder.Build();
 
 //rollen
@@ -247,6 +276,8 @@ app.UseSwaggerUI();
 app.UseAuthentication();
 app.UseAuthorization();
 
+var locOptions = app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value;
+app.UseRequestLocalization(locOptions);
 
 app.MapStaticAssets();
 
