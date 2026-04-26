@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace ChampionsLeagueTickets.Repositories.Interfaces
 {
-    public interface IMatchDAO : IDAO<Match>
+    public interface IAbonementenPrijsDAO : IDAO<AbonnementenPrijs>
     {
-        Task<IEnumerable<Match>?> GetAllMatchesFromTeamsAsync(string homeTeamId, string awayTeamId);
-        Task<Stadion> GetStadionByIMatchdAsync(string matchId);
+
+        Task<decimal> GetPriceBySeizoenIdAndStadionId(string seizoenID, string stadionId);
+
     }
 }

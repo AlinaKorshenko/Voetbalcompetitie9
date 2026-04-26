@@ -17,9 +17,9 @@
         {
             <div class="col">
                 <a asp-controller="Abonnement"
-                   asp-action="Kopen"
-                   asp-route-stadionNaam="@abonnement.StadionNaam"
-                   asp-route-seizoenNaam="@abonnement.SeizoenNaam"
+                   asp-action="ChooseSeats"
+                   asp-route-stadionId="@abonnement.StadionId"
+                   asp-route-seizoenId="@abonnement.SeizoenId"
                    class="text-decoration-none text-dark">
                     <div class="card h-100 shadow-sm p-3">
                         <div class="card-body">
@@ -34,7 +34,7 @@
                         </div>
                         <div class="card-footer d-flex justify-content-between align-items-center">
                             <strong class="fs-5">€ @abonnement.Prijs.ToString("F2")</strong>
-                            <span class="btn btn-dark btn-sm">Kopen</span>
+                            <span class="btn btn-dark btn-sm">In winkelwagen</span>
                         </div>
                     </div>
                 </a>

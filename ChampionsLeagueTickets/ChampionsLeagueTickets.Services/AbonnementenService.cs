@@ -1,4 +1,5 @@
 ﻿using ChampionsLeagueTickets.Domain.EntitiesDB;
+using ChampionsLeagueTickets.Repositories;
 using ChampionsLeagueTickets.Repositories.Interfaces;
 using ChampionsLeagueTickets.Services.Interfaces;
 using System;
@@ -9,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace ChampionsLeagueTickets.Services
 {
-    public class AbonnementenService : IService<Abonnementen>
+    public class AbonnementenService : IAbonnementService
     {
-        private IDAO<Abonnementen> _abonnementenDAO;
+        private IAbonnementDAO _abonnementenDAO;
 
-        public AbonnementenService(IDAO<Abonnementen> abonnementenDAO)
+        public AbonnementenService(IAbonnementDAO abonnementenDAO)
         {
             _abonnementenDAO = abonnementenDAO;
         }
@@ -24,6 +25,16 @@ namespace ChampionsLeagueTickets.Services
         }
 
         public Task DeleteAsync(Abonnementen entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<string> FindAbinementIdByStadonSeizoenZitplaatsAsynk(string stadionId, string seizoenId, string zitplaatsId)
+        {
+            return await _abonnementenDAO.FindAbinementIdByStadonSeizoenZitplaatsAsynk(stadionId, seizoenId, zitplaatsId);
+        }
+
+        public Task<Abonnementen> FindAbonnementByStadionIdAndAbonnementId(string abonnementId, string stadionId)
         {
             throw new NotImplementedException();
         }

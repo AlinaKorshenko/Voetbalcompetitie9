@@ -1,0 +1,94 @@
+﻿@model ChampionsLeagueTickets.ViewModels.AbonementOverzichtVM
+
+@{
+    ViewData["Title"] = "OverzichtInfoAbonement";
+}
+
+<div class="container mt-5">
+    <div class="card shadow rounded-4">
+
+        <!-- Header -->
+        <div class="text-center card-header">
+            <h3 class="mb-0">
+                <i class="bi bi-card-checklist"></i> Abonnementoverzicht
+            </h3>
+        </div>
+
+        <div class="card-body p-4">
+
+            <!-- Seizoen info -->
+            <div class="text-center mb-4">
+                <h4 class="fw-bold">
+                    🏆 @Model.SeizoenNaam
+                </h4>
+                <p class="text-muted mb-0">
+                    @Model.StartDatum.ToString("dd/MM/yyyy") - @Model.EindDatum.ToString("dd/MM/yyyy")
+                </p>
+            </div>
+
+            <!-- Stadion info -->
+            <div class="mb-4">
+                <h5 class="fw-bold text-primary">
+                    <i class="bi bi-info-circle"></i> Abonnementinformatie
+                </h5>
+                <hr />
+
+                <p>
+                    <i class="bi bi-geo-alt-fill text-danger"></i>
+                    <strong>Stadion:</strong> @Model.StadionNaam
+                </p>
+
+                <p>
+                    <i class="bi bi-calendar-event text-primary"></i>
+                    <strong>Seizoen:</strong> @Model.SeizoenNaam
+                </p>
+            </div>
+
+            <!-- Plaats info -->
+            <div class="mb-4">
+                <h5 class="fw-bold text-primary">
+                    <i class="bi bi-grid"></i> Gekozen plaats
+                </h5>
+                <hr />
+
+                <p>
+                    <i class="bi bi-layers-fill text-warning"></i>
+                    <strong>Vak:</strong> @Model.zitplaats.VakNummerNavigation.Omschrijving
+                </p>
+
+                <p>
+                    <i class="bi bi-list-ol text-info"></i>
+                    <strong>Rij:</strong> @Model.zitplaats.RijNummer
+                </p>
+
+                <p>
+                    <i class="bi bi-person text-info"></i>
+                    <strong>Stoel:</strong> @Model.zitplaats.StoelNummer
+                </p>
+
+                <p>
+                    <i class="bi bi-cash-coin text-success"></i>
+                    <strong>Prijs:</strong> € @Model.Prijs
+                </p>
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex justify-content-between mt-4">
+                <a asp-action="Bevestig" class="btn btn-outline-secondary px-4">
+                    <i class="bi bi-arrow-left"></i> Terug
+                </a>
+
+                <form asp-action="Bevestig" method="post">
+                    <input type="hidden" name="SeizoenId" value="@Model.SeizoenId" />
+                    <input type="hidden" name="StadionID" value="@Model.StadionID" />
+                    <input type="hidden" name="ZitplaatsId" value="@Model.zitplaats.ZitplaatsId" />
+
+                    <button type="submit" class="btn btn-success px-4">
+                        <i class="bi bi-check-circle"></i> Bevestigen
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>

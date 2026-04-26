@@ -1,13 +1,16 @@
-﻿@model ChampionsLeagueTickets.View_Models.TicketStoelVM
+﻿@model ChampionsLeagueTickets.ViewModels.AbonementStoelVM
 
 @{
     ViewData["Title"] = "ChooseSeats";
 }
 
+
 <h1>Kies een plaats</h1>
 
 <form asp-action="ChooseSeats" method="post" id="seatForm">
-    <input type="hidden" asp-for="MatchID" />
+    <input type="hidden" asp-for="StadionID" />
+    <input type="hidden" asp-for="SeizoenId" />
+
 
     <div class="mb-3">
         <label asp-for="StadionVak" class="form-label">Vak</label>
@@ -46,16 +49,13 @@
     }
 </form>
 
-@if (Model.Prijs.HasValue)
-{
-    <p class="prijsDisplay">Prijs : &#8364; @Model.Prijs</p>
-}
+
 
 @if (!string.IsNullOrEmpty(Model.GeselecteerdeZitplaatsId))
 {
-    <form asp-action="OverzichtInfoTicket" method="post">
-        <input type="hidden" asp-for="MatchID" />
-        <input type="hidden" asp-for="Prijs" />
+    <form asp-action="OverzichtInfoAbonement" method="post">
+        <input type="hidden" asp-for="StadionID" />
+        <input type="hidden" asp-for="SeizoenId" />
         <input type="hidden" asp-for="StadionVak" />
         <input type="hidden" asp-for="RijNummer" />
         <input type="hidden" asp-for="GeselecteerdeZitplaatsId" />

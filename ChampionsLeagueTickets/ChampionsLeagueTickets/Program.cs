@@ -114,12 +114,16 @@ builder.Services.AddScoped<ISeizoenenDAO, SeizoenenDAO>();
 builder.Services.AddScoped<ISeizoenenService, SeizoenenService>();
 
 //AbonnementenPrijs
-builder.Services.AddScoped<IDAO<AbonnementenPrijs>, AbonnementenPrijsDAO>();
-builder.Services.AddScoped<IService<AbonnementenPrijs>, AbonnementenPrijsService>();
+builder.Services.AddScoped<IAbonementenPrijsDAO, AbonnementenPrijsDAO>();
+builder.Services.AddScoped<IAbonementenPrijsService, AbonnementenPrijsService>();
 
 //TicketPrijs
 builder.Services.AddScoped<ITicketPrijsDAO, TicketPrijsDAO>();
 builder.Services.AddScoped<ITicketPrijsService, TicketsPrijsService>();
+
+//Abonementen
+builder.Services.AddScoped<IAbonnementDAO, AbonnementenDAO>();
+builder.Services.AddScoped<IAbonnementService, AbonnementenService>();
 
 //Users
 builder.Services.AddScoped<IUserService, UserService>();

@@ -45,7 +45,7 @@ namespace Voetbalcompetitie9.Controllers
                   DisplayName = "Ring " + v.Ring + " ( " + v.Omschrijving + " )" 
                 });
 
-            TicketVM ticketVM = new TicketVM()
+            TicketStoelVM ticketVM = new TicketStoelVM()
             {
                 VakenLijst = new SelectList(vakTypes, "VakNummer", "DisplayName"),
                 MatchID = matchID
@@ -55,7 +55,7 @@ namespace Voetbalcompetitie9.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ChooseSeats(TicketVM ticketVM)
+        public async Task<IActionResult> ChooseSeats(TicketStoelVM ticketVM)
         {
             if (!ModelState.IsValid) {
                 return View(ticketVM);
@@ -70,11 +70,20 @@ namespace Voetbalcompetitie9.Controllers
 
             ticketVM.VakenLijst = new SelectList(vakTypes, "VakNummer", "DisplayName");
 
-            ticketVM.Prijs = await _ticketPrijsService.GetTicketPrijsByMatchAndSectionAsync(ticketVM.MatchID, ticketVM.StadionVak);          
+            ticketVM.Prijs = await _ticketPrijsService.GetTicketPrijsByMatchAndSectionAsync(ticketVM.MatchID, ticketVM.StadionVak);
+
+            var stadion = await _matchesService.GetStadionByIMatchdAsync(ticketVM.MatchID);
+
+            if (stadion == null)
+            {
+                return NotFound();
+            }
+
+            var stadionID = stadion.StadionId;
 
             if (!string.IsNullOrEmpty(ticketVM.StadionVak))
             {
-                var rijen = await _zitplatsenService.GetRowsForMatchAndSectionAsync(ticketVM.MatchID, ticketVM.StadionVak);
+                var rijen = await _zitplatsenService.GetRowsForSectionAsync(stadionID, ticketVM.StadionVak);
                 ticketVM.RijenLijst = new SelectList(rijen, ticketVM.RijNummer);
             }
 
@@ -96,7 +105,7 @@ namespace Voetbalcompetitie9.Controllers
             return View(ticketVM);
         }
 
-        public async Task<IActionResult> OverzichtInfoTicket(TicketVM vm)
+        public async Task<IActionResult> OverzichtInfoTicket(TicketStoelVM vm)
         {
             var match = await _matchesService.FindByIdAsync(vm.MatchID);
             var thuisTeamNaam = match.ThuisTeam?.Naam;
@@ -137,8 +146,8 @@ namespace Voetbalcompetitie9.Controllers
                 return BadRequest();
             }
 
-            var cart = HttpContext.Session.GetObject<List<ShoppingCartItemKortVM>>("ShoppingCart")
-                       ?? new List<ShoppingCartItemKortVM>();
+            var cart = HttpContext.Session.GetObject<List<ShoppingCartTicketItemKortVM>>("ShoppingCartTicket")
+                       ?? new List<ShoppingCartTicketItemKortVM>();
 
             var zitplaats = await _zitplatsenService.FindByIdAsync(ZitplaatsID);
 
@@ -156,7 +165,6 @@ namespace Voetbalcompetitie9.Controllers
 
             if (bestaand != null)
             {
-                // проверка лимита (max 4 per match)
                 int totaalVoorMatch = cart
                     .Where(x => x.MatchId == MatchID)
                     .Sum(x => x.Aantal);
@@ -171,7 +179,6 @@ namespace Voetbalcompetitie9.Controllers
             }
             else
             {
-                // тоже проверка лимита
                 int totaalVoorMatch = cart
                     .Where(x => x.MatchId == MatchID)
                     .Sum(x => x.Aantal);
@@ -182,7 +189,7 @@ namespace Voetbalcompetitie9.Controllers
                     return RedirectToAction("Introductie", "Info");
                 }
 
-                cart.Add(new ShoppingCartItemKortVM
+                cart.Add(new ShoppingCartTicketItemKortVM
                 {
                     MatchId = MatchID,
                     ZitplaatsId = ZitplaatsID,
@@ -191,7 +198,7 @@ namespace Voetbalcompetitie9.Controllers
                 });
             }
 
-            HttpContext.Session.SetObject("ShoppingCart", cart);
+            HttpContext.Session.SetObject("ShoppingCartTicket", cart);
 
             return RedirectToAction("Index", "ShoppingCart");
         }

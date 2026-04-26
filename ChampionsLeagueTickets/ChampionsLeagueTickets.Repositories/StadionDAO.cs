@@ -29,9 +29,19 @@ namespace ChampionsLeagueTickets.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<Stadion?> FindByIdAsync(string Id)
+        public async Task<Stadion?> FindByIdAsync(string Id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _dbContext.Stadions
+                      .FirstOrDefaultAsync(s => s.StadionId == Id);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in DAO: " + ex.Message);
+                throw;
+            }
+
         }
 
         public async Task<IEnumerable<Stadion>?> GetAllAsync()

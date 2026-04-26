@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ChampionsLeagueTickets.Repositories
 {
-    public class AbonnementenPrijsDAO : IDAO<AbonnementenPrijs>
+    public class AbonnementenPrijsDAO : IAbonementenPrijsDAO
     {
         private readonly FootballDbContext _dbContext;
 
@@ -48,6 +48,29 @@ namespace ChampionsLeagueTickets.Repositories
                 Console.WriteLine("Error in DAO: " + ex.Message);
                 throw;
             }
+        }
+
+        public async Task<decimal> GetPriceBySeizoenIdAndStadionId(string seizoenID, string stadionId)
+        {
+
+            try
+            {
+                var ticket = await _dbContext.AbonnementenPrijs
+                    .FirstOrDefaultAsync(tp => tp.SeizoenId == seizoenID && tp.StadionId == stadionId);
+
+                if (ticket == null)
+                {
+                    throw new Exception("Ticket prijs not found for the given MatchID and VakNummer.");
+                }
+
+                return ticket.Prijs;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in DAO: " + ex.Message);
+                throw;
+            }
+
         }
 
         public Task UpdateAsync(AbonnementenPrijs entity)

@@ -2,10 +2,13 @@
 
 @{
     ViewData["Title"] = "Matches";
-}
 
-@section Styles {
-    <link href="~/lib/datatables/css/jquery.datatables.min.css" rel="stylesheet" />
+    var clubs = Model?
+        .SelectMany(m => new[] { m.homeTeamName, m.awayTeamName })
+        .Where(c => !string.IsNullOrWhiteSpace(c))
+        .Distinct()
+        .OrderBy(c => c)
+        .ToList();
 }
 
 @if (Model != null)
@@ -17,21 +20,38 @@
         Mis ze niet.
     </p>
 
+    <div class="mb-4">
+        <label for="clubFilter" class="form-label fw-bold">Filter op club</label>
+
+        <select id="clubFilter" class="form-select" style="max-width: 350px;">
+            <option value="">Alle clubs</option>
+
+            @foreach (var club in clubs)
+            {
+                <option value="@club">@club</option>
+            }
+        </select>
+    </div>
+
     <table id="matchesTable" class="table border-0">
         <thead>
             <tr>
                 <th>Matches</th>
             </tr>
         </thead>
+
         <tbody>
             @foreach (var match in Model)
             {
-                <tr class="match-card">
+                <tr class="match-card"
+                    data-home="@match.homeTeamName"
+                    data-away="@match.awayTeamName">
                     <td>
                         <a asp-controller="Ticket"
                            asp-action="ChooseSeats"
                            asp-route-matchId="@match.MatchId"
                            class="text-decoration-none text-dark">
+
                             <div class="card p-3 shadow-sm mb-3">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
@@ -45,12 +65,8 @@
                                     </div>
 
                                     <div class="text-end">
-                                        <strong>
-                                            @match.DatumTijdStartMatch.ToString("dd/MM/yyyy")
-                                        </strong><br />
-                                        <span>
-                                            @match.DatumTijdStartMatch.ToString("HH:mm")
-                                        </span>
+                                        <strong>@match.DatumTijdStartMatch.ToString("dd/MM/yyyy")</strong><br />
+                                        <span>@match.DatumTijdStartMatch.ToString("HH:mm")</span>
                                     </div>
                                 </div>
                             </div>
@@ -60,8 +76,43 @@
             }
         </tbody>
     </table>
+
+    <p id="noMatchesMessage" class="text-warning fw-bold d-none">
+        Geen wedstrijden gevonden voor deze club.
+    </p>
 }
 else
 {
     <p>Er is een fout</p>
+}
+
+@section Scripts {
+    <script>
+        const clubFilter = document.getElementById("clubFilter");
+        const rows = document.querySelectorAll(".match-card");
+        const noMatchesMessage = document.getElementById("noMatchesMessage");
+
+        clubFilter.addEventListener("change", function () {
+            const selectedClub = this.value;
+            let visibleCount = 0;
+
+            rows.forEach(row => {
+                const home = row.dataset.home;
+                const away = row.dataset.away;
+
+                const isMatch =
+                    selectedClub === "" ||
+                    home === selectedClub ||
+                    away === selectedClub;
+
+                row.style.display = isMatch ? "" : "none";
+
+                if (isMatch) {
+                    visibleCount++;
+                }
+            });
+
+            noMatchesMessage.classList.toggle("d-none", visibleCount > 0);
+        });
+    </script>
 }

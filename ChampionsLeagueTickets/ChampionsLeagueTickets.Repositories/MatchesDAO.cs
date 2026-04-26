@@ -89,6 +89,14 @@ namespace ChampionsLeagueTickets.Repositories
             }
         }
 
+        public async Task<Stadion> GetStadionByIMatchdAsync(string matchId)
+        {
+            return await _dbContext.Matches
+    .Where(m => m.MatchId == matchId)
+    .Select(m => m.ThuisTeam.Stadion)
+    .FirstOrDefaultAsync();
+        }
+
         public Task UpdateAsync(Match entity)
         {
             throw new NotImplementedException();

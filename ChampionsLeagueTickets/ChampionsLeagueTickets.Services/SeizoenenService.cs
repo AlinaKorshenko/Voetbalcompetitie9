@@ -30,7 +30,7 @@ namespace ChampionsLeagueTickets.Services
 
         public Task<Seizoenen?> FindByIdAsync(string Id)
         {
-            throw new NotImplementedException();
+           return _seizoenenDAO.FindByIdAsync(Id);
         }
 
         public async Task<IEnumerable<Seizoenen>?> GetAllAsync()

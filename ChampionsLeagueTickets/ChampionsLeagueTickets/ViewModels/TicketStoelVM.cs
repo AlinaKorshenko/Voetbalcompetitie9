@@ -5,7 +5,7 @@ using System.Security.Principal;
 
 namespace ChampionsLeagueTickets.View_Models
 {
-    public class TicketVM
+    public class TicketStoelVM
     {
         [Required]
         public string MatchID { get; set; }

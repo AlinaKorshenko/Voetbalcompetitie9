@@ -45,9 +45,9 @@ namespace ChampionsLeagueTickets.Services
             return await _zitplaatsenDAO.GetCountZitplaatsenByVakTypeAndStadion(stadion, vaktype);
         }
 
-        public Task<List<string>> GetRowsForMatchAndSectionAsync(string matchId, string vakNummer)
+        public Task<List<string>> GetRowsForSectionAsync(string stadionID, string vakNummer)
         {
-            return _zitplaatsenDAO.GetRowsForMatchAndSectionAsync(matchId, vakNummer);
+            return _zitplaatsenDAO.GetRowsForSectionAsync(stadionID, vakNummer);
         }
 
         public async Task<List<ZitplaatsDto>> GetSeatsForMatchSectionAndRowAsync(
@@ -64,6 +64,11 @@ namespace ChampionsLeagueTickets.Services
                 StoelNummer = s.Zitplaats.StoelNummer,
                 IsBezet = s.IsBezet
             }).ToList();
+        }
+
+        public async Task<List<Zitplaatsen>> GetFreeSeatsForSeasonSectionAndRowAsync(string stadionId, string seizoenId, string vakNummer, string rijNummer)
+        {
+            return await _zitplaatsenDAO.GetFreeSeatsForSeasonSectionAndRowAsync(stadionId, seizoenId, vakNummer, rijNummer);
         }
 
         public Task UpdateAsync(Zitplaatsen entity)
