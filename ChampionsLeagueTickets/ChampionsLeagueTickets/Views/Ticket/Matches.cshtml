@@ -49,13 +49,28 @@
                     <td>
                         <a asp-controller="Ticket"
                            asp-action="ChooseSeats"
-                           asp-route-matchId="@match.MatchId"
-                           class="text-decoration-none text-dark">
+                           asp-route-matchID="@match.MatchId"
+                           class="text-decoration-none @(match.IsKoopbaar ? "text-dark" : "text-muted")"
+                           style="pointer-events:@(match.IsKoopbaar ? "auto" : "none");">
 
-                            <div class="card p-3 shadow-sm mb-3">
+                            <div class="card p-3 shadow-sm mb-3 @(match.IsKoopbaar ? "" : "opacity-50")">
                                 <div class="d-flex justify-content-between align-items-center">
+
                                     <div>
                                         <h5 class="mb-0">@match.stadionName</h5>
+
+                                        @if (match.IsKoopbaar)
+                                        {
+                                            <span class="badge bg-success">Tickets beschikbaar</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">Binnenkort beschikbaar</span>
+                                            <br />
+                                            <small class="text-muted">
+                                                Vanaf: @match.DatumTijdStartMatch.AddMonths(-1).ToString("dd/MM/yyyy")
+                                            </small>
+                                        }
                                     </div>
 
                                     <div>
@@ -68,6 +83,7 @@
                                         <strong>@match.DatumTijdStartMatch.ToString("dd/MM/yyyy")</strong><br />
                                         <span>@match.DatumTijdStartMatch.ToString("HH:mm")</span>
                                     </div>
+
                                 </div>
                             </div>
                         </a>

@@ -62,6 +62,7 @@ namespace ChampionsLeagueTickets.Repositories
                         .ThenInclude(t => t.Stadion)
                     .Include(m => m.BezoekendTeam)
                     .Where(m => m.DatumTijdStartMatch > DateTime.Now)
+                    .OrderBy(m => m.DatumTijdStartMatch)
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -80,6 +81,32 @@ namespace ChampionsLeagueTickets.Repositories
                         .ThenInclude(t => t.Stadion)
                     .Include(m => m.BezoekendTeam)
                     .Where(match => match.ThuisTeamId == homeTeamId && match.BezoekendTeamId == awayTeamId)
+                    .OrderBy(m => m.DatumTijdStartMatch)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in DAO: " + ex.Message);
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Match>?> GetAllMatchesWhereUserIsAbleToBuyTickets()
+        {
+            try
+            {
+                var now = DateTime.Now;
+                var oneMonthFromNow = now.AddMonths(1);
+
+                return await _dbContext.Matches
+                    .Include(m => m.ThuisTeam)
+                        .ThenInclude(t => t.Stadion)
+                    .Include(m => m.BezoekendTeam)
+                    .Where(m =>
+                        m.DatumTijdStartMatch > now &&
+                        m.DatumTijdStartMatch <= oneMonthFromNow
+                    )
+                    .OrderBy(m => m.DatumTijdStartMatch)
                     .ToListAsync();
             }
             catch (Exception ex)

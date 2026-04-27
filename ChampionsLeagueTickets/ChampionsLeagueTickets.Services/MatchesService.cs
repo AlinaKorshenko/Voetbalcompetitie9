@@ -43,6 +43,11 @@ namespace ChampionsLeagueTickets.Services
             return await _matchesDAO.GetAllMatchesFromTeamsAsync(homeTeamId, awayTeamId);
         }
 
+        public async Task<IEnumerable<Match>?> GetAllMatchesWhereUserIsAbleToBuyTickets()
+        {
+            return await _matchesDAO.GetAllMatchesWhereUserIsAbleToBuyTickets();
+        }
+
         public async Task<Stadion> GetStadionByIMatchdAsync(string matchId)
         {
             return await _matchesDAO.GetStadionByIMatchdAsync(matchId);

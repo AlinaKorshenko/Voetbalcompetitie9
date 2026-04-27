@@ -32,7 +32,12 @@ namespace Voetbalcompetitie9.Controllers
         public async Task<IActionResult> Matches()
         {
             var list = await _matchesService.GetAllAsync();
-            List<MatchVM> matches = _mapper.Map<List<MatchVM>>(list);
+            var matches = _mapper.Map<List<MatchVM>>(list);
+
+            foreach (var match in matches)
+            {
+                match.IsKoopbaar = IsTicketBeschikbaar(match.DatumTijdStartMatch);
+            }
 
             return View(matches);
         }
@@ -201,6 +206,14 @@ namespace Voetbalcompetitie9.Controllers
             HttpContext.Session.SetObject("ShoppingCartTicket", cart);
 
             return RedirectToAction("Index", "ShoppingCart");
+        }
+
+        private bool IsTicketBeschikbaar(DateTime matchDatum)
+        {
+            var now = DateTime.Now;
+            var oneMonthBeforeMatch = matchDatum.AddMonths(-1);
+
+            return now >= oneMonthBeforeMatch && now < matchDatum;
         }
     }
 }
