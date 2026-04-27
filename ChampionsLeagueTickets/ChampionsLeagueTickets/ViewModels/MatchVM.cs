@@ -8,6 +8,6 @@
         public string awayTeamName { get; set; }
         public string stadionName { get; set; }
         public DateTime DatumTijdStartMatch { get; set; }
-
+        public bool IsKoopbaar { get; set; }
     }
 }
