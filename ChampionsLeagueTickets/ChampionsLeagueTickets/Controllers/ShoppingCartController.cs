@@ -8,6 +8,7 @@ using ChampionsLeagueTickets.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Org.BouncyCastle.Math;
 using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace ChampionsLeagueTickets.Controllers
 {
@@ -17,21 +18,25 @@ namespace ChampionsLeagueTickets.Controllers
         private const string CartKeyAbonement = "ShoppingCartAbonement";
         private readonly IMatchService _matchesService;
         private readonly IService<VakType> _vakService;
+        private readonly ITicketService _ticketService;
         private readonly IZitplaatsenService _zitplatsenService;
         private readonly ITicketPrijsService _ticketPrijsService;
         private readonly IService<Stadion> _stadionService;
         private readonly IAbonementenPrijsService _abonementenPrijsService;
         private readonly ISeizoenenService _seizoenenService;
-        public ShoppingCartController(IMatchService matchesService, IService<VakType> vakService, IZitplaatsenService zitplatsenService, ITicketPrijsService ticketPrijsService, IService<Stadion> stadionService, IAbonementenPrijsService abonementenPrijsService, ISeizoenenService seizoenenService)
+        private int maxAantalTickets;
+
+        public ShoppingCartController(IMatchService matchesService, IService<VakType> vakService, ITicketService ticketService, IZitplaatsenService zitplatsenService, ITicketPrijsService ticketPrijsService, IService<Stadion> stadionService, IAbonementenPrijsService abonementenPrijsService, ISeizoenenService seizoenenService)
         {
             _matchesService = matchesService;
             _vakService = vakService;
+            _ticketService = ticketService;
             _zitplatsenService = zitplatsenService;
             _ticketPrijsService = ticketPrijsService;
             _stadionService = stadionService;
             _abonementenPrijsService = abonementenPrijsService;
             _seizoenenService = seizoenenService;
-
+            maxAantalTickets = 4;
         }
 
         public async Task<IActionResult> IndexAsync()
@@ -162,31 +167,55 @@ namespace ChampionsLeagueTickets.Controllers
         }
 
         [HttpPost]
-        public IActionResult VoegTicketToe(string matchId, string zitplaatsId)
+        public async Task<IActionResult> VoegTicketToeAsync(string matchId, string zitplaatsId)
         {
+            const int maxAantalTickets = 4;
+
             var cartTickets = HttpContext.Session
                 .GetObject<List<ShoppingCartTicketItemKortVM>>(CartKeyTicket)
                 ?? new List<ShoppingCartTicketItemKortVM>();
 
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            int aantalTicketsAlGekocht =
+                await _ticketService.GetAantalTicketsVoorMatchEnUser(userId, matchId);
+
             var item = cartTickets.FirstOrDefault(x =>
                 x.MatchId == matchId && x.ZitplaatsId == zitplaatsId);
 
+            int aantalInCartVoorMatch = cartTickets
+                .Where(x => x.MatchId == matchId)
+                .Sum(x => x.Aantal);
+
+            // +1 omdat user net wil toevoegen
+            int totaal = aantalTicketsAlGekocht + aantalInCartVoorMatch + 1;
+
+            if (totaal > maxAantalTickets)
+            {
+                TempData["Error"] = "Je kan maximaal 4 tickets per wedstrijd kopen.";
+                return RedirectToAction("Index");
+            }
+
+            // item toevoegen of verhogen
             if (item != null)
             {
-                if (item.Aantal >= 4)
-                {
-                    TempData["Error"] = "Je kan maximaal 4 tickets per plaats toevoegen.";
-                    return RedirectToAction("Index");
-                }
-
-                item.Aantal += 1;
+                item.Aantal++;
             }
-           
+            else
+            {
+                cartTickets.Add(new ShoppingCartTicketItemKortVM
+                {
+                    MatchId = matchId,
+                    ZitplaatsId = zitplaatsId,
+                    Aantal = 1
+                });
+            }
 
             HttpContext.Session.SetObject(CartKeyTicket, cartTickets);
 
             return RedirectToAction("Index");
         }
+
         [HttpPost]
         public IActionResult VerwijderAbonnement(string stadionId, string seizoenId, string zitplaatsId)
         {
