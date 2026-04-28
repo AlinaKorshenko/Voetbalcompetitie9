@@ -60,7 +60,7 @@ namespace ChampionsLeagueTickets.Repositories
         {
             try
             {
-                return await _context.Orderlijnen
+                return await _dbContext.Orderlijnens
                     .Where(ol =>
                         ol.MatchId == matchId &&
                         ol.TicketId != null &&

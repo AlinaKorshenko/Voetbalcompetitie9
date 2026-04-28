@@ -148,6 +148,10 @@ builder.Services.AddScoped<ISeizoenenService, SeizoenenService>();
 builder.Services.AddScoped<IAbonementenPrijsDAO, AbonnementenPrijsDAO>();
 builder.Services.AddScoped<IAbonementenPrijsService, AbonnementenPrijsService>();
 
+//Tickets
+builder.Services.AddScoped<ITicketDAO, TicketDAO>();
+builder.Services.AddScoped<ITicketService, TicketService>();
+
 //TicketPrijs
 builder.Services.AddScoped<ITicketPrijsDAO, TicketPrijsDAO>();
 builder.Services.AddScoped<ITicketPrijsService, TicketsPrijsService>();
