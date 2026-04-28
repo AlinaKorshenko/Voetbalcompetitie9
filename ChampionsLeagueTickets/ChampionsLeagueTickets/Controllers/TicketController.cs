@@ -29,15 +29,26 @@ namespace Voetbalcompetitie9.Controllers
             _ticketPrijsService = ticketPrijsService;
         }
 
-        public async Task<IActionResult> Matches()
+        public async Task<IActionResult> Matches(string club)
         {
             var list = await _matchesService.GetAllAsync();
+
+            if (!string.IsNullOrEmpty(club))
+            {
+                list = list.Where(m =>
+                    m.ThuisTeam.Naam == club ||
+                    m.BezoekendTeam.Naam == club
+                ).ToList();
+            }
+
             var matches = _mapper.Map<List<MatchVM>>(list);
 
             foreach (var match in matches)
             {
                 match.IsKoopbaar = IsTicketBeschikbaar(match.DatumTijdStartMatch);
             }
+
+            ViewBag.SelectedClub = club;
 
             return View(matches);
         }
