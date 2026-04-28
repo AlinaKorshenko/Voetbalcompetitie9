@@ -56,6 +56,24 @@ namespace ChampionsLeagueTickets.Repositories
             }
         }
 
+        public async Task<int> GetAantalTicketsVoorMatchEnUser(string userId, string matchId)
+        {
+            try
+            {
+                return await _context.Orderlijnen
+                    .Where(ol =>
+                        ol.MatchId == matchId &&
+                        ol.TicketId != null &&
+                        ol.Order.UserId == userId)
+                    .CountAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in DAO: " + ex.Message);
+                throw;
+            }
+        }
+
         public async Task<IEnumerable<Ticket>?> GetAllAsync()
         {
             try

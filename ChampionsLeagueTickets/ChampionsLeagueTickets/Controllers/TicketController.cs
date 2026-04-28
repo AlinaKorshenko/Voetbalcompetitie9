@@ -77,7 +77,7 @@ namespace Voetbalcompetitie9.Controllers
 
             ticketVM.Prijs = await _ticketPrijsService.GetTicketPrijsByMatchAndSectionAsync(ticketVM.MatchID, ticketVM.StadionVak);
 
-            var stadion = await _matchesService.GetStadionByIMatchdAsync(ticketVM.MatchID);
+            var stadion = await _matchesService.GetStadionByMatchIdAsync(ticketVM.MatchID);
 
             if (stadion == null)
             {

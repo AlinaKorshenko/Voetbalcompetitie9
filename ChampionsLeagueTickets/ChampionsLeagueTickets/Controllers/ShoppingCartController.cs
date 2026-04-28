@@ -214,9 +214,6 @@ namespace ChampionsLeagueTickets.Controllers
 
             return RedirectToAction("Index");
         }
-
-
-
     }
-    }
+}
 

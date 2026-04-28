@@ -9,8 +9,8 @@ namespace ChampionsLeagueTickets.Repositories.Interfaces
 {
     public interface ITicketDAO : IDAO<Ticket>
     {
-
         Task<Ticket?> FindByMatchAndSeatAsync(string matchId, string seatId);
 
+        Task<int> GetAantalTicketsVoorMatchEnUser(string userId, string matchId);
     }
 }
