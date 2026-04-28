@@ -91,37 +91,20 @@ namespace ChampionsLeagueTickets.Repositories
             }
         }
 
-        public async Task<IEnumerable<Match>?> GetAllMatchesWhereUserIsAbleToBuyTickets()
+        public async Task<Stadion> GetStadionByMatchIdAsync(string matchId)
         {
             try
             {
-                var now = DateTime.Now;
-                var oneMonthFromNow = now.AddMonths(1);
-
                 return await _dbContext.Matches
-                    .Include(m => m.ThuisTeam)
-                        .ThenInclude(t => t.Stadion)
-                    .Include(m => m.BezoekendTeam)
-                    .Where(m =>
-                        m.DatumTijdStartMatch > now &&
-                        m.DatumTijdStartMatch <= oneMonthFromNow
-                    )
-                    .OrderBy(m => m.DatumTijdStartMatch)
-                    .ToListAsync();
+                    .Where(m => m.MatchId == matchId)
+                    .Select(m => m.ThuisTeam.Stadion)
+                    .FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error in DAO: " + ex.Message);
                 throw;
             }
-        }
-
-        public async Task<Stadion> GetStadionByIMatchdAsync(string matchId)
-        {
-            return await _dbContext.Matches
-    .Where(m => m.MatchId == matchId)
-    .Select(m => m.ThuisTeam.Stadion)
-    .FirstOrDefaultAsync();
         }
 
         public Task UpdateAsync(Match entity)

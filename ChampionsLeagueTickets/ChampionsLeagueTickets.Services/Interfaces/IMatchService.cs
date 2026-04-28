@@ -10,7 +10,7 @@ namespace ChampionsLeagueTickets.Services.Interfaces
     public interface IMatchService : IService<Match>
     {
         Task<IEnumerable<Match>?> GetAllMatchesFromTeamsAsync(string homeTeamId, string awayTeamId);
-        Task<Stadion> GetStadionByIMatchdAsync(string matchId);
-        Task<IEnumerable<Match>?> GetAllMatchesWhereUserIsAbleToBuyTickets();
+
+        Task<Stadion> GetStadionByMatchIdAsync(string matchId);
     }
 }
