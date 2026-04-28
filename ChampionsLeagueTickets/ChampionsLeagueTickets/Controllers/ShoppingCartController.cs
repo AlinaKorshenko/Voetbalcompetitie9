@@ -24,7 +24,7 @@ namespace ChampionsLeagueTickets.Controllers
         private readonly IService<Stadion> _stadionService;
         private readonly IAbonementenPrijsService _abonementenPrijsService;
         private readonly ISeizoenenService _seizoenenService;
-        private int maxAantalTickets;
+        private const int maxAantalTickets = 4;
 
         public ShoppingCartController(IMatchService matchesService, IService<VakType> vakService, ITicketService ticketService, IZitplaatsenService zitplatsenService, ITicketPrijsService ticketPrijsService, IService<Stadion> stadionService, IAbonementenPrijsService abonementenPrijsService, ISeizoenenService seizoenenService)
         {
@@ -36,10 +36,9 @@ namespace ChampionsLeagueTickets.Controllers
             _stadionService = stadionService;
             _abonementenPrijsService = abonementenPrijsService;
             _seizoenenService = seizoenenService;
-            maxAantalTickets = 4;
         }
 
-        public async Task<IActionResult> IndexAsync()
+        public async Task<IActionResult> Index()
         {
             var carts = await GetShoppingCart();
             return View(carts);
@@ -54,6 +53,7 @@ namespace ChampionsLeagueTickets.Controllers
 
             return RedirectToAction("Index");
         }
+
         private async Task<ShoppingCartVM> GetShoppingCart()
         {
             var cartTickets = HttpContext.Session.GetObject<List<ShoppingCartTicketItemKortVM>>(CartKeyTicket);
@@ -62,8 +62,6 @@ namespace ChampionsLeagueTickets.Controllers
 
             if (cartTickets != null && cartTickets.Any())
             {
-
-
                 foreach (var item in cartTickets)
                 {
                     var match = await _matchesService.FindByIdAsync(item.MatchId);
@@ -169,8 +167,6 @@ namespace ChampionsLeagueTickets.Controllers
         [HttpPost]
         public async Task<IActionResult> VoegTicketToeAsync(string matchId, string zitplaatsId)
         {
-            const int maxAantalTickets = 4;
-
             var cartTickets = HttpContext.Session
                 .GetObject<List<ShoppingCartTicketItemKortVM>>(CartKeyTicket)
                 ?? new List<ShoppingCartTicketItemKortVM>();
