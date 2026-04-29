@@ -95,6 +95,7 @@ namespace ChampionsLeagueTickets.Controllers
                 }
 
             }
+
             var cartAbonementen = HttpContext.Session.GetObject<List<ShoppingCartAbonementItemKortVM>>(CartKeyAbonement);
 
             if (cartAbonementen == null || !cartAbonementen.Any())
@@ -102,12 +103,8 @@ namespace ChampionsLeagueTickets.Controllers
                 return result;
             }
 
-
-
             foreach (var item in cartAbonementen)
             {
-
-
                 var stadion = await _stadionService.FindByIdAsync(item.StadionId);
                 var seizoen = await _seizoenenService.FindByIdAsync(item.SeizoenId);
                 var zitplaats = await _zitplatsenService.FindByIdAsync(item.ZitplaatsId);
@@ -127,7 +124,6 @@ namespace ChampionsLeagueTickets.Controllers
                         Prijs = prijs
                     });
                 }
-
 
             return result;
         }
@@ -165,16 +161,13 @@ namespace ChampionsLeagueTickets.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> VoegTicketToeAsync(string matchId, string zitplaatsId)
+        public async Task<IActionResult> VoegTicketToe(string matchId, string zitplaatsId, string vakNummer)
         {
             var cartTickets = HttpContext.Session
                 .GetObject<List<ShoppingCartTicketItemKortVM>>(CartKeyTicket)
                 ?? new List<ShoppingCartTicketItemKortVM>();
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            int aantalTicketsAlGekocht =
-                await _ticketService.GetAantalTicketsVoorMatchEnUser(userId, matchId);
 
             var item = cartTickets.FirstOrDefault(x =>
                 x.MatchId == matchId && x.ZitplaatsId == zitplaatsId);
@@ -183,7 +176,27 @@ namespace ChampionsLeagueTickets.Controllers
                 .Where(x => x.MatchId == matchId)
                 .Sum(x => x.Aantal);
 
-            // +1 omdat user net wil toevoegen
+            //geen ticket voor match zelfde datum
+            var match = await _matchesService.FindByIdAsync(matchId);
+
+            if (await _ticketService.HasTicketOnSameDay(userId, matchId, match.DatumTijdStartMatch))
+            {
+                TempData["Error"] = "Je kan geen tickets kopen voor matches op dezelfde datum.";
+                return RedirectToAction("Index");
+            }
+
+            foreach (var cartItem in cartTickets) {
+                if (cartItem.DatumTijdStart.Date == match.DatumTijdStartMatch.Date && cartItem.MatchId != match.MatchId)
+                {
+                    TempData["Error"] = "Je kan geen tickets kopen voor matches op hetzelfde tijdstip.";
+                    return RedirectToAction("Index");
+                }
+            }
+
+            //max 4 tickets per wedstrijd
+            int aantalTicketsAlGekocht =
+                await _ticketService.GetAantalTicketsVoorMatchEnUser(userId, matchId);
+
             int totaal = aantalTicketsAlGekocht + aantalInCartVoorMatch + 1;
 
             if (totaal > maxAantalTickets)
@@ -192,20 +205,14 @@ namespace ChampionsLeagueTickets.Controllers
                 return RedirectToAction("Index");
             }
 
-            // item toevoegen of verhogen
-            if (item != null)
+            cartTickets.Add(new ShoppingCartTicketItemKortVM
             {
-                item.Aantal++;
-            }
-            else
-            {
-                cartTickets.Add(new ShoppingCartTicketItemKortVM
-                {
-                    MatchId = matchId,
-                    ZitplaatsId = zitplaatsId,
-                    Aantal = 1
-                });
-            }
+                MatchId = matchId,
+                ZitplaatsId = zitplaatsId,
+                Aantal = 1,
+                VakNummer = vakNummer,
+                DatumTijdStart = match.DatumTijdStartMatch
+            });
 
             HttpContext.Session.SetObject(CartKeyTicket, cartTickets);
 

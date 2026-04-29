@@ -2,14 +2,10 @@
 
 namespace ChampionsLeagueTickets.ViewModels
 {
-
-
     public class ShoppingCartVM {
         public List<ShoppingCartTicketVM> Tickets { get; set; } = new();
         public List<AbonementOverzichtVM> Abonementen { get; set; } = new();
     }
-
-
 
     public class ShoppingCartTicketItemKortVM
     {
@@ -17,6 +13,7 @@ namespace ChampionsLeagueTickets.ViewModels
         public string ZitplaatsId { get; set; }
         public int Aantal { get; set; }
         public string VakNummer{ get; set; }
+        public DateTime DatumTijdStart { get; set; }
     }
 
     public class ShoppingCartAbonementItemKortVM
@@ -26,8 +23,7 @@ namespace ChampionsLeagueTickets.ViewModels
         public string ZitplaatsId { get; set; }
     }
 
-        public class ShoppingCartTicketVM {
-
+    public class ShoppingCartTicketVM {
         public string MatchId { get; set; }
         public string ZitplaatsId { get; set; }
         public string ThuisTeam { get; set; }
@@ -40,6 +36,5 @@ namespace ChampionsLeagueTickets.ViewModels
         public string Rij { get; set; }
         public string Stoel { get; set; }
         public int Aantal { get; set; }
-
     }
 }

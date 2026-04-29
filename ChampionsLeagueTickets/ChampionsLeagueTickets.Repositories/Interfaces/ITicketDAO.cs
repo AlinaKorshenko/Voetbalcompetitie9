@@ -12,5 +12,7 @@ namespace ChampionsLeagueTickets.Repositories.Interfaces
         Task<Ticket?> FindByMatchAndSeatAsync(string matchId, string seatId);
 
         Task<int> GetAantalTicketsVoorMatchEnUser(string userId, string matchId);
+
+        Task<bool> HasTicketOnSameDay(string userId, string matchId, DateTime matchDatum);
     }
 }

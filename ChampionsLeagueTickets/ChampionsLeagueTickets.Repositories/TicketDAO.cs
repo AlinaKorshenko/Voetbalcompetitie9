@@ -88,6 +88,28 @@ namespace ChampionsLeagueTickets.Repositories
             }
         }
 
+        public async Task<bool> HasTicketOnSameDay(string userId, string matchId, DateTime matchDatum)
+        {
+            try
+            {
+                return await _dbContext.Orderlijnens
+                    .Include(ol => ol.Order)
+                    .Include(ol => ol.Ticket)
+                        .ThenInclude(t => t.Match)
+                    .Where(ol =>
+                        ol.Order.UserId == userId &&
+                        ol.TicketId != null &&
+                        ol.Ticket.MatchId != matchId)
+                    .AnyAsync(ol =>
+                        ol.Ticket.Match.DatumTijdStartMatch.Date == matchDatum.Date);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in DAO: " + ex.Message);
+                throw;
+            }
+        }
+
         public Task UpdateAsync(Ticket entity)
         {
             throw new NotImplementedException();

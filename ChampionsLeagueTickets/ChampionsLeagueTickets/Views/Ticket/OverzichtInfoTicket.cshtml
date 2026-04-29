@@ -70,17 +70,18 @@
                     <i class="bi bi-arrow-left"></i> Terug
                 </a>
 
-                <form asp-action="BevestigTicket" method="post">
-                    <input type="hidden" name="ZitplaatsID" value="@Model.Zitplaats.ZitplaatsId" />
-                    <input type="hidden" name="MatchID" value="@Model.MatchID" />
+                <form asp-controller="ShoppingCart" asp-action="VoegTicketToe" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden" name="zitplaatsId" value="@Model.Zitplaats.ZitplaatsId" />
+                    <input type="hidden" name="matchId" value="@Model.MatchID" />
+                    <input type="hidden" name="vakNummer" value="@Model.Zitplaats.VakNummer" />
 
                     <button type="submit" class="btn btn-success px-4">
                         <i class="bi bi-check-circle"></i> Bevestigen
                     </button>
                 </form>
             </div>
-
-
         </div>
     </div>
 </div>

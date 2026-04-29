@@ -48,6 +48,11 @@ namespace ChampionsLeagueTickets.Services
             return await _ticketsDAO.GetAllAsync();
         }
 
+        public async Task<bool> HasTicketOnSameDay(string userId, string matchId, DateTime matchDatum)
+        {
+            return await _ticketsDAO.HasTicketOnSameDay(userId, matchId, matchDatum);
+        }
+
         public Task UpdateAsync(Ticket entity)
         {
             throw new NotImplementedException();

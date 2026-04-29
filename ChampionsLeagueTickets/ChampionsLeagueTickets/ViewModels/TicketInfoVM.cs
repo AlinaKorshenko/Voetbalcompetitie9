@@ -11,8 +11,5 @@ namespace ChampionsLeagueTickets.ViewModels
         public DateTime Datum { get; set; }
         public Zitplaatsen Zitplaats { get; set; }
         public decimal Prijs { get; set; }
-
-
-
     }
 }

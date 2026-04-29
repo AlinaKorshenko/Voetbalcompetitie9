@@ -13,6 +13,14 @@
 
 <div class="container py-5">
 
+@if (TempData["Error"] != null)
+{
+        <div class="alert alert-warning alert-dismissible fade show mb-4">
+            <strong>Waarschuwing:</strong> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+}
+
 <div class="container py-5">
     <div class="mb-4">
         <h1 class="cart-page-title">
@@ -212,11 +220,3 @@
         </div>
     </div>
 </div>
-
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <strong>Waarschuwing:</strong> @TempData["Error"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-}
