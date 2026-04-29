@@ -20,11 +20,19 @@
                    asp-action="ChooseSeats"
                    asp-route-stadionId="@abonnement.StadionId"
                    asp-route-seizoenId="@abonnement.SeizoenId"
-                   class="text-decoration-none text-dark">
-                    <div class="card h-100 shadow-sm p-3">
+                   class="text-decoration-none @(abonnement.IsKoopbaar ? "text-dark" : "text-muted")"
+                   style="pointer-events:@(abonnement.IsKoopbaar ? "auto" : "none");">
+                    <div class="card h-100 shadow-sm p-3 @(abonnement.IsKoopbaar ? "" : "opacity-50")">
                         <div class="card-body">
                             <h4 class="card-title mb-1">@abonnement.StadionNaam</h4>
-                            <span class="badge mb-3">@abonnement.SeizoenNaam</span>
+                            @if (abonnement.IsKoopbaar)
+                            {
+                                <span class="badge bg-success mb-2">Beschikbaar</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary mb-2">Niet meer beschikbaar</span>
+                            }
                             <p class="mb-1">
                                 <i class="bi bi-calendar-event"></i>
                                 @abonnement.StartDatum.ToString("dd/MM/yyyy")

@@ -29,24 +29,24 @@ namespace ChampionsLeagueTickets.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<string> FindAbinementIdByStadonSeizoenZitplaatsAsynk(string stadionId, string seirzoenId, string zitplaatsId)
+        public async Task<string> FindAbinementIdByStadonSeizoenZitplaatsAsynk(string stadionId, string seizoenId, string zitplaatsId)
         {
 
-             try
-    {
-        return await _dbContext.Abonnementens
-            .Where(a =>
-                a.StadionId == stadionId &&
-                a.SeizoenId == seirzoenId &&
-                a.ZitplaatsId == zitplaatsId)
-            .Select(a => a.AbonnementId)
-            .FirstOrDefaultAsync();
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine("Error in DAO: " + ex.Message);
-        throw;
-    }
+            try
+            {
+                return await _dbContext.Abonnementens
+                    .Where(a =>
+                        a.StadionId == stadionId &&
+                        a.SeizoenId == seizoenId &&
+                        a.ZitplaatsId == zitplaatsId)
+                    .Select(a => a.AbonnementId)
+                    .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in DAO: " + ex.Message);
+                throw;
+            }
         }
 
         public async Task<Abonnementen> FindAbonnementByStadionIdAndAbonnementId(string abonnementId, string stadionId)

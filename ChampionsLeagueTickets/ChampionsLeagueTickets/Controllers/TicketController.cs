@@ -5,6 +5,7 @@ using ChampionsLeagueTickets.Services;
 using ChampionsLeagueTickets.Services.Interfaces;
 using ChampionsLeagueTickets.View_Models;
 using ChampionsLeagueTickets.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
@@ -53,6 +54,7 @@ namespace Voetbalcompetitie9.Controllers
             return View(matches);
         }
 
+        [Authorize]
         public async Task<IActionResult> ChooseSeats(string matchID) {
             var vakTypes = (await _vakService.GetAllAsync())
              .Select(v => new
@@ -70,6 +72,7 @@ namespace Voetbalcompetitie9.Controllers
             return View(ticketVM);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> ChooseSeats(TicketStoelVM ticketVM)
         {
@@ -121,6 +124,7 @@ namespace Voetbalcompetitie9.Controllers
             return View(ticketVM);
         }
 
+        [Authorize]
         public async Task<IActionResult> OverzichtInfoTicket(TicketStoelVM vm)
         {
             var match = await _matchesService.FindByIdAsync(vm.MatchID);
@@ -156,6 +160,7 @@ namespace Voetbalcompetitie9.Controllers
             return View(zitplaatsInfoVM);
         }
 
+        [Authorize]
         public async Task<IActionResult> BevestigTicket(string ZitplaatsID, string MatchID) {
             if (string.IsNullOrEmpty(ZitplaatsID) || string.IsNullOrEmpty(MatchID))
             {

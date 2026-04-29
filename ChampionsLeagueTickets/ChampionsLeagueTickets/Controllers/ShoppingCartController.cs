@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Org.BouncyCastle.Math;
 using System.Threading.Tasks;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ChampionsLeagueTickets.Controllers
 {
@@ -127,7 +128,6 @@ namespace ChampionsLeagueTickets.Controllers
 
             return result;
         }
-
 
         [HttpPost]
         public IActionResult VerwijderTicket(string matchId, string zitplaatsId)
