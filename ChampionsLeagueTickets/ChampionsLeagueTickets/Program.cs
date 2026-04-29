@@ -18,7 +18,6 @@ using Microsoft.OpenApi.Models;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text;
-using Azure.Identity;
 using Azure.Extensions.AspNetCore.Configuration.Secrets;
 
 var builder = WebApplication.CreateBuilder(args);

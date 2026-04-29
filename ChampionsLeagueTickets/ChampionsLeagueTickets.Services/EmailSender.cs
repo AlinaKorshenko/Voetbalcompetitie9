@@ -36,7 +36,6 @@ namespace ChampionsLeagueTickets.Services
                 using var smtp = new SmtpClient();
                 await smtp.ConnectAsync(s["MailServer"], int.Parse(s["MailPort"]!), SecureSocketOptions.StartTls);
 
-                // 🔐 hier mix je appsettings + Key Vault
                 await smtp.AuthenticateAsync(s["Username"], password);
 
                 await smtp.SendAsync(message);

@@ -118,7 +118,11 @@ namespace Voetbalcompetitie9.Controllers
                         DisplayName = "Stoel " + s.StoelNummer
                     });
 
-                ticketVM.StoelenLijst = new SelectList(vrijeStoelen, "ZitplaatsId", "DisplayName", ticketVM.GeselecteerdeZitplaatsId);
+                ticketVM.StoelenLijst = new SelectList(
+                    vrijeStoelen,
+                    "ZitplaatsId",
+                    "DisplayName"
+                );
             }
 
             return View(ticketVM);
