@@ -101,5 +101,71 @@ namespace ChampionsLeagueTickets.Services
         </body>
         </html>
         """;
+
+        public static string OrderConfirmationSimple(
+            string orderId,
+            DateTime orderDate,
+            List<string> ticketLines,
+            List<string> abonnementLines,
+            decimal total
+        )
+                {
+                    var ticketsHtml = ticketLines.Any()
+                        ? string.Join("", ticketLines.Select(t => $"<li>{t}</li>"))
+                        : "<li>Geen tickets</li>";
+
+                    var abonnementHtml = abonnementLines.Any()
+                        ? string.Join("", abonnementLines.Select(a => $"<li>{a}</li>"))
+                        : "<li>Geen abonnementen</li>";
+
+                    return $"""
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="utf-8">
+                <style>{BaseStyle}</style>
+            </head>
+
+            <body style="margin:0; background-color:#0d0e1a;">
+              <div class="wrapper">
+
+                <div class="header">
+                  <h1>⚽ Bestelbevestiging</h1>
+                  <p>Order #{orderId}</p>
+                </div>
+
+                <div class="body">
+
+                  <h2>Bedankt voor je bestelling!</h2>
+
+                  <div class="info-box">
+                    <p><strong>Order datum:</strong> {orderDate:dd/MM/yyyy HH:mm}</p>
+                  </div>
+
+                  <h3 style="color:#fff;">🎟 Tickets</h3>
+                  <ul>{ticketsHtml}</ul>
+
+                  <h3 style="color:#fff;">🏟 Abonnementen</h3>
+                  <ul>{abonnementHtml}</ul>
+
+                  <hr class="divider" />
+
+                  <p><strong>Totaal:</strong> €{total:0.00}</p>
+
+                  <p style="font-size:13px;">
+                    Dit is een bevestiging van je bestelling. Bewaar deze e-mail goed.
+                  </p>
+
+                </div>
+
+                <div class="footer">
+                  <p>&copy; Champions League Tickets</p>
+                </div>
+
+              </div>
+            </body>
+            </html>
+            """;
+        }
     }
 }
