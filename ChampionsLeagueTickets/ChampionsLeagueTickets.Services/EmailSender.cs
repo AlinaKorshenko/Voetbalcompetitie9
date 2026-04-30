@@ -50,7 +50,6 @@ namespace ChampionsLeagueTickets.Services
 
         public async Task SendOrderConfirmationAsync(
                 string email,
-                string userName,
                 DateTime orderDate,
                 List<string> tickets,
                 List<string> abonnementen,

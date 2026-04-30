@@ -21,6 +21,7 @@ namespace ChampionsLeagueTickets.Controllers
         private readonly IMatchService _matchesService;
         private readonly IService<VakType> _vakService;
         private readonly ITicketService _ticketService;
+        private readonly IAbonnementService _abonnementService;
         private readonly IZitplaatsenService _zitplatsenService;
         private readonly ITicketPrijsService _ticketPrijsService;
         private readonly IService<Stadion> _stadionService;
@@ -28,13 +29,15 @@ namespace ChampionsLeagueTickets.Controllers
         private readonly ISeizoenenService _seizoenenService;
         private readonly IOrderService _orderService;
         private readonly IService<Orderlijnen> _orderlijnenService;
+        private readonly IAppEmailSender _appEmailSender;
         private const int maxAantalTickets = 4;
 
-        public ShoppingCartController(IMatchService matchesService, IService<VakType> vakService, ITicketService ticketService, IZitplaatsenService zitplatsenService, ITicketPrijsService ticketPrijsService, IService<Stadion> stadionService, IAbonementenPrijsService abonementenPrijsService, ISeizoenenService seizoenenService, IOrderService orderService, IService<Orderlijnen> orderlijnenService)
+        public ShoppingCartController(IMatchService matchesService, IService<VakType> vakService, ITicketService ticketService, IAbonnementService abonnementService, IZitplaatsenService zitplatsenService, ITicketPrijsService ticketPrijsService, IService<Stadion> stadionService, IAbonementenPrijsService abonementenPrijsService, ISeizoenenService seizoenenService, IOrderService orderService, IService<Orderlijnen> orderlijnenService, IAppEmailSender appEmailSender)
         {
             _matchesService = matchesService;
             _vakService = vakService;
             _ticketService = ticketService;
+            _abonnementService = abonnementService;
             _zitplatsenService = zitplatsenService;
             _ticketPrijsService = ticketPrijsService;
             _stadionService = stadionService;
@@ -42,6 +45,7 @@ namespace ChampionsLeagueTickets.Controllers
             _seizoenenService = seizoenenService;
             _orderService = orderService;
             _orderlijnenService = orderlijnenService;
+            _appEmailSender = appEmailSender;
         }
 
         public async Task<IActionResult> Index()
@@ -293,18 +297,27 @@ namespace ChampionsLeagueTickets.Controllers
 
                 totaal += t.Prijs * t.Aantal;
 
+                string ticketId = await _ticketService.GenerateNextTicketIdAsync();
+
+                Zitplaatsen zitplaats = await _zitplatsenService.FindByIdAsync(t.ZitplaatsId);
+                string stadionId = zitplaats.StadionId;
+
+                await _ticketService.AddAsync(new Ticket
+                {
+                    TicketId = ticketId,
+                    MatchId = t.MatchId,
+                    ZitplaatsId = t.ZitplaatsId,
+                    StadionId = stadionId,
+                    Prijs = t.Prijs
+                });
+
                 await _orderlijnenService.AddAsync(new Orderlijnen
                 {
                     OrderId = order.OrderId,
                     OrderLijnNummer = lijn++,
-                    TicketId = t.MatchId,
+                    TicketId = ticketId,
                     MatchId = t.MatchId,
-                    Bedrag = t.Prijs * t.Aantal
-                });
-
-                await _ticketService.AddAsync(new Ticket
-                {
-                    
+                    Bedrag = t.Prijs
                 });
             }
 
@@ -313,6 +326,26 @@ namespace ChampionsLeagueTickets.Controllers
                 abonnementLines.Add($"{a.StadionNaam} - {a.SeizoenNaam}");
 
                 totaal += a.Prijs;
+
+                string abonnementenId = await _abonnementService.GenerateNextAbonnementenIdAsync();
+
+                string stadionId = a.zitplaats.StadionId;
+
+                Seizoenen seizoen = await _seizoenenService.FindByIdAsync(a.SeizoenId);
+                DateOnly startDatum = seizoen.StartDatum;
+                DateOnly eindDatum = seizoen.EindDatum;
+
+                await _abonnementService.AddAsync(new Abonnementen
+                {
+                    AbonnementId = abonnementenId,
+                    StadionId = stadionId,
+                    UserId = userId,
+                    ZitplaatsId = a.zitplaats.ZitplaatsId,
+                    StartDatum = startDatum,
+                    EindDatum = eindDatum,
+                    Status = false,
+                    SeizoenId = a.SeizoenId
+                });
 
                 await _orderlijnenService.AddAsync(new Orderlijnen
                 {
@@ -324,61 +357,9 @@ namespace ChampionsLeagueTickets.Controllers
                 });
             }
 
-            // 2. Tickets
-            if (cart.Tickets != null)
-            {
-                foreach (var t in cart.Tickets)
-                {
-                    ticketLines.Add($"{t.Aantal}x {t.ThuisTeam} - {t.UitTeam}");
-
-                    totaal += t.Prijs * t.Aantal;
-
-                    string ticketId = await _ticketService.GenerateNextTicketIdAsync();
-
-                    await _ticketService.AddAsync(new Ticket
-                    {
-                        TicketId = ticketId,
-                        MatchId = t.MatchId,
-                        ZitplaatsId = t.ZitplaatsId,
-                        StadionId = ?,
-                        Prijs = t.Prijs
-                    });
-
-                    await _orderlijnenService.AddAsync(new Orderlijnen
-                    {
-                        OrderID = order.OrderID,
-                        OrderLijnNummer = lijn++,
-                        TicketID = ticketId,
-                        MatchID = t.MatchId,
-                        Bedrag = t.Prijs * t.Aantal
-                    });
-                }
-            }
-
-            // 3. Abonnementen
-            if (cart.Abonementen != null)
-            {
-                foreach (var a in cart.Abonementen)
-                {
-                    abonnementLines.Add($"{a.StadionNaam} - {a.SeizoenNaam}");
-
-                    totaal += a.Prijs;
-
-                    await _orderlijnenService.AddAsync(new Orderlijnen
-                    {
-                        OrderID = order.OrderID,
-                        OrderLijnNummer = lijn++,
-                        AbonnementID = a.SeizoenId,
-                        StadionID = a.StadionID,
-                        Bedrag = a.Prijs
-                    });
-                }
-            }
-
             // 4. Email sturen
-            await _emailSender.SendOrderConfirmationAsync(
+            await _appEmailSender.SendOrderConfirmationAsync(
                 userEmail,
-                User.Identity.Name,
                 DateTime.Now,
                 ticketLines,
                 abonnementLines,
