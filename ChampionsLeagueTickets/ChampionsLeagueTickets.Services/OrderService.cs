@@ -1,5 +1,6 @@
 ﻿using ChampionsLeagueTickets.Domain.EntitiesDB;
 using ChampionsLeagueTickets.Repositories.Interfaces;
+using ChampionsLeagueTickets.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ChampionsLeagueTickets.Services
 {
-    public class OrderService : IOrderDAO
+    public class OrderService : IOrderService
     {
         private IOrderDAO _orderDAO;
 

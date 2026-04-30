@@ -174,6 +174,13 @@ builder.Services.AddScoped<IAbonnementService, AbonnementenService>();
 //Users
 builder.Services.AddScoped<IUserService, UserService>();
 
+//Orders
+builder.Services.AddScoped<IOrderDAO, OrderDAO>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+
+builder.Services.AddScoped<IDAO<Orderlijnen>, OrderlijnenDAO>();
+builder.Services.AddScoped<IService<Orderlijnen>, OrderlijnenService>();
+
 //Hotel API
 //builder.Services.AddScoped<IHotelService, HotelService>();
 
