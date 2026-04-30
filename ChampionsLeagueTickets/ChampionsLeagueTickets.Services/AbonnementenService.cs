@@ -44,6 +44,11 @@ namespace ChampionsLeagueTickets.Services
             throw new NotImplementedException();
         }
 
+        public async Task<string> GenerateNextAbonnementenIdAsync()
+        {
+            return await _abonnementenDAO.GenerateNextAbonnementenIdAsync();
+        }
+
         public async Task<IEnumerable<Abonnementen>?> GetAllAsync()
         {
             return await _abonnementenDAO.GetAllAsync();

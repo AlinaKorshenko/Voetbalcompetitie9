@@ -332,14 +332,23 @@ namespace ChampionsLeagueTickets.Controllers
                     ticketLines.Add($"{t.Aantal}x {t.ThuisTeam} - {t.UitTeam}");
 
                     totaal += t.Prijs * t.Aantal;
-                    
 
+                    string ticketId = await _ticketService.GenerateNextTicketIdAsync();
+
+                    await _ticketService.AddAsync(new Ticket
+                    {
+                        TicketId = ticketId,
+                        MatchId = t.MatchId,
+                        ZitplaatsId = t.ZitplaatsId,
+                        StadionId = ?,
+                        Prijs = t.Prijs
+                    });
 
                     await _orderlijnenService.AddAsync(new Orderlijnen
                     {
                         OrderID = order.OrderID,
                         OrderLijnNummer = lijn++,
-                        TicketID = t.MatchId,
+                        TicketID = ticketId,
                         MatchID = t.MatchId,
                         Bedrag = t.Prijs * t.Aantal
                     });
