@@ -19,9 +19,9 @@ namespace ChampionsLeagueTickets.Services
             _abonnementenDAO = abonnementenDAO;
         }
 
-        public Task AddAsync(Abonnementen entity)
+        public async Task AddAsync(Abonnementen entity)
         {
-            throw new NotImplementedException();
+            await _abonnementenDAO.AddAsync(entity);
         }
 
         public Task DeleteAsync(Abonnementen entity)

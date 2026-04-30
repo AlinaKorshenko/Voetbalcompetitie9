@@ -20,9 +20,18 @@ namespace ChampionsLeagueTickets.Repositories
             _dbContext = dbContext;
         }
 
-        public Task AddAsync(Ticket entity)
+        public async Task AddAsync(Ticket entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _dbContext.Tickets.AddAsync(entity);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in DAO: " + ex.Message);
+                throw;
+            }
         }
 
         public Task DeleteAsync(Ticket entity)
@@ -48,6 +57,29 @@ namespace ChampionsLeagueTickets.Repositories
                 }
 
                 return tickets;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in DAO: " + ex.Message);
+                throw;
+            }
+        }
+
+        public async Task<string> GenerateNextTicketIdAsync()
+        {
+            try
+            {
+                var lastTicket = await _dbContext.Tickets
+                    .OrderByDescending(o => o.TicketId)
+                    .FirstOrDefaultAsync();
+
+                if (lastTicket == null)
+                    return "T0001";
+
+                var lastNumber = int.Parse(lastTicket.TicketId.Substring(1));
+                var newNumber = lastNumber + 1;
+
+                return $"O{newNumber.ToString("D4")}";
             }
             catch (Exception ex)
             {

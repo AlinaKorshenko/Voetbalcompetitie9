@@ -268,9 +268,11 @@ namespace ChampionsLeagueTickets.Controllers
             var userEmail = User.Identity.Name;
 
             // 1. Order maken
+            string orderId = await _orderService.GenerateNextOrderIdAsync();
+
             var order = new Order
             {
-                OrderId = Guid.NewGuid().ToString().Substring(0, 5),
+                OrderId = orderId,
                 UserId = userId,
                 DatumTijdOrder = DateTime.Now,
                 Status = "Bevestigd"
@@ -278,6 +280,7 @@ namespace ChampionsLeagueTickets.Controllers
 
             await _orderService.AddAsync(order);
 
+            //orderlijnen
             int lijn = 1;
             decimal totaal = 0;
 
@@ -297,6 +300,11 @@ namespace ChampionsLeagueTickets.Controllers
                     TicketId = t.MatchId,
                     MatchId = t.MatchId,
                     Bedrag = t.Prijs * t.Aantal
+                });
+
+                await _ticketService.AddAsync(new Ticket
+                {
+                    
                 });
             }
 

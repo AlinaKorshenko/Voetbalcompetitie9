@@ -19,9 +19,18 @@ namespace ChampionsLeagueTickets.Repositories
             _dbContext = dbContext;
         }
 
-        public Task AddAsync(Abonnementen entity)
+        public async Task AddAsync(Abonnementen entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _dbContext.Abonnementens.AddAsync(entity);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in DAO: " + ex.Message);
+                throw;
+            }
         }
 
         public Task DeleteAsync(Abonnementen entity)
