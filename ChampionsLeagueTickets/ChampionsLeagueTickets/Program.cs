@@ -156,6 +156,14 @@ builder.Services.AddScoped<ITicketPrijsService, TicketsPrijsService>();
 builder.Services.AddScoped<IAbonnementDAO, AbonnementenDAO>();
 builder.Services.AddScoped<IAbonnementService, AbonnementenService>();
 
+//Orders
+builder.Services.AddScoped<IOrderDAO, OrderDAO>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+
+//OrderLijns
+builder.Services.AddScoped<IOrderLijnDAO, OrderLijnDAO>();
+builder.Services.AddScoped<IOrderLijnService, OrderLijnService>();
+
 //Users
 builder.Services.AddScoped<IUserService, UserService>();
 

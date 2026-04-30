@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace ChampionsLeagueTickets.ViewModels
+namespace ChampionsLeagueTickets.ViewModels.ShoppingCart
 {
 
 

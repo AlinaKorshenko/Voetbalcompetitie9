@@ -2,6 +2,7 @@
 using ChampionsLeagueTickets.Domain.EntitiesDB;
 using ChampionsLeagueTickets.Services.DTO;
 using ChampionsLeagueTickets.ViewModels;
+using ChampionsLeagueTickets.ViewModels.order;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ChampionsLeagueTickets.AutoMapper
@@ -36,6 +37,34 @@ namespace ChampionsLeagueTickets.AutoMapper
             //users
             CreateMap<AspNetUser, UserInfoResponse>();
             CreateMap<UserInfoResponse, UserVM>();
+
+
+
+            //orders
+            CreateMap<Zitplaatsen, ZitplaatsVM>()
+                .ForMember(dest => dest.VakOmschrijving, opt => opt.MapFrom(src => src.VakNummerNavigation.Omschrijving));
+
+
+            CreateMap<Ticket, OrderTicketVM>()
+                .ForMember(dest => dest.MatchID, opt => opt.MapFrom(src => src.MatchId))
+                .ForMember(dest => dest.Prijs, opt => opt.MapFrom(src => src.Prijs))
+                .ForMember(dest => dest.Zitplaats, opt => opt.MapFrom(src => src.Zitplaatsen));
+
+            CreateMap<Abonnementen, OrderAbonementVM>()
+                .ForMember(dest => dest.AbonnementId, opt => opt.MapFrom(src => src.AbonnementId))
+                .ForMember(dest => dest.Zitplaats, opt => opt.MapFrom(src => src.Zitplaatsen))
+                .ForMember(dest => dest.SeizoenNaam, opt => opt.MapFrom(src => src.Seizoen.Naam));
+
+            CreateMap<Orderlijnen, OrderLijnVM>()
+                .ForMember(dest => dest.orderLijnNummer, opt => opt.MapFrom(src => src.OrderLijnNummer))
+                .ForMember(dest => dest.bedrag, opt => opt.MapFrom(src => src.Bedrag))
+                .ForMember(dest => dest.Ticket, opt => opt.MapFrom(src => src.Ticket))
+                .ForMember(dest => dest.Abonement, opt => opt.MapFrom(src => src.Abonnementen));
+
+            CreateMap<Order, OrderVM>()
+                .ForMember(dest => dest.OrderLijnen, opt => opt.MapFrom(src => src.Orderlijnens));
+
+
         }
 
     }

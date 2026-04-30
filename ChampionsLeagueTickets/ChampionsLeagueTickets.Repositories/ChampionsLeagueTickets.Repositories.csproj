@@ -18,4 +18,10 @@
     <ProjectReference Include="..\ChampionsLeagueTickets.Domain\ChampionsLeagueTickets.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Interfaces\IOrderLijnDAO.cs">
+      <CustomToolNamespace>DAO</CustomToolNamespace>
+    </Compile>
+  </ItemGroup>
+
 </Project>

@@ -5,6 +5,8 @@ using ChampionsLeagueTickets.Services;
 using ChampionsLeagueTickets.Services.Interfaces;
 using ChampionsLeagueTickets.View_Models;
 using ChampionsLeagueTickets.ViewModels;
+using ChampionsLeagueTickets.ViewModels.order;
+using ChampionsLeagueTickets.ViewModels.ShoppingCart;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -109,6 +111,7 @@ namespace ChampionsLeagueTickets.Controllers
             var zitplaats = await _zitplaatsenService.FindByIdAsync(stoelVm.GeselecteerdeZitplaatsId);
             var seizoen = await _seizoenenService.FindByIdAsync(stoelVm.SeizoenId);
 
+            var zitplaatsVM = _mapper.Map<ZitplaatsVM>(zitplaats);
 
             if (zitplaats == null)
             {
@@ -122,7 +125,7 @@ namespace ChampionsLeagueTickets.Controllers
                 SeizoenId = stoelVm.SeizoenId,
                 StadionID = stoelVm.StadionID,
                 StadionNaam = stadion.Naam,
-                zitplaats = zitplaats,
+                zitplaats = zitplaatsVM,
                 SeizoenNaam = seizoen.Naam,
                 StartDatum = seizoen.StartDatum,
                 EindDatum = seizoen.EindDatum,

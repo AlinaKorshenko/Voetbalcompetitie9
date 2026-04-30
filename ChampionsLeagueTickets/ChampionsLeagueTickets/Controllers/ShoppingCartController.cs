@@ -5,6 +5,8 @@ using ChampionsLeagueTickets.Repositories.Interfaces;
 using ChampionsLeagueTickets.Services;
 using ChampionsLeagueTickets.Services.Interfaces;
 using ChampionsLeagueTickets.ViewModels;
+using ChampionsLeagueTickets.ViewModels.order;
+using ChampionsLeagueTickets.ViewModels.ShoppingCart;
 using Microsoft.AspNetCore.Mvc;
 using Org.BouncyCastle.Math;
 using System.Threading.Tasks;
@@ -22,7 +24,8 @@ namespace ChampionsLeagueTickets.Controllers
         private readonly IService<Stadion> _stadionService;
         private readonly IAbonementenPrijsService _abonementenPrijsService;
         private readonly ISeizoenenService _seizoenenService;
-        public ShoppingCartController(IMatchService matchesService, IService<VakType> vakService, IZitplaatsenService zitplatsenService, ITicketPrijsService ticketPrijsService, IService<Stadion> stadionService, IAbonementenPrijsService abonementenPrijsService, ISeizoenenService seizoenenService)
+        private readonly IMapper _mapper;
+        public ShoppingCartController(IMatchService matchesService, IService<VakType> vakService, IZitplaatsenService zitplatsenService, ITicketPrijsService ticketPrijsService, IService<Stadion> stadionService, IAbonementenPrijsService abonementenPrijsService, ISeizoenenService seizoenenService, IMapper mapper)
         {
             _matchesService = matchesService;
             _vakService = vakService;
@@ -31,7 +34,7 @@ namespace ChampionsLeagueTickets.Controllers
             _stadionService = stadionService;
             _abonementenPrijsService = abonementenPrijsService;
             _seizoenenService = seizoenenService;
-
+            _mapper = mapper;
         }
 
         public async Task<IActionResult> IndexAsync()
@@ -111,13 +114,15 @@ namespace ChampionsLeagueTickets.Controllers
 
                     var prijs = await _abonementenPrijsService.GetPriceBySeizoenIdAndStadionId(item.SeizoenId, item.StadionId);
 
-                    result.Abonementen.Add(new AbonementOverzichtVM
+                var zitplaatsVM = _mapper.Map<ZitplaatsVM>(zitplaats);
+
+                result.Abonementen.Add(new AbonementOverzichtVM
                     {
 
                         SeizoenId = item.SeizoenId,
                         StadionID = item.StadionId,
                         StadionNaam = stadion.Naam,
-                        zitplaats = zitplaats,
+                        zitplaats = zitplaatsVM,
                         SeizoenNaam = seizoen.Naam,
                         StartDatum = seizoen.StartDatum,
                         EindDatum = seizoen.EindDatum,

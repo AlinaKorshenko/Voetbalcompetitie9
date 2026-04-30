@@ -5,6 +5,7 @@ using ChampionsLeagueTickets.Services;
 using ChampionsLeagueTickets.Services.Interfaces;
 using ChampionsLeagueTickets.View_Models;
 using ChampionsLeagueTickets.ViewModels;
+using ChampionsLeagueTickets.ViewModels.ShoppingCart;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
@@ -118,7 +119,8 @@ namespace Voetbalcompetitie9.Controllers
                 return NotFound("Match niet gevonden");
             }
 
-            var zitplaats = await _zitplatsenService.FindByIdAsync(vm.GeselecteerdeZitplaatsId);           
+            var zitplaats = await _zitplatsenService.FindByIdAsync(vm.GeselecteerdeZitplaatsId);
+            var zitplaatsVM = _mapper.Map<ZitplaatsVM>(zitplaats);
 
             if (zitplaats == null)
             {
@@ -131,7 +133,7 @@ namespace Voetbalcompetitie9.Controllers
                 ThuisTeam = thuisTeamNaam ?? "",
                 BezoekTeam = bezoekTeamNaam ?? "",
                 Stadion = stadionNaam ?? "",
-                Zitplaats = zitplaats,
+                Zitplaats = zitplaatsVM,
                 Prijs = (decimal)vm.Prijs,
                 Datum = datum
 

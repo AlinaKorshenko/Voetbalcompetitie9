@@ -1,4 +1,5 @@
-﻿@model ChampionsLeagueTickets.ViewModels.AbonementOverzichtVM
+﻿@using ChampionsLeagueTickets.ViewModels.ShoppingCart
+@model AbonementOverzichtVM
 
 @{
     ViewData["Title"] = "OverzichtInfoAbonement";
@@ -53,7 +54,7 @@
 
                 <p>
                     <i class="bi bi-layers-fill text-warning"></i>
-                    <strong>Vak:</strong> @Model.zitplaats.VakNummerNavigation.Omschrijving
+                    <strong>Vak:</strong> @Model.zitplaats.VakOmschrijving
                 </p>
 
                 <p>
