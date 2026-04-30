@@ -1,15 +1,16 @@
 ﻿using AutoMapper;
 using ChampionsLeagueTickets.Domain.EntitiesDB;
 using ChampionsLeagueTickets.Extentions;
+using ChampionsLeagueTickets.Repositories;
 using ChampionsLeagueTickets.Repositories.Interfaces;
 using ChampionsLeagueTickets.Services;
 using ChampionsLeagueTickets.Services.Interfaces;
 using ChampionsLeagueTickets.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Org.BouncyCastle.Math;
-using System.Threading.Tasks;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 
 namespace ChampionsLeagueTickets.Controllers
 {
@@ -25,9 +26,11 @@ namespace ChampionsLeagueTickets.Controllers
         private readonly IService<Stadion> _stadionService;
         private readonly IAbonementenPrijsService _abonementenPrijsService;
         private readonly ISeizoenenService _seizoenenService;
+        private readonly IOrderService _orderService;
+        private readonly IService<Orderlijnen> _orderlijnenService;
         private const int maxAantalTickets = 4;
 
-        public ShoppingCartController(IMatchService matchesService, IService<VakType> vakService, ITicketService ticketService, IZitplaatsenService zitplatsenService, ITicketPrijsService ticketPrijsService, IService<Stadion> stadionService, IAbonementenPrijsService abonementenPrijsService, ISeizoenenService seizoenenService)
+        public ShoppingCartController(IMatchService matchesService, IService<VakType> vakService, ITicketService ticketService, IZitplaatsenService zitplatsenService, ITicketPrijsService ticketPrijsService, IService<Stadion> stadionService, IAbonementenPrijsService abonementenPrijsService, ISeizoenenService seizoenenService, IOrderService orderService, IService<Orderlijnen> orderlijnenService)
         {
             _matchesService = matchesService;
             _vakService = vakService;
@@ -37,6 +40,8 @@ namespace ChampionsLeagueTickets.Controllers
             _stadionService = stadionService;
             _abonementenPrijsService = abonementenPrijsService;
             _seizoenenService = seizoenenService;
+            _orderService = orderService;
+            _orderlijnenService = orderlijnenService;
         }
 
         public async Task<IActionResult> Index()
@@ -247,7 +252,128 @@ namespace ChampionsLeagueTickets.Controllers
             return RedirectToAction("Index");
         }
 
-        
+        [HttpPost]
+        public async Task<IActionResult> Checkout()
+        {
+            var cart = await GetShoppingCart();
+
+            if ((cart.Tickets == null || !cart.Tickets.Any()) &&
+                (cart.Abonementen == null || !cart.Abonementen.Any()))
+            {
+                TempData["Error"] = "Winkelmandje is leeg.";
+                return RedirectToAction("Index");
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userEmail = User.Identity.Name;
+
+            // 1. Order maken
+            var order = new Order
+            {
+                OrderId = Guid.NewGuid().ToString().Substring(0, 5),
+                UserId = userId,
+                DatumTijdOrder = DateTime.Now,
+                Status = "Bevestigd"
+            };
+
+            await _orderService.AddAsync(order);
+
+            int lijn = 1;
+            decimal totaal = 0;
+
+            var ticketLines = new List<string>();
+            var abonnementLines = new List<string>();
+
+            foreach (var t in cart.Tickets ?? new List<ShoppingCartTicketVM>())
+            {
+                ticketLines.Add($"{t.Aantal}x {t.ThuisTeam} - {t.UitTeam}");
+
+                totaal += t.Prijs * t.Aantal;
+
+                await _orderlijnenService.AddAsync(new Orderlijnen
+                {
+                    OrderId = order.OrderId,
+                    OrderLijnNummer = lijn++,
+                    TicketId = t.MatchId,
+                    MatchId = t.MatchId,
+                    Bedrag = t.Prijs * t.Aantal
+                });
+            }
+
+            foreach (var a in cart.Abonementen ?? new List<AbonementOverzichtVM>())
+            {
+                abonnementLines.Add($"{a.StadionNaam} - {a.SeizoenNaam}");
+
+                totaal += a.Prijs;
+
+                await _orderlijnenService.AddAsync(new Orderlijnen
+                {
+                    OrderId = order.OrderId,
+                    OrderLijnNummer = lijn++,
+                    AbonnementId = a.SeizoenId,
+                    StadionId = a.StadionID,
+                    Bedrag = a.Prijs
+                });
+            }
+
+            // 2. Tickets
+            if (cart.Tickets != null)
+            {
+                foreach (var t in cart.Tickets)
+                {
+                    ticketLines.Add($"{t.Aantal}x {t.ThuisTeam} - {t.UitTeam}");
+
+                    totaal += t.Prijs * t.Aantal;
+                    
+
+
+                    await _orderlijnenService.AddAsync(new Orderlijnen
+                    {
+                        OrderID = order.OrderID,
+                        OrderLijnNummer = lijn++,
+                        TicketID = t.MatchId,
+                        MatchID = t.MatchId,
+                        Bedrag = t.Prijs * t.Aantal
+                    });
+                }
+            }
+
+            // 3. Abonnementen
+            if (cart.Abonementen != null)
+            {
+                foreach (var a in cart.Abonementen)
+                {
+                    abonnementLines.Add($"{a.StadionNaam} - {a.SeizoenNaam}");
+
+                    totaal += a.Prijs;
+
+                    await _orderlijnenService.AddAsync(new Orderlijnen
+                    {
+                        OrderID = order.OrderID,
+                        OrderLijnNummer = lijn++,
+                        AbonnementID = a.SeizoenId,
+                        StadionID = a.StadionID,
+                        Bedrag = a.Prijs
+                    });
+                }
+            }
+
+            // 4. Email sturen
+            await _emailSender.SendOrderConfirmationAsync(
+                userEmail,
+                User.Identity.Name,
+                DateTime.Now,
+                ticketLines,
+                abonnementLines,
+                totaal
+            );
+
+            // 5. Cart leegmaken
+            HttpContext.Session.Remove("ShoppingCartTicket");
+            HttpContext.Session.Remove("ShoppingCartAbonement");
+
+            return RedirectToAction("OrderSuccess");
+        }
     }
 }
 

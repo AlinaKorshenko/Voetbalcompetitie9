@@ -10,5 +10,6 @@ namespace ChampionsLeagueTickets.Repositories.Interfaces
     public interface IOrderDAO : IDAO<Order>
     {
         Task<IEnumerable<Order>?> GetAllOrderInformationFromUser(string userId);
+        Task<string> GenerateNextOrderIdAsync();
     }
 }

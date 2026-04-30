@@ -10,6 +10,11 @@ namespace ChampionsLeagueTickets.Services.Interfaces
     {
         Task SendEmailAsync(string email, string subject, string htmlMessage);
 
-        Task SendOrderConfirmationAsync(string email, string userName, string matchName, int ticketCount);
+        Task SendOrderConfirmationAsync(string email,
+            string userName,
+            DateTime orderDate,
+            List<string> tickets,
+            List<string> abonnementen,
+            decimal total);
     }
 }

@@ -32,6 +32,11 @@ namespace ChampionsLeagueTickets.Services
             throw new NotImplementedException();
         }
 
+        public async Task<string> GenerateNextOrderIdAsync()
+        {
+            return await _orderDAO.GenerateNextOrderIdAsync();
+        }
+
         public Task<IEnumerable<Order>?> GetAllAsync()
         {
             throw new NotImplementedException();

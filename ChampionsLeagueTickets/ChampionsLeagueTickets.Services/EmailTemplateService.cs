@@ -103,22 +103,22 @@ namespace ChampionsLeagueTickets.Services
         """;
 
         public static string OrderConfirmationSimple(
-            string orderId,
             DateTime orderDate,
-            List<string> ticketLines,
-            List<string> abonnementLines,
+            List<string> tickets,
+            List<string> abonnementen,
             decimal total
         )
-                {
-                    var ticketsHtml = ticketLines.Any()
-                        ? string.Join("", ticketLines.Select(t => $"<li>{t}</li>"))
-                        : "<li>Geen tickets</li>";
+        {
+            var ticketHtml = (tickets != null && tickets.Any())
+                ? string.Join("", tickets.Select(t => $"<li>{t}</li>"))
+                : "<li>Geen tickets besteld</li>";
 
-                    var abonnementHtml = abonnementLines.Any()
-                        ? string.Join("", abonnementLines.Select(a => $"<li>{a}</li>"))
-                        : "<li>Geen abonnementen</li>";
+            var abonnementHtml = (abonnementen != null && abonnementen.Any())
+                ? string.Join("", abonnementen.Select(a => $"<li>{a}</li>"))
+                : "<li>Geen abonnementen besteld</li>";
 
-                    return $"""
+            return 
+            $"""
             <!DOCTYPE html>
             <html>
             <head>
@@ -126,12 +126,12 @@ namespace ChampionsLeagueTickets.Services
                 <style>{BaseStyle}</style>
             </head>
 
-            <body style="margin:0; background-color:#0d0e1a;">
+            <body style="margin:0; padding:0; background-color:#0d0e1a;">
               <div class="wrapper">
 
                 <div class="header">
-                  <h1>⚽ Bestelbevestiging</h1>
-                  <p>Order #{orderId}</p>
+                  <h1>⚽ Orderbevestiging</h1>
+                  <p>Champions League Tickets</p>
                 </div>
 
                 <div class="body">
@@ -139,27 +139,23 @@ namespace ChampionsLeagueTickets.Services
                   <h2>Bedankt voor je bestelling!</h2>
 
                   <div class="info-box">
-                    <p><strong>Order datum:</strong> {orderDate:dd/MM/yyyy HH:mm}</p>
+                    <p><strong>Datum bestelling:</strong> {orderDate:dd/MM/yyyy HH:mm}</p>
                   </div>
 
-                  <h3 style="color:#fff;">🎟 Tickets</h3>
-                  <ul>{ticketsHtml}</ul>
+                  <h3 style="color:white;">🎟 Tickets</h3>
+                  <ul>{ticketHtml}</ul>
 
-                  <h3 style="color:#fff;">🏟 Abonnementen</h3>
+                  <h3 style="color:white;">🏟 Abonnementen</h3>
                   <ul>{abonnementHtml}</ul>
 
                   <hr class="divider" />
 
                   <p><strong>Totaal:</strong> €{total:0.00}</p>
 
-                  <p style="font-size:13px;">
-                    Dit is een bevestiging van je bestelling. Bewaar deze e-mail goed.
-                  </p>
-
                 </div>
 
                 <div class="footer">
-                  <p>&copy; Champions League Tickets</p>
+                  <p>&copy; Champions League Tickets - Schoolproject</p>
                 </div>
 
               </div>

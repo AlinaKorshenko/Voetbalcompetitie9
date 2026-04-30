@@ -11,5 +11,6 @@ namespace ChampionsLeagueTickets.Services.Interfaces
     public interface IOrderService : IService<Order>
     {
         Task<IEnumerable<Order>?> GetAllOrderInformationFromUser(string userId);
+        Task<string> GenerateNextOrderIdAsync();
     }
 }

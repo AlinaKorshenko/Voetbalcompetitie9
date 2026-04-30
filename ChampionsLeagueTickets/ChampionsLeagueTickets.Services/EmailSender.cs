@@ -48,9 +48,25 @@ namespace ChampionsLeagueTickets.Services
             }
         }
 
-        public Task SendOrderConfirmationAsync(string email, string userName, string matchName, int ticketCount)
-        {
-            throw new NotImplementedException();
+        public async Task SendOrderConfirmationAsync(
+                string email,
+                string userName,
+                DateTime orderDate,
+                List<string> tickets,
+                List<string> abonnementen,
+                decimal total
+            )
+            {
+            var subject = "Bevestiging van je bestelling";
+
+            var body = EmailTemplateService.OrderConfirmationSimple(
+                orderDate,
+                tickets,
+                abonnementen,
+                total
+            );
+
+            await SendEmailAsync(email, subject, body);
         }
     }
 }
