@@ -54,6 +54,11 @@ namespace ChampionsLeagueTickets.Controllers
             return View(carts);
         }
 
+        public IActionResult OrderSucces()
+        {
+            return View();
+        }
+
         public IActionResult AddToCart(ShoppingCartVM vm)
         {
             if (!ModelState.IsValid)
@@ -351,8 +356,8 @@ namespace ChampionsLeagueTickets.Controllers
                 {
                     OrderId = order.OrderId,
                     OrderLijnNummer = lijn++,
-                    AbonnementId = a.SeizoenId,
-                    StadionId = a.StadionID,
+                    AbonnementId = abonnementenId,
+                    StadionId = stadionId,
                     Bedrag = a.Prijs
                 });
             }
@@ -370,7 +375,7 @@ namespace ChampionsLeagueTickets.Controllers
             HttpContext.Session.Remove("ShoppingCartTicket");
             HttpContext.Session.Remove("ShoppingCartAbonement");
 
-            return RedirectToAction("OrderSuccess");
+            return RedirectToAction("OrderSucces");
         }
     }
 }
