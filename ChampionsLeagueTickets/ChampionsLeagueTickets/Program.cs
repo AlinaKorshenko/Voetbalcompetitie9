@@ -181,18 +181,22 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IDAO<Orderlijnen>, OrderlijnenDAO>();
 builder.Services.AddScoped<IService<Orderlijnen>, OrderlijnenService>();
 
-//Hotel API
-//builder.Services.AddScoped<IHotelService, HotelService>();
-
-//Automapper
-builder.Services.AddAutoMapper(typeof(Program));
-
-//DI
+//Matches
 builder.Services.AddScoped<IMatchDAO, MatchesDAO>();
 builder.Services.AddScoped<IMatchService, MatchesService>();
 
+//Tickets
 builder.Services.AddScoped<ITicketDAO, TicketDAO>();
 builder.Services.AddScoped<ITicketService, TicketService>();
+
+//Hotel API
+//builder.Services.AddScoped<IHotelService, HotelService>();
+
+//Pdf
+builder.Services.AddScoped<IPdfService, PdfService>();
+
+//Automapper
+builder.Services.AddAutoMapper(typeof(Program));
 
 //Session
 builder.Services.AddDistributedMemoryCache();
