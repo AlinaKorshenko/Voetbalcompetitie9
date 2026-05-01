@@ -398,7 +398,7 @@ namespace ChampionsLeagueTickets.Controllers
                 attachments.Add((pdf, $"abonnement_{a.zitplaats.Stadion.Naam}.pdf"));
             }
 
-            // 4. Email sturen
+            //email
             await _appEmailSender.SendOrderConfirmationAsync(
                 userEmail,
                 DateTime.Now,
@@ -408,7 +408,7 @@ namespace ChampionsLeagueTickets.Controllers
                 attachments
             );
 
-            // 5. Cart leegmaken
+            //cart leegmaken
             HttpContext.Session.Remove("ShoppingCartTicket");
             HttpContext.Session.Remove("ShoppingCartAbonement");
 
