@@ -1,0 +1,22 @@
+﻿.account-dropdown {
+    position: relative;
+}
+
+.account-icon {
+    font-size: 1.6rem;
+    cursor: pointer;
+}
+
+.account-dropdown .dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    min-width: 180px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.account-dropdown:hover .dropdown-menu {
+    display: block;
+}
