@@ -130,8 +130,8 @@ namespace ChampionsLeagueTickets.Services
               <div class="wrapper">
 
                 <div class="header">
-                  <h1>⚽ Orderbevestiging</h1>
-                  <p>Champions League Tickets</p>
+                  <h1>⚽ Champions League Tickets</h1>
+                  <p>Champions League Tickets Application Orderbevestiging</p>
                 </div>
 
                 <div class="body">
@@ -142,10 +142,10 @@ namespace ChampionsLeagueTickets.Services
                     <p><strong>Datum bestelling:</strong> {orderDate:dd/MM/yyyy HH:mm}</p>
                   </div>
 
-                  <h3 style="color:white;">🎟 Tickets</h3>
+                  <h3 style="color:white;">Tickets</h3>
                   <ul>{ticketHtml}</ul>
 
-                  <h3 style="color:white;">🏟 Abonnementen</h3>
+                  <h3 style="color:white;">Abonnementen</h3>
                   <ul>{abonnementHtml}</ul>
 
                   <hr class="divider" />

@@ -53,19 +53,52 @@ namespace ChampionsLeagueTickets.Services
                 DateTime orderDate,
                 List<string> tickets,
                 List<string> abonnementen,
-                decimal total
+                decimal total,
+                List<(byte[] File, string FileName)> attachments
             )
             {
-            var subject = "Bevestiging van je bestelling";
+            try
+            {
+                var s = _config.GetSection("EmailSettings");
+                var password = _config["EmailSettingsPassword"];
 
-            var body = EmailTemplateService.OrderConfirmationSimple(
-                orderDate,
-                tickets,
-                abonnementen,
-                total
-            );
+                var subject = "Bevestiging van je bestelling";
 
-            await SendEmailAsync(email, subject, body);
+                var body = EmailTemplateService.OrderConfirmationSimple(
+                    orderDate,
+                    tickets,
+                    abonnementen,
+                    total
+                );
+
+                var message = new MimeMessage();
+                message.From.Add(new MailboxAddress(s["SenderName"], s["SenderEmail"]));
+                message.To.Add(MailboxAddress.Parse(email));
+                message.Subject = subject;
+
+                var builder = new BodyBuilder
+                {
+                    HtmlBody = body
+                };
+
+                foreach (var att in attachments)
+                {
+                    builder.Attachments.Add(att.FileName, att.File);
+                }
+
+                message.Body = builder.ToMessageBody();
+
+                using var smtp = new SmtpClient();
+                await smtp.ConnectAsync(s["MailServer"], int.Parse(s["MailPort"]!), SecureSocketOptions.StartTls);
+                await smtp.AuthenticateAsync(s["Username"], password);
+                await smtp.SendAsync(message);
+                await smtp.DisconnectAsync(true);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Gefaald om een order te sturen naar {Email}", email);
+                throw;
+            }
         }
     }
 }

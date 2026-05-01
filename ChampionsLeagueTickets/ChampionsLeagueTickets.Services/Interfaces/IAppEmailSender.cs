@@ -14,6 +14,7 @@ namespace ChampionsLeagueTickets.Services.Interfaces
             DateTime orderDate,
             List<string> tickets,
             List<string> abonnementen,
-            decimal total);
+            decimal total,
+            List<(byte[] File, string FileName)> attachments);
     }
 }

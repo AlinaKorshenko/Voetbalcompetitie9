@@ -62,7 +62,7 @@ namespace ChampionsLeagueTickets.Services
             }
 
             document.Add(new Paragraph(" "));
-            document.Add(new Paragraph("Scan deze QR-code bij toegang", smallFont));
+            document.Add(new Paragraph("Scan deze QR-code bij toegang.", smallFont));
 
             document.Close();
 
