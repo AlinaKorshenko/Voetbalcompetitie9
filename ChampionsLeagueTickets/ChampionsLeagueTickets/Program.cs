@@ -19,6 +19,10 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using Azure.Extensions.AspNetCore.Configuration.Secrets;
+using ChampionsLeagueTickets.Services.Pdf;
+using ChampionsLeagueTickets.Services.Pdf.Interfaces;
+using ChampionsLeagueTickets.Services.Mail.Interfaces;
+using ChampionsLeagueTickets.Services.Mail;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChampionsLeagueTickets.Services.Interfaces
+namespace ChampionsLeagueTickets.Services.Pdf.Interfaces
 {
     public interface IPdfService
     {

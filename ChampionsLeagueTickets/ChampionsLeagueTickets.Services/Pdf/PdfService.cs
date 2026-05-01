@@ -1,4 +1,4 @@
-﻿using ChampionsLeagueTickets.Services.Interfaces;
+﻿using ChampionsLeagueTickets.Services.Pdf.Interfaces;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Org.BouncyCastle.Math;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChampionsLeagueTickets.Services
+namespace ChampionsLeagueTickets.Services.Pdf
 {
     public class PdfService : IPdfService
     {
@@ -37,10 +37,10 @@ namespace ChampionsLeagueTickets.Services
             document.Add(new Paragraph($"Stoel: {stoelNummer}", normalFont));
             document.Add(new Paragraph(" "));
 
-            document.Add(new Paragraph("Startdatum: " + startDatum.ToString("dd/MM/yyyy HH:mm"), normalFont));
+            document.Add(new Paragraph("Startdatum: " + startDatum.ToString("dd/MM/yyyy"), normalFont));
             document.Add(new Paragraph(" "));
 
-            document.Add(new Paragraph("Einddatum: " + eindDatum.ToString("dd/MM/yyyy HH:mm"), normalFont));
+            document.Add(new Paragraph("Einddatum: " + eindDatum.ToString("dd/MM/yyyy"), normalFont));
             document.Add(new Paragraph(" "));
 
             var qrContent = $"{startDatum}-{eindDatum}-{seizoenOmschrijving}-{stadionNaam}";
@@ -58,7 +58,6 @@ namespace ChampionsLeagueTickets.Services
                 document.Add(qrImage);
             }
 
-            document.Add(new Paragraph(" "));
             document.Add(new Paragraph("Scan deze QR-code bij toegang bij elke match.", smallFont));
 
             document.Close();

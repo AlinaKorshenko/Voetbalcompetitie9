@@ -1,4 +1,4 @@
-﻿using ChampionsLeagueTickets.Services.Interfaces;
+﻿using ChampionsLeagueTickets.Services.Mail.Interfaces;
 using MailKit.Security;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Configuration;
@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using MimeKit;
 using SmtpClient = MailKit.Net.Smtp.SmtpClient;
 
-namespace ChampionsLeagueTickets.Services
+namespace ChampionsLeagueTickets.Services.Mail
 {
     public class EmailSender : IAppEmailSender, IEmailSender
     {

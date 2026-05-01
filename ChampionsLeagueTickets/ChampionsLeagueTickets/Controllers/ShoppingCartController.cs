@@ -5,9 +5,12 @@ using ChampionsLeagueTickets.Repositories;
 using ChampionsLeagueTickets.Repositories.Interfaces;
 using ChampionsLeagueTickets.Services;
 using ChampionsLeagueTickets.Services.Interfaces;
+using ChampionsLeagueTickets.Services.Mail.Interfaces;
+using ChampionsLeagueTickets.Services.Pdf.Interfaces;
 using ChampionsLeagueTickets.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Org.BouncyCastle.Math;
 using System.Net.Mail;
 using System.Security.Claims;
@@ -343,7 +346,7 @@ namespace ChampionsLeagueTickets.Controllers
                     zitplaats.StoelNummer
                 );
 
-                attachments.Add((pdf, $"ticket_{ticketId}.pdf"));
+                attachments.Add((pdf, $"ticket_{match.ThuisTeam.Naam}X{match.BezoekendTeam.Naam}.pdf"));
             }
 
             //abonnementen
@@ -381,6 +384,18 @@ namespace ChampionsLeagueTickets.Controllers
                     StadionId = stadionId,
                     Bedrag = a.Prijs
                 });
+
+                var pdf = _pdfService.GenerateAbonnementPdf(
+                    a.zitplaats.VakNummerNavigation.Omschrijving,
+                    a.zitplaats.RijNummer,
+                    a.zitplaats.StoelNummer,
+                    startDatum,
+                    eindDatum,
+                    seizoen.Naam,
+                    a.zitplaats.Stadion.Naam
+                );
+
+                attachments.Add((pdf, $"abonnement_{a.zitplaats.Stadion.Naam}.pdf"));
             }
 
             // 4. Email sturen
