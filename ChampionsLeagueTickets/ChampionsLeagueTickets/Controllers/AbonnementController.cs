@@ -89,7 +89,6 @@ namespace ChampionsLeagueTickets.Controllers
 
             abonementStoelVM.VakenLijst = new SelectList(vakTypes, "VakNummer", "DisplayName");
 
-
             if (!string.IsNullOrEmpty(abonementStoelVM.StadionVak))
             {
                 var rijen = await _zitplaatsenService.GetRowsForSectionAsync(abonementStoelVM.StadionID, abonementStoelVM.StadionVak);
@@ -121,21 +120,17 @@ namespace ChampionsLeagueTickets.Controllers
 
         [Authorize]
         public async Task<IActionResult> OverzichtInfoAbonement(AbonementStoelVM stoelVm) {
-
             var stadion = await _stadionService.FindByIdAsync(stoelVm.StadionID);
             var zitplaats = await _zitplaatsenService.FindByIdAsync(stoelVm.GeselecteerdeZitplaatsId);
             var seizoen = await _seizoenenService.FindByIdAsync(stoelVm.SeizoenId);
-
 
             if (zitplaats == null)
             {
                 return NotFound("Zitplaats niet gevonden");
             }
 
-
             var zitplaatsInfoVM = new AbonementOverzichtVM
             {
-
                 SeizoenId = stoelVm.SeizoenId,
                 StadionID = stoelVm.StadionID,
                 StadionNaam = stadion.Naam,
@@ -144,8 +139,6 @@ namespace ChampionsLeagueTickets.Controllers
                 StartDatum = seizoen.StartDatum,
                 EindDatum = seizoen.EindDatum,
                 Prijs = await _abonnementenPrijsService.GetPriceBySeizoenIdAndStadionId(stoelVm.SeizoenId, stoelVm.StadionID)
-
-
             };
 
             return View(zitplaatsInfoVM);
