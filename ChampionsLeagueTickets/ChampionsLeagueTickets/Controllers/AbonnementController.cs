@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using ChampionsLeagueTickets.Domain.EntitiesDB;
 using ChampionsLeagueTickets.Extentions;
-using ChampionsLeagueTickets.Services;
 using ChampionsLeagueTickets.Services.Interfaces;
-using ChampionsLeagueTickets.View_Models;
 using ChampionsLeagueTickets.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -30,15 +28,35 @@ namespace ChampionsLeagueTickets.Controllers
             _stadionService = stadionService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? seizoenId = null)
         {
-            var abonnementenPrijzen = await _abonnementenPrijsService.GetAllAsync();
-            var vm = _mapper.Map<IEnumerable<AbonnementenInformatieVM>>(abonnementenPrijzen);
+            var seizoenen = await _seizoenenService.GetAllAsync();
 
-            foreach (var abonnement in vm)
+            var abonnementenPrijzen = await _abonnementenPrijsService.GetAllAsync();
+
+            if (!string.IsNullOrEmpty(seizoenId))
+            {
+                abonnementenPrijzen = abonnementenPrijzen.Where(a => a.SeizoenId == seizoenId);
+            }
+
+            var abonnementenVm = _mapper.Map<IEnumerable<AbonnementenInformatieVM>>(abonnementenPrijzen);
+
+            foreach (var abonnement in abonnementenVm)
             {
                 abonnement.IsKoopbaar = IsAbonnementBeschikbaar(abonnement.StartDatum);
             }
+
+            var vm = new AbonnementenIndexVM
+            {
+                Abonnementen = abonnementenVm,
+                GeselecteerdSeizoenId = seizoenId,
+                SeizoenenLijst = new SelectList(
+                    seizoenen.OrderByDescending(s => s.StartDatum),
+                    "SeizoenId",
+                    "Naam",
+                    seizoenId
+                )
+            };
 
             return View(vm);
         }
@@ -50,25 +68,15 @@ namespace ChampionsLeagueTickets.Controllers
             return vandaag < startDatum;
         }
 
-        [Authorize]
         public async Task<IActionResult> ChooseSeats(AbonnementenInformatieVM abonement)
         {
-            var vakTypes = (await _vakService.GetAllAsync())
-             .Select(v => new
-             {
-                 v.VakNummer,
-                 DisplayName = "Ring " + v.Ring + " ( " + v.Omschrijving + " )"
-             });
-
-            AbonementStoelVM abonementStoelVM = new AbonementStoelVM()
+            AbonementStoelVM vm = new AbonementStoelVM()
             {
-                VakenLijst = new SelectList(vakTypes, "VakNummer", "DisplayName"),
                 SeizoenId = abonement.SeizoenId,
                 StadionID = abonement.StadionId
-                
             };
 
-            return View(abonementStoelVM);
+            return View(vm);
         }
 
         [Authorize]

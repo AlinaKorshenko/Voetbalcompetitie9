@@ -11,17 +11,6 @@
     <input type="hidden" asp-for="StadionID" />
     <input type="hidden" asp-for="SeizoenId" />
 
-
-    <div class="mb-3">
-        <label asp-for="StadionVak" class="form-label">Vak</label>
-        <select asp-for="StadionVak"
-                asp-items="Model.VakenLijst"
-                class="form-control"
-                id="StadionVak">
-            <option value="">-- Kies vak --</option>
-        </select>
-    </div>
-
     @if (Model.RijenLijst != null)
     {
         <div class="mb-3">

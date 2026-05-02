@@ -1,21 +1,56 @@
-﻿@model IEnumerable<ChampionsLeagueTickets.ViewModels.AbonnementenInformatieVM>
+﻿@model ChampionsLeagueTickets.ViewModels.AbonnementenIndexVM
 @{
     ViewData["Title"] = "Abonnementen";
+    var seizoenen = Model.SeizoenenLijst?
+        .Cast<SelectListItem>()
+        .ToList();
+
+    var stadions = Model.Abonnementen
+        .Select(a => new { a.StadionId, a.StadionNaam })
+        .DistinctBy(a => a.StadionId)
+        .OrderBy(a => a.StadionNaam)
+        .ToList();
 }
 
-@if (Model != null)
+<h2 class="mb-2">Abonnementen</h2>
+<p class="mb-4">
+    Ontgrendel een wereld van voetbalplezier.
+    <br />
+    Met een abonnement kunt u gedurende het hele seizoen kijken naar matchen in het thuisstadion
+    van uw favoriete team.
+</p>
+
+<div class="d-flex gap-4 mb-4">
+    <div>
+        <label for="seizoenFilter" class="form-label fw-bold">Filter op seizoen</label>
+        <select id="seizoenFilter" class="form-select" style="max-width: 350px;">
+            <option value="">Alle seizoenen</option>
+            @foreach (var seizoen in seizoenen)
+            {
+                <option value="@seizoen.Value">@seizoen.Text</option>
+            }
+        </select>
+    </div>
+    <div>
+        <label for="stadionFilter" class="form-label fw-bold">Filter op stadion</label>
+        <select id="stadionFilter" class="form-select" style="max-width: 350px;">
+            <option value="">Alle stadions</option>
+            @foreach (var stadion in stadions)
+            {
+                <option value="@stadion.StadionId">@stadion.StadionNaam</option>
+            }
+        </select>
+    </div>
+</div>
+
+@if (Model.Abonnementen.Any())
 {
-    <h2 class="mb-4">Abonnementen</h2>
-    <p>
-        Ontgrendel een wereld van voetbalplezier.
-        <br />
-        Met een abonnement kunt u gedurende het hele seizoen kijken naar matchen in het thuisstadion
-        van uw favoriete team.
-    </p>
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        @foreach (var abonnement in Model)
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="abonnementenGrid">
+        @foreach (var abonnement in Model.Abonnementen)
         {
-            <div class="col">
+            <div class="col abonnement-card"
+                 data-seizoen="@abonnement.SeizoenId"
+                 data-stadion="@abonnement.StadionId">
                 <a asp-controller="Abonnement"
                    asp-action="ChooseSeats"
                    asp-route-stadionId="@abonnement.StadionId"
@@ -25,6 +60,7 @@
                     <div class="card h-100 shadow-sm p-3 @(abonnement.IsKoopbaar ? "" : "opacity-50")">
                         <div class="card-body">
                             <h4 class="card-title mb-1">@abonnement.StadionNaam</h4>
+                            <p class="text-muted mb-1"><i class="bi bi-geo-alt"></i> @abonnement.VakNaam</p>
                             @if (abonnement.IsKoopbaar)
                             {
                                 <span class="badge bg-success mb-2">Beschikbaar</span>
@@ -49,8 +85,40 @@
             </div>
         }
     </div>
+    <p id="geenAbonnementenBericht" class="text-warning fw-bold d-none">
+        Geen abonnementen gevonden voor deze filter.
+    </p>
 }
 else
 {
-    <p>Er is een fout</p>
+    <p class="text-muted mt-3">Geen abonnementen beschikbaar.</p>
+}
+
+@section Scripts {
+    <script>
+        const seizoenFilter = document.getElementById("seizoenFilter");
+        const stadionFilter = document.getElementById("stadionFilter");
+        const cards = document.querySelectorAll(".abonnement-card");
+        const geenBericht = document.getElementById("geenAbonnementenBericht");
+
+        function applyFilters() {
+            const selectedSeizoen = seizoenFilter.value;
+            const selectedStadion = stadionFilter.value;
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const seizoenMatch = selectedSeizoen === "" || card.dataset.seizoen === selectedSeizoen;
+                const stadionMatch = selectedStadion === "" || card.dataset.stadion === selectedStadion;
+
+                const isMatch = seizoenMatch && stadionMatch;
+                card.style.display = isMatch ? "" : "none";
+                if (isMatch) visibleCount++;
+            });
+
+            geenBericht.classList.toggle("d-none", visibleCount > 0);
+        }
+
+        seizoenFilter.addEventListener("change", applyFilters);
+        stadionFilter.addEventListener("change", applyFilters);
+    </script>
 }
