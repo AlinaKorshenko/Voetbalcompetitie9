@@ -152,6 +152,12 @@ namespace ChampionsLeagueTickets.Services
 
                   <p><strong>Totaal:</strong> €{total:0.00}</p>
 
+                  <p>Gelieve dit bedrag binnen de 5 werkdagen te storten naar: BE05 0636 6081 0313</p>
+
+                  <p style="font-size: 11px; color: #ffffff; margin-top: 20px;">
+                Dit is een schoolapplicatie. De weergegeven tickets en abonnementen zijn niet echt en dienen uitsluitend voor educatieve doeleinden. Er hoeft geen betaling uitgevoerd te worden, maar u bent altijd welkom.
+                </p>
+
                 </div>
 
                 <div class="footer">
