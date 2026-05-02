@@ -39,7 +39,7 @@ public partial class FootballDbContext : DbContext
 
     public virtual DbSet<Ticket> Tickets { get; set; }
 
-    public virtual DbSet<TicketsPrijs> TicketsPrijs { get; set; }
+    public virtual DbSet<TicketsPrij> TicketsPrijs { get; set; }
 
     public virtual DbSet<VakType> VakTypes { get; set; }
 
@@ -76,12 +76,10 @@ public partial class FootballDbContext : DbContext
                 .HasMaxLength(5)
                 .IsUnicode(false)
                 .HasColumnName("stadionID");
-            entity.Property(e => e.EindDatum).HasColumnName("eindDatum");
             entity.Property(e => e.SeizoenId)
                 .HasMaxLength(5)
                 .IsUnicode(false)
                 .HasColumnName("seizoenID");
-            entity.Property(e => e.StartDatum).HasColumnName("startDatum");
             entity.Property(e => e.Status).HasColumnName("status");
             entity.Property(e => e.UserId)
                 .HasMaxLength(450)
@@ -405,7 +403,7 @@ public partial class FootballDbContext : DbContext
                 .HasConstraintName("fk_zitplaatsID_Tickets");
         });
 
-        modelBuilder.Entity<TicketsPrijs>(entity =>
+        modelBuilder.Entity<TicketsPrij>(entity =>
         {
             entity.HasKey(e => new { e.MatchId, e.VakNummer }).HasName("PK__TicketsP__B97B8E44CB171748");
 

@@ -55,6 +55,8 @@
                    asp-action="ChooseSeats"
                    asp-route-stadionId="@abonnement.StadionId"
                    asp-route-seizoenId="@abonnement.SeizoenId"
+                   asp-route-vakNummer="@abonnement.VakNummer"
+                   asp-route-vakNaam="@abonnement.VakNaam"
                    class="text-decoration-none @(abonnement.IsKoopbaar ? "text-dark" : "text-muted")"
                    style="pointer-events:@(abonnement.IsKoopbaar ? "auto" : "none");">
                     <div class="card h-100 shadow-sm p-3 @(abonnement.IsKoopbaar ? "" : "opacity-50")">

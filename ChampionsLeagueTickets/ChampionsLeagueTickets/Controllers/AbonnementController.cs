@@ -51,7 +51,7 @@ namespace ChampionsLeagueTickets.Controllers
                 Abonnementen = abonnementenVm,
                 GeselecteerdSeizoenId = seizoenId,
                 SeizoenenLijst = new SelectList(
-                    seizoenen.OrderByDescending(s => s.StartDatum),
+                    seizoenen.OrderBy(s => s.StartDatum),
                     "SeizoenId",
                     "Naam",
                     seizoenId
@@ -70,10 +70,15 @@ namespace ChampionsLeagueTickets.Controllers
 
         public async Task<IActionResult> ChooseSeats(AbonnementenInformatieVM abonement)
         {
+            var rijen = await _zitplaatsenService.GetRowsForSectionAsync(abonement.StadionId, abonement.VakNummer);
+
             AbonementStoelVM vm = new AbonementStoelVM()
             {
                 SeizoenId = abonement.SeizoenId,
-                StadionID = abonement.StadionId
+                StadionID = abonement.StadionId,
+                VakNummer = abonement.VakNummer,
+                VakNaam = abonement.VakNaam,
+                RijenLijst = new SelectList(rijen)
             };
 
             return View(vm);
@@ -88,39 +93,28 @@ namespace ChampionsLeagueTickets.Controllers
                 return View(abonementStoelVM);
             }
 
-            var vakTypes = (await _vakService.GetAllAsync())
-             .Select(v => new
-             {
-                 v.VakNummer,
-                 DisplayName = "Ring " + v.Ring + " ( " + v.Omschrijving + " )"
-             });
+            var rijen = await _zitplaatsenService.GetRowsForSectionAsync(abonementStoelVM.StadionID, abonementStoelVM.VakNummer);
+            abonementStoelVM.RijenLijst = new SelectList(rijen, abonementStoelVM.RijNummer);
 
-            abonementStoelVM.VakenLijst = new SelectList(vakTypes, "VakNummer", "DisplayName");
-
-            if (!string.IsNullOrEmpty(abonementStoelVM.StadionVak))
+            if (!string.IsNullOrEmpty(abonementStoelVM.RijNummer))
             {
-                var rijen = await _zitplaatsenService.GetRowsForSectionAsync(abonementStoelVM.StadionID, abonementStoelVM.StadionVak);
-                abonementStoelVM.RijenLijst = new SelectList(rijen, abonementStoelVM.RijNummer);
-            }
+                var vrijeStoelen = await _zitplaatsenService.GetFreeSeatsForSeasonSectionAndRowAsync(
+                    abonementStoelVM.StadionID,
+                    abonementStoelVM.SeizoenId,
+                    abonementStoelVM.VakNummer,
+                    abonementStoelVM.RijNummer
+                );
 
-            if (!string.IsNullOrEmpty(abonementStoelVM.StadionVak) && !string.IsNullOrEmpty(abonementStoelVM.RijNummer))
-            {
-                var vrijeStoelen = await _zitplaatsenService.GetFreeSeatsForSeasonSectionAndRowAsync(abonementStoelVM.StadionID, abonementStoelVM.SeizoenId, abonementStoelVM.StadionVak, abonementStoelVM.RijNummer);
-
-                var stoelenSelectList = vrijeStoelen
-                    .Select(s => new
+                abonementStoelVM.StoelenLijst = new SelectList(
+                    vrijeStoelen.Select(s => new
                     {
                         ZitplaatsId = s.ZitplaatsId,
                         DisplayName = "Stoel " + s.StoelNummer
-                    })
-                    .ToList();
-
-                abonementStoelVM.StoelenLijst = new SelectList(
-                    stoelenSelectList,
+                    }),
                     "ZitplaatsId",
                     "DisplayName",
                     abonementStoelVM.GeselecteerdeZitplaatsId
-                    );
+                );
             }
 
             return View(abonementStoelVM);

@@ -134,7 +134,6 @@ namespace ChampionsLeagueTickets.Controllers
 
                     result.Abonementen.Add(new AbonementOverzichtVM
                     {
-
                         SeizoenId = item.SeizoenId,
                         StadionID = item.StadionId,
                         StadionNaam = stadion.Naam,
@@ -370,8 +369,6 @@ namespace ChampionsLeagueTickets.Controllers
                     StadionId = stadionId,
                     UserId = userId,
                     ZitplaatsId = a.zitplaats.ZitplaatsId,
-                    StartDatum = startDatum,
-                    EindDatum = eindDatum,
                     Status = false,
                     SeizoenId = a.SeizoenId
                 });
@@ -392,10 +389,10 @@ namespace ChampionsLeagueTickets.Controllers
                     startDatum,
                     eindDatum,
                     seizoen.Naam,
-                    a.zitplaats.Stadion.Naam
+                    a.StadionNaam
                 );
 
-                attachments.Add((pdf, $"abonnement_{a.zitplaats.Stadion.Naam}.pdf"));
+                attachments.Add((pdf, $"abonnement_{a.StadionNaam}.pdf"));
             }
 
             //email

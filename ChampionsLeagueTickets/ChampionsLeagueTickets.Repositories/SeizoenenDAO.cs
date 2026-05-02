@@ -48,6 +48,7 @@ namespace ChampionsLeagueTickets.Repositories
             try
             {
                 return await _dbContext.Seizoenens
+                    .OrderByDescending(s => s.StartDatum)
                     .ToListAsync();
             }
             catch (Exception ex)

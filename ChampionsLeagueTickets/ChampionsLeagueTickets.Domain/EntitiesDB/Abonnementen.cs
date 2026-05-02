@@ -13,10 +13,6 @@ public partial class Abonnementen
 
     public string ZitplaatsId { get; set; } = null!;
 
-    public DateOnly StartDatum { get; set; }
-
-    public DateOnly EindDatum { get; set; }
-
     public bool Status { get; set; }
 
     public string SeizoenId { get; set; } = null!;
