@@ -114,7 +114,7 @@ public partial class FootballDbContext : DbContext
 
         modelBuilder.Entity<AbonnementenPrijs>(entity =>
         {
-            entity.HasKey(e => new { e.StadionId, e.SeizoenId }).HasName("PK__Abonneme__FAA00C928D8B5A8E");
+            entity.HasKey(e => new { e.StadionId, e.SeizoenId, e.VakNummer }).HasName("PK__Abonneme__611BC6D454CBAA73");
 
             entity.Property(e => e.StadionId)
                 .HasMaxLength(5)
@@ -124,6 +124,10 @@ public partial class FootballDbContext : DbContext
                 .HasMaxLength(5)
                 .IsUnicode(false)
                 .HasColumnName("seizoenID");
+            entity.Property(e => e.VakNummer)
+                .HasMaxLength(5)
+                .IsUnicode(false)
+                .HasColumnName("vakNummer");
             entity.Property(e => e.Prijs)
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("prijs");
@@ -137,6 +141,11 @@ public partial class FootballDbContext : DbContext
                 .HasForeignKey(d => d.StadionId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_stadionIDAbonnementenPrijs");
+
+            entity.HasOne(d => d.VakNummerNavigation).WithMany(p => p.AbonnementenPrijs)
+                .HasForeignKey(d => d.VakNummer)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_vakNummmerAbonnementenPrijs");
         });
 
         modelBuilder.Entity<AspNetRole>(entity =>
@@ -190,6 +199,10 @@ public partial class FootballDbContext : DbContext
             entity.Property(e => e.DatumTijdStartMatch)
                 .HasColumnType("datetime")
                 .HasColumnName("datumTijdStartMatch");
+            entity.Property(e => e.SeizoenId)
+                .HasMaxLength(5)
+                .IsUnicode(false)
+                .HasColumnName("seizoenID");
             entity.Property(e => e.ThuisTeamId)
                 .HasMaxLength(5)
                 .IsUnicode(false)
@@ -199,6 +212,11 @@ public partial class FootballDbContext : DbContext
                 .HasForeignKey(d => d.BezoekendTeamId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_bezoekendTeamID");
+
+            entity.HasOne(d => d.Seizoen).WithMany(p => p.Matches)
+                .HasForeignKey(d => d.SeizoenId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_seizoenIDMatches");
 
             entity.HasOne(d => d.ThuisTeam).WithMany(p => p.MatchThuisTeams)
                 .HasForeignKey(d => d.ThuisTeamId)

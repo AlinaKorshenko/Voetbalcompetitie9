@@ -11,6 +11,8 @@ public partial class VakType
 
     public string? Omschrijving { get; set; }
 
+    public virtual ICollection<AbonnementenPrijs> AbonnementenPrijs { get; set; } = new List<AbonnementenPrijs>();
+
     public virtual ICollection<TicketsPrijs> TicketsPrijs { get; set; } = new List<TicketsPrijs>();
 
     public virtual ICollection<Zitplaatsen> Zitplaatsens { get; set; } = new List<Zitplaatsen>();
