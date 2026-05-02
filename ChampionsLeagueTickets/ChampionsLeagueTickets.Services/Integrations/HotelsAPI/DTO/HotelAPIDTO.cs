@@ -1,62 +1,83 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ChampionsLeagueTickets.Domain.Integrations.HotelsAPI.DTO
 {
-    public class HotelAPIDTO
+    public class GoogleHotelApiDTO
     {
+        [JsonProperty("status")]
+        public string? Status { get; set; }
 
-        [JsonProperty("success")]
-        public Boolean? Succes {  get; set; }
+        [JsonProperty("results")]
+        public List<GoogleHotelItem>? Results { get; set; } = new();
 
-        [JsonProperty("data")]
-        public List<HotelItem>? Data { get; set; } = new();
-
-        [JsonProperty("message")]
-        public string? Message { get; set; }
-
-        [JsonProperty("timestamp")]
-        public DateTime? Timestamp { get; set; }
+        [JsonProperty("next_page_token")]
+        public string? NextPageToken { get; set; }
     }
 
-    public class HotelItem
+    public class GoogleHotelItem
     {
-        [JsonProperty("id")]
-        public int? Id { get; set; }
+        [JsonProperty("place_id")]
+        public string? PlaceId { get; set; }
 
         [JsonProperty("name")]
         public string? Name { get; set; }
 
-        [JsonProperty("city")]
-        public string? City { get; set; }
-
-        [JsonProperty("country")]
-        public string? Country { get; set; }
-
-        [JsonProperty("country_code")]
-        public string? Country_code { get; set; }
-
-
-        [JsonProperty("address")]
-        public string? Address { get; set; }
-
+        [JsonProperty("vicinity")]
+        public string? Vicinity { get; set; }
 
         [JsonProperty("rating")]
         public double? Rating { get; set; }
 
+        [JsonProperty("user_ratings_total")]
+        public int? UserRatingsTotal { get; set; }
 
+        [JsonProperty("price_level")]
+        public int? PriceLevel { get; set; }
+
+        [JsonProperty("geometry")]
+        public GoogleHotelGeometry? Geometry { get; set; }
+
+        [JsonProperty("opening_hours")]
+        public GoogleHotelOpeningHours? OpeningHours { get; set; }
+
+        [JsonProperty("photos")]
+        public List<GoogleHotelPhoto>? Photos { get; set; }
+
+        [JsonProperty("types")]
+        public string[]? Types { get; set; }
+    }
+
+    public class GoogleHotelGeometry
+    {
+        [JsonProperty("location")]
+        public GoogleHotelLocation? Location { get; set; }
+    }
+
+    public class GoogleHotelLocation
+    {
         [JsonProperty("lat")]
         public double? Lat { get; set; }
 
-
         [JsonProperty("lng")]
         public double? Lng { get; set; }
+    }
 
-        [JsonProperty("amenities")]
-        public string[]? Amenities { get; set; }
+    public class GoogleHotelOpeningHours
+    {
+        [JsonProperty("open_now")]
+        public bool? OpenNow { get; set; }
+    }
+
+    public class GoogleHotelPhoto
+    {
+        [JsonProperty("photo_reference")]
+        public string? PhotoReference { get; set; }
+
+        [JsonProperty("height")]
+        public int? Height { get; set; }
+
+        [JsonProperty("width")]
+        public int? Width { get; set; }
     }
 }

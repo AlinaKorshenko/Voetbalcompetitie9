@@ -1,0 +1,83 @@
+﻿@model ChampionsLeagueTickets.ViewModels.HotelVM
+
+@{
+    ViewData["Title"] = "Hotels";
+}
+
+<h1>Hotels dichtbij uw match</h1>
+<p>
+    Zoekt u naar een plaats om te verblijven?
+    <br />
+    Selecteer een stadion om de dichtstbijzijnde hotels te zien.
+</p>
+
+<form method="post">
+    <div class="mb-4">
+        <label for="stadiumSelect" class="form-label fw-bold">Selecteer een stadion</label>
+        @Html.DropDownListFor(m => m.SelectedStadiumId, Model.Stadiums!, "Selecteer een stadion", new { @class = "form-select", id = "stadiumSelect", style = "max-width: 350px;" })
+    </div>
+    <button type="submit" class="btn-golden">Zoek hotels</button>
+</form>
+
+@if (Model.Hotels != null)
+{
+    @if (Model.Hotels.Any())
+    {
+        <h5 class="mb-3">@Model.Hotels.Count hotels gevonden dichtbij @Model.SelectedStadiumName</h5>
+
+        <table class="table border-0">
+            <thead>
+                <tr>
+                    <th>Hotels</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var hotel in Model.Hotels)
+                {
+                    <tr>
+                        <td>
+                            <div class="card p-3 shadow-sm mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+
+                                    <div>
+                                        <h5 class="mb-1">@hotel.Name</h5>
+                                        <span class="text-muted">📍 @hotel.Vicinity</span>
+                                    </div>
+
+                                    <div class="text-center">
+                                    </div>
+                                    <div class="text-end">
+                                        @if (hotel.Rating.HasValue)
+                                        {
+                                            <span class="badge bg-dark mx-2">⭐ @hotel.Rating / 5</span>
+                                            @if (hotel.UserRatingsTotal.HasValue)
+                                            {
+                                                <small class="text-muted">@hotel.UserRatingsTotal reviews</small>
+                                            }
+                                            <br />
+                                        }
+                                        @if (hotel.PriceLevel.HasValue)
+                                        {
+                                            <strong>@string.Concat(Enumerable.Repeat("€", hotel.PriceLevel.Value))</strong>
+                                            <br />
+                                        }
+                                        @if (hotel.OpeningHours?.OpenNow.HasValue == true)
+                                        {
+                                            <span class="badge @(hotel.OpeningHours.OpenNow.Value ? "bg-success" : "bg-secondary")">
+                                                @(hotel.OpeningHours.OpenNow.Value ? "Open now" : "Closed")
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="text-warning fw-bold">No hotels found near @Model.SelectedStadiumName.</p>
+    }
+}

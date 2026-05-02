@@ -2,11 +2,6 @@
 using ChampionsLeagueTickets.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ChampionsLeagueTickets.Services.Integrations.HotelsAPI
 {
@@ -16,16 +11,16 @@ namespace ChampionsLeagueTickets.Services.Integrations.HotelsAPI
         private readonly IConfiguration _configuration;
         private const string BaseUrl = "https://maps.googleapis.com/maps/api/place/nearbysearch/json";
 
-        public HotelService(HttpClient httpClient, IConfiguration _configuration)
+        public HotelService(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
-            _configuration = _configuration;
+            _configuration = configuration;
         }
 
         public async Task<GoogleHotelApiDTO?> GetNearbyHotelsAsync(double lat, double lng, int radiusMeters = 5000)
         {
-            var apiKey = _configuration["GoogleHotelAPIKey"];
-            var url = $"{BaseUrl}?location={lat},{lng}&radius={radiusMeters}&type=lodging&key={apiKey}";
+            var apiKey = _configuration["GoogleHotelApiKey"];
+            var url = $"{BaseUrl}?location={lat.ToString(System.Globalization.CultureInfo.InvariantCulture)},{lng.ToString(System.Globalization.CultureInfo.InvariantCulture)}&radius={radiusMeters}&type=lodging&key={apiKey}";
 
             var response = await _httpClient.GetAsync(url);
             response.EnsureSuccessStatusCode();

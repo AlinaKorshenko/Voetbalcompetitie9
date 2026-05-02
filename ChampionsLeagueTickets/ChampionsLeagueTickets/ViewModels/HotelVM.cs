@@ -1,19 +1,14 @@
-﻿using Newtonsoft.Json;
+﻿using ChampionsLeagueTickets.Domain.Integrations.HotelsAPI.DTO;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 
 namespace ChampionsLeagueTickets.ViewModels
 {
     public class HotelVM
     {
-        public string? Name { get; set; }
-
-        public string? City { get; set; }
-
-        public string? Country { get; set; }
-
-        public string? Address { get; set; }
-
-        public double? Rating { get; set; }
-
-        public string[]? Amenities { get; set; }
+        public SelectList? Stadiums { get; set; }
+        public string? SelectedStadiumId { get; set; }
+        public string? SelectedStadiumName { get; set; }
+        public List<GoogleHotelItem>? Hotels { get; set; }
     }
 }

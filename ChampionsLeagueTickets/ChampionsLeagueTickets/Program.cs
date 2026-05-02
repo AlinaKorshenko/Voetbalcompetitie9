@@ -23,6 +23,7 @@ using ChampionsLeagueTickets.Services.Pdf;
 using ChampionsLeagueTickets.Services.Pdf.Interfaces;
 using ChampionsLeagueTickets.Services.Mail.Interfaces;
 using ChampionsLeagueTickets.Services.Mail;
+using ChampionsLeagueTickets.Services.Integrations.HotelsAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -194,7 +195,8 @@ builder.Services.AddScoped<ITicketDAO, TicketDAO>();
 builder.Services.AddScoped<ITicketService, TicketService>();
 
 //Hotel API
-//builder.Services.AddScoped<IHotelService, HotelService>();
+builder.Services.AddScoped<IHotelService, HotelService>();
+builder.Services.AddHttpClient<HotelService>();
 
 //Pdf
 builder.Services.AddScoped<IPdfService, PdfService>();

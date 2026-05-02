@@ -23,5 +23,5 @@ public partial class Match
 
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 
-    public virtual ICollection<TicketsPrij> TicketsPrijs { get; set; } = new List<TicketsPrij>();
+    public virtual ICollection<TicketsPrijs> TicketsPrijs { get; set; } = new List<TicketsPrijs>();
 }

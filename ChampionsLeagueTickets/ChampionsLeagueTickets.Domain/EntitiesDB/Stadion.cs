@@ -17,6 +17,10 @@ public partial class Stadion
 
     public string Gemeente { get; set; } = null!;
 
+    public double Latitude { get; set; }
+
+    public double Longitude { get; set; }
+
     public virtual ICollection<AbonnementenPrijs> AbonnementenPrijs { get; set; } = new List<AbonnementenPrijs>();
 
     public virtual ICollection<Abonnementen> Abonnementens { get; set; } = new List<Abonnementen>();

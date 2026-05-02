@@ -1,8 +1,7 @@
-﻿using ChampionsLeagueTickets.Domain.EntitiesDB;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using ChampionsLeagueTickets.Domain.EntitiesDB;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChampionsLeagueTickets.Domain.DataDB;
 
@@ -39,24 +38,15 @@ public partial class FootballDbContext : DbContext
 
     public virtual DbSet<Ticket> Tickets { get; set; }
 
-    public virtual DbSet<TicketsPrij> TicketsPrijs { get; set; }
+    public virtual DbSet<TicketsPrijs> TicketsPrijs { get; set; }
 
     public virtual DbSet<VakType> VakTypes { get; set; }
 
     public virtual DbSet<Zitplaatsen> Zitplaatsens { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (!optionsBuilder.IsConfigured)
-        {
-            IConfigurationRoot configuration = new ConfigurationBuilder()
-                  .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                  .AddJsonFile("appsettings.json")
-                  .Build();
-
-            optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
-        }
-    }
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=championsleagueticketsvivesilona.database.windows.net; Database=ChampionsLeague; User ID=Beheerder; Password=MagneetRolstoelToetsenbord9!; MultipleActiveResultSets=true;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -403,7 +393,7 @@ public partial class FootballDbContext : DbContext
                 .HasConstraintName("fk_zitplaatsID_Tickets");
         });
 
-        modelBuilder.Entity<TicketsPrij>(entity =>
+        modelBuilder.Entity<TicketsPrijs>(entity =>
         {
             entity.HasKey(e => new { e.MatchId, e.VakNummer }).HasName("PK__TicketsP__B97B8E44CB171748");
 
