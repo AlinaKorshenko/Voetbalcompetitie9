@@ -29,7 +29,7 @@ namespace ChampionsLeagueTickets.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<VakType?> FindByIdAsync(string Id)
+        public async Task<VakType?> FindByIdAsync(string Id)
         {
             throw new NotImplementedException();
         }

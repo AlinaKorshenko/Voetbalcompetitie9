@@ -9,9 +9,13 @@ public partial class AbonnementenPrijs
 
     public string SeizoenId { get; set; } = null!;
 
+    public string VakNummer { get; set; } = null!;
+
     public decimal Prijs { get; set; }
 
     public virtual Seizoenen Seizoen { get; set; } = null!;
 
     public virtual Stadion Stadion { get; set; } = null!;
+
+    public virtual VakType VakNummerNavigation { get; set; } = null!;
 }

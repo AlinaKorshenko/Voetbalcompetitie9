@@ -5,12 +5,16 @@ using ChampionsLeagueTickets.Repositories;
 using ChampionsLeagueTickets.Repositories.Interfaces;
 using ChampionsLeagueTickets.Services;
 using ChampionsLeagueTickets.Services.Interfaces;
+using ChampionsLeagueTickets.Services.Mail.Interfaces;
+using ChampionsLeagueTickets.Services.Pdf.Interfaces;
 using ChampionsLeagueTickets.ViewModels;
 using ChampionsLeagueTickets.ViewModels.order;
 using ChampionsLeagueTickets.ViewModels.ShoppingCart;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Org.BouncyCastle.Math;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -32,9 +36,12 @@ namespace ChampionsLeagueTickets.Controllers
         private readonly IOrderService _orderService;
         private readonly IOrderLijnService _orderlijnenService;
         private readonly IAppEmailSender _appEmailSender;
+        private readonly IPdfService _pdfService;
         private const int maxAantalTickets = 4;
         private readonly IMapper _mapper;
         public ShoppingCartController(IAppEmailSender appEmailSender, IOrderLijnService orderlijnenService, IOrderService orderService, IAbonnementService abonnementService, ITicketService ticketService, IMatchService matchesService, IService<VakType> vakService, IZitplaatsenService zitplatsenService, ITicketPrijsService ticketPrijsService, IService<Stadion> stadionService, IAbonementenPrijsService abonementenPrijsService, ISeizoenenService seizoenenService, IMapper mapper)
+
+        public ShoppingCartController(IMatchService matchesService, IService<VakType> vakService, ITicketService ticketService, IAbonnementService abonnementService, IZitplaatsenService zitplatsenService, ITicketPrijsService ticketPrijsService, IService<Stadion> stadionService, IAbonementenPrijsService abonementenPrijsService, ISeizoenenService seizoenenService, IOrderService orderService, IService<Orderlijnen> orderlijnenService, IAppEmailSender appEmailSender, IPdfService pdfService)
         {
             _matchesService = matchesService;
             _vakService = vakService;
@@ -49,6 +56,7 @@ namespace ChampionsLeagueTickets.Controllers
             _orderService = orderService;
             _orderlijnenService = orderlijnenService;
             _appEmailSender = appEmailSender;
+            _pdfService = pdfService;
         }
 
         public async Task<IActionResult> Index()
@@ -133,7 +141,6 @@ namespace ChampionsLeagueTickets.Controllers
 
                 result.Abonementen.Add(new AbonementOverzichtVM
                     {
-
                         SeizoenId = item.SeizoenId,
                         StadionID = item.StadionId,
                         StadionNaam = stadion.Naam,
@@ -281,7 +288,7 @@ namespace ChampionsLeagueTickets.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var userEmail = User.Identity.Name;
 
-            // 1. Order maken
+            //order maken
             string orderId = await _orderService.GenerateNextOrderIdAsync();
 
             var order = new Order
@@ -301,6 +308,9 @@ namespace ChampionsLeagueTickets.Controllers
             var ticketLines = new List<string>();
             var abonnementLines = new List<string>();
 
+            var attachments = new List<(byte[] File, string FileName)>();
+
+            //tickets
             foreach (var t in cart.Tickets ?? new List<ShoppingCartTicketVM>())
             {
                 ticketLines.Add($"{t.Aantal}x {t.ThuisTeam} - {t.UitTeam}");
@@ -311,6 +321,8 @@ namespace ChampionsLeagueTickets.Controllers
 
                 Zitplaatsen zitplaats = await _zitplatsenService.FindByIdAsync(t.ZitplaatsId);
                 string stadionId = zitplaats.StadionId;
+
+                Match match = await _matchesService.FindByIdAsync(t.MatchId);
 
                 await _ticketService.AddAsync(new Ticket
                 {
@@ -329,8 +341,21 @@ namespace ChampionsLeagueTickets.Controllers
                     MatchId = t.MatchId,
                     Bedrag = t.Prijs
                 });
+
+                var pdf = _pdfService.GenerateTicketPdf(
+                    t.Prijs,
+                    t.ThuisTeam,
+                    t.UitTeam,
+                    match.DatumTijdStartMatch,
+                    zitplaats.VakNummerNavigation.Omschrijving,
+                    zitplaats.RijNummer,
+                    zitplaats.StoelNummer
+                );
+
+                attachments.Add((pdf, $"ticket_{match.ThuisTeam.Naam}X{match.BezoekendTeam.Naam}.pdf"));
             }
 
+            //abonnementen
             foreach (var a in cart.Abonementen ?? new List<AbonementOverzichtVM>())
             {
                 abonnementLines.Add($"{a.StadionNaam} - {a.SeizoenNaam}");
@@ -351,8 +376,6 @@ namespace ChampionsLeagueTickets.Controllers
                     StadionId = stadionId,
                     UserId = userId,
                     ZitplaatsId = a.zitplaats.ZitplaatsId,
-                    StartDatum = startDatum,
-                    EindDatum = eindDatum,
                     Status = false,
                     SeizoenId = a.SeizoenId
                 });
@@ -365,18 +388,31 @@ namespace ChampionsLeagueTickets.Controllers
                     StadionId = stadionId,
                     Bedrag = a.Prijs
                 });
+
+                var pdf = _pdfService.GenerateAbonnementPdf(
+                    a.zitplaats.VakNummerNavigation.Omschrijving,
+                    a.zitplaats.RijNummer,
+                    a.zitplaats.StoelNummer,
+                    startDatum,
+                    eindDatum,
+                    seizoen.Naam,
+                    a.StadionNaam
+                );
+
+                attachments.Add((pdf, $"abonnement_{a.StadionNaam}.pdf"));
             }
 
-            // 4. Email sturen
+            //email
             await _appEmailSender.SendOrderConfirmationAsync(
                 userEmail,
                 DateTime.Now,
                 ticketLines,
                 abonnementLines,
-                totaal
+                totaal,
+                attachments
             );
 
-            // 5. Cart leegmaken
+            //cart leegmaken
             HttpContext.Session.Remove("ShoppingCartTicket");
             HttpContext.Session.Remove("ShoppingCartAbonement");
 

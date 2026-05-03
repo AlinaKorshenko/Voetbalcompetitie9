@@ -41,6 +41,7 @@ namespace ChampionsLeagueTickets.Repositories
                 return await _dbContext.AbonnementenPrijs
                     .Include(ap => ap.Stadion)
                     .Include(ap => ap.Seizoen)
+                    .Include(ap => ap.VakNummerNavigation)
                     .OrderByDescending(ap => ap.Seizoen.StartDatum)
                     .ToListAsync();
             }

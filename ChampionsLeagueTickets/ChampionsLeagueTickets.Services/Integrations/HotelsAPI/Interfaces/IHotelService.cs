@@ -9,6 +9,6 @@ namespace ChampionsLeagueTickets.Services.Interfaces
 {
     public interface IHotelService
     {
-        Task<List<HotelItem>?> GetHotelsFromCountryAndCity(string country, string city);
+        Task<GoogleHotelApiDTO?> GetNearbyHotelsAsync(double lat, double lng, int radiusMeters = 5000);
     }
 }

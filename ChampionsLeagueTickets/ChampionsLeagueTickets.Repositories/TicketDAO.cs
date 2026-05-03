@@ -88,7 +88,7 @@ namespace ChampionsLeagueTickets.Repositories
                 var lastNumber = int.Parse(lastTicket.TicketId.Substring(1));
                 var newNumber = lastNumber + 1;
 
-                return $"O{newNumber.ToString("D4")}";
+                return $"T{newNumber.ToString("D4")}";
             }
             catch (Exception ex)
             {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChampionsLeagueTickets.Services.Interfaces
+namespace ChampionsLeagueTickets.Services.Mail.Interfaces
 {
     public interface IAppEmailSender
     {
@@ -14,6 +14,7 @@ namespace ChampionsLeagueTickets.Services.Interfaces
             DateTime orderDate,
             List<string> tickets,
             List<string> abonnementen,
-            decimal total);
+            decimal total,
+            List<(byte[] File, string FileName)> attachments);
     }
 }

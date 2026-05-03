@@ -1,39 +1,30 @@
 ﻿@model ChampionsLeagueTickets.ViewModels.AbonementStoelVM
-
 @{
-    ViewData["Title"] = "ChooseSeats";
+    ViewData["Title"] = "Kies een plaats";
 }
-
 
 <h1>Kies een plaats</h1>
 
 <form asp-action="ChooseSeats" method="post" id="seatForm">
     <input type="hidden" asp-for="StadionID" />
     <input type="hidden" asp-for="SeizoenId" />
-
+    <input type="hidden" asp-for="VakNummer" />
+    <input type="hidden" asp-for="VakNaam" />
 
     <div class="mb-3">
-        <label asp-for="StadionVak" class="form-label">Vak</label>
-        <select asp-for="StadionVak"
-                asp-items="Model.VakenLijst"
-                class="form-control"
-                id="StadionVak">
-            <option value="">-- Kies vak --</option>
-        </select>
+        <label class="form-label fw-bold">Vak</label>
+        <p>@Model.VakNaam</p>
     </div>
 
-    @if (Model.RijenLijst != null)
-    {
-        <div class="mb-3">
-            <label asp-for="RijNummer" class="form-label">Rij</label>
-            <select asp-for="RijNummer"
-                    asp-items="Model.RijenLijst"
-                    class="form-control"
-                    id="RijNummer">
-                <option value="">-- Kies rij --</option>
-            </select>
-        </div>
-    }
+    <div class="mb-3">
+        <label asp-for="RijNummer" class="form-label">Rij</label>
+        <select asp-for="RijNummer"
+                asp-items="Model.RijenLijst"
+                class="form-control"
+                id="RijNummer">
+            <option value="">-- Kies rij --</option>
+        </select>
+    </div>
 
     @if (Model.StoelenLijst != null)
     {
@@ -49,34 +40,24 @@
     }
 </form>
 
-
-
 @if (!string.IsNullOrEmpty(Model.GeselecteerdeZitplaatsId))
 {
     <form asp-action="OverzichtInfoAbonement" method="post">
         <input type="hidden" asp-for="StadionID" />
         <input type="hidden" asp-for="SeizoenId" />
-        <input type="hidden" asp-for="StadionVak" />
+        <input type="hidden" asp-for="VakNummer" />
         <input type="hidden" asp-for="RijNummer" />
         <input type="hidden" asp-for="GeselecteerdeZitplaatsId" />
-
-        <button type="submit" class="btn btn-success">
-            Verder gaan
-        </button>
+        <button type="submit" class="btn btn-success">Verder gaan</button>
     </form>
 }
 
 @section Scripts {
     <script>
         $(document).ready(function () {
-            $('#StadionVak').on('change', function () {
-                $('#seatForm').submit();
-            });
-
             $('#RijNummer').on('change', function () {
                 $('#seatForm').submit();
             });
-
             $('#GeselecteerdeZitplaatsId').on('change', function () {
                 $('#seatForm').submit();
             });

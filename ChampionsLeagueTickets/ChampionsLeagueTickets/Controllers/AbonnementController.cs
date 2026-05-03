@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using ChampionsLeagueTickets.Domain.EntitiesDB;
 using ChampionsLeagueTickets.Extentions;
-using ChampionsLeagueTickets.Services;
 using ChampionsLeagueTickets.Services.Interfaces;
-using ChampionsLeagueTickets.View_Models;
 using ChampionsLeagueTickets.ViewModels;
 using ChampionsLeagueTickets.ViewModels.order;
 using ChampionsLeagueTickets.ViewModels.ShoppingCart;
@@ -32,15 +30,35 @@ namespace ChampionsLeagueTickets.Controllers
             _stadionService = stadionService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? seizoenId = null)
         {
-            var abonnementenPrijzen = await _abonnementenPrijsService.GetAllAsync();
-            var vm = _mapper.Map<IEnumerable<AbonnementenInformatieVM>>(abonnementenPrijzen);
+            var seizoenen = await _seizoenenService.GetAllAsync();
 
-            foreach (var abonnement in vm)
+            var abonnementenPrijzen = await _abonnementenPrijsService.GetAllAsync();
+
+            if (!string.IsNullOrEmpty(seizoenId))
+            {
+                abonnementenPrijzen = abonnementenPrijzen.Where(a => a.SeizoenId == seizoenId);
+            }
+
+            var abonnementenVm = _mapper.Map<IEnumerable<AbonnementenInformatieVM>>(abonnementenPrijzen);
+
+            foreach (var abonnement in abonnementenVm)
             {
                 abonnement.IsKoopbaar = IsAbonnementBeschikbaar(abonnement.StartDatum);
             }
+
+            var vm = new AbonnementenIndexVM
+            {
+                Abonnementen = abonnementenVm,
+                GeselecteerdSeizoenId = seizoenId,
+                SeizoenenLijst = new SelectList(
+                    seizoenen.OrderBy(s => s.StartDatum),
+                    "SeizoenId",
+                    "Naam",
+                    seizoenId
+                )
+            };
 
             return View(vm);
         }
@@ -52,25 +70,20 @@ namespace ChampionsLeagueTickets.Controllers
             return vandaag < startDatum;
         }
 
-        [Authorize]
         public async Task<IActionResult> ChooseSeats(AbonnementenInformatieVM abonement)
         {
-            var vakTypes = (await _vakService.GetAllAsync())
-             .Select(v => new
-             {
-                 v.VakNummer,
-                 DisplayName = "Ring " + v.Ring + " ( " + v.Omschrijving + " )"
-             });
+            var rijen = await _zitplaatsenService.GetRowsForSectionAsync(abonement.StadionId, abonement.VakNummer);
 
-            AbonementStoelVM abonementStoelVM = new AbonementStoelVM()
+            AbonementStoelVM vm = new AbonementStoelVM()
             {
-                VakenLijst = new SelectList(vakTypes, "VakNummer", "DisplayName"),
                 SeizoenId = abonement.SeizoenId,
-                StadionID = abonement.StadionId
-                
+                StadionID = abonement.StadionId,
+                VakNummer = abonement.VakNummer,
+                VakNaam = abonement.VakNaam,
+                RijenLijst = new SelectList(rijen)
             };
 
-            return View(abonementStoelVM);
+            return View(vm);
         }
 
         [Authorize]
@@ -82,40 +95,28 @@ namespace ChampionsLeagueTickets.Controllers
                 return View(abonementStoelVM);
             }
 
-            var vakTypes = (await _vakService.GetAllAsync())
-             .Select(v => new
-             {
-                 v.VakNummer,
-                 DisplayName = "Ring " + v.Ring + " ( " + v.Omschrijving + " )"
-             });
+            var rijen = await _zitplaatsenService.GetRowsForSectionAsync(abonementStoelVM.StadionID, abonementStoelVM.VakNummer);
+            abonementStoelVM.RijenLijst = new SelectList(rijen, abonementStoelVM.RijNummer);
 
-            abonementStoelVM.VakenLijst = new SelectList(vakTypes, "VakNummer", "DisplayName");
-
-
-            if (!string.IsNullOrEmpty(abonementStoelVM.StadionVak))
+            if (!string.IsNullOrEmpty(abonementStoelVM.RijNummer))
             {
-                var rijen = await _zitplaatsenService.GetRowsForSectionAsync(abonementStoelVM.StadionID, abonementStoelVM.StadionVak);
-                abonementStoelVM.RijenLijst = new SelectList(rijen, abonementStoelVM.RijNummer);
-            }
+                var vrijeStoelen = await _zitplaatsenService.GetFreeSeatsForSeasonSectionAndRowAsync(
+                    abonementStoelVM.StadionID,
+                    abonementStoelVM.SeizoenId,
+                    abonementStoelVM.VakNummer,
+                    abonementStoelVM.RijNummer
+                );
 
-            if (!string.IsNullOrEmpty(abonementStoelVM.StadionVak) && !string.IsNullOrEmpty(abonementStoelVM.RijNummer))
-            {
-                var vrijeStoelen = await _zitplaatsenService.GetFreeSeatsForSeasonSectionAndRowAsync(abonementStoelVM.StadionID, abonementStoelVM.SeizoenId, abonementStoelVM.StadionVak, abonementStoelVM.RijNummer);
-
-                var stoelenSelectList = vrijeStoelen
-                    .Select(s => new
+                abonementStoelVM.StoelenLijst = new SelectList(
+                    vrijeStoelen.Select(s => new
                     {
                         ZitplaatsId = s.ZitplaatsId,
                         DisplayName = "Stoel " + s.StoelNummer
-                    })
-                    .ToList();
-
-                abonementStoelVM.StoelenLijst = new SelectList(
-                    stoelenSelectList,
+                    }),
                     "ZitplaatsId",
                     "DisplayName",
                     abonementStoelVM.GeselecteerdeZitplaatsId
-                    );
+                );
             }
 
             return View(abonementStoelVM);
@@ -123,7 +124,6 @@ namespace ChampionsLeagueTickets.Controllers
 
         [Authorize]
         public async Task<IActionResult> OverzichtInfoAbonement(AbonementStoelVM stoelVm) {
-
             var stadion = await _stadionService.FindByIdAsync(stoelVm.StadionID);
             var zitplaats = await _zitplaatsenService.FindByIdAsync(stoelVm.GeselecteerdeZitplaatsId);
             var seizoen = await _seizoenenService.FindByIdAsync(stoelVm.SeizoenId);
@@ -135,10 +135,8 @@ namespace ChampionsLeagueTickets.Controllers
                 return NotFound("Zitplaats niet gevonden");
             }
 
-
             var zitplaatsInfoVM = new AbonementOverzichtVM
             {
-
                 SeizoenId = stoelVm.SeizoenId,
                 StadionID = stoelVm.StadionID,
                 StadionNaam = stadion.Naam,
@@ -147,8 +145,6 @@ namespace ChampionsLeagueTickets.Controllers
                 StartDatum = seizoen.StartDatum,
                 EindDatum = seizoen.EindDatum,
                 Prijs = await _abonnementenPrijsService.GetPriceBySeizoenIdAndStadionId(stoelVm.SeizoenId, stoelVm.StadionID)
-
-
             };
 
             return View(zitplaatsInfoVM);

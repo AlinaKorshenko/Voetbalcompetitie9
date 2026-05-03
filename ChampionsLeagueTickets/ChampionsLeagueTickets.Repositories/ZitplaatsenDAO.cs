@@ -38,6 +38,7 @@ namespace ChampionsLeagueTickets.Repositories
             {
                 var zitplaats = await _dbContext.Zitplaatsens
                     .Include(z => z.VakNummerNavigation)
+                    .Include(z => z.Stadion)
                     .FirstOrDefaultAsync(m => m.ZitplaatsId == Id);
 
                 if(zitplaats == null)
