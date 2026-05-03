@@ -30,13 +30,11 @@ namespace ChampionsLeagueTickets.Controllers
         private readonly IAbonementenPrijsService _abonementenPrijsService;
         private readonly ISeizoenenService _seizoenenService;
         private readonly IOrderService _orderService;
-        private readonly IService<Orderlijnen> _orderlijnenService;
+        private readonly IOrderLijnService _orderlijnenService;
         private readonly IAppEmailSender _appEmailSender;
         private const int maxAantalTickets = 4;
-
-        public ShoppingCartController(IMatchService matchesService, IService<VakType> vakService, ITicketService ticketService, IAbonnementService abonnementService, IZitplaatsenService zitplatsenService, ITicketPrijsService ticketPrijsService, IService<Stadion> stadionService, IAbonementenPrijsService abonementenPrijsService, ISeizoenenService seizoenenService, IOrderService orderService, IService<Orderlijnen> orderlijnenService, IAppEmailSender appEmailSender)
         private readonly IMapper _mapper;
-        public ShoppingCartController(IMatchService matchesService, IService<VakType> vakService, IZitplaatsenService zitplatsenService, ITicketPrijsService ticketPrijsService, IService<Stadion> stadionService, IAbonementenPrijsService abonementenPrijsService, ISeizoenenService seizoenenService, IMapper mapper)
+        public ShoppingCartController(IAppEmailSender appEmailSender, IOrderLijnService orderlijnenService, IOrderService orderService, IAbonnementService abonnementService, ITicketService ticketService, IMatchService matchesService, IService<VakType> vakService, IZitplaatsenService zitplatsenService, ITicketPrijsService ticketPrijsService, IService<Stadion> stadionService, IAbonementenPrijsService abonementenPrijsService, ISeizoenenService seizoenenService, IMapper mapper)
         {
             _matchesService = matchesService;
             _vakService = vakService;

@@ -33,9 +33,18 @@ namespace ChampionsLeagueTickets.Repositories
             }
         }
 
-        public Task DeleteAsync(Abonnementen entity)
+        public async Task DeleteAsync(Abonnementen entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _dbContext.Abonnementens.Remove(entity);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in DAO: " + ex.Message);
+                throw;
+            }
         }
 
         public async Task<string> FindAbinementIdByStadonSeizoenZitplaatsAsynk(string stadionId, string seizoenId, string zitplaatsId)

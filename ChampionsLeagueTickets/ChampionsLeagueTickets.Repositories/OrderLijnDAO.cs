@@ -19,9 +19,18 @@ namespace ChampionsLeagueTickets.Repositories
         {
             _dbContext = dbContext;
         }
-        public Task AddAsync(Orderlijnen entity)
+        public async Task AddAsync(Orderlijnen entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _dbContext.Orderlijnens.AddAsync(entity);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in DAO: " + ex.Message);
+                throw;
+            }
         }
 
         public async Task DeleteAsync(Orderlijnen entity)
@@ -38,6 +47,8 @@ namespace ChampionsLeagueTickets.Repositories
         public Task<Orderlijnen> FindByOrderIdAndOrderLijnNumber(string orderId, int orderLijnNumber)
         {
             return _dbContext.Orderlijnens
+                .Include(o => o.Ticket)
+                .Include(o => o.Abonnementen)
                  .FirstOrDefaultAsync(l => l.OrderId == orderId && l.OrderLijnNummer == orderLijnNumber);
         }
 

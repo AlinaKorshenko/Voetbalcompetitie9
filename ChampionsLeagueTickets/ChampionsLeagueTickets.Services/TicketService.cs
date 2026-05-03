@@ -23,9 +23,9 @@ namespace ChampionsLeagueTickets.Services
             await _ticketsDAO.AddAsync(entity);
         }
 
-        public Task DeleteAsync(Ticket entity)
+        public async Task DeleteAsync(Ticket entity)
         {
-            throw new NotImplementedException();
+            await _ticketsDAO.DeleteAsync(entity);
         }
 
         public Task<Ticket?> FindByIdAsync(string Id)

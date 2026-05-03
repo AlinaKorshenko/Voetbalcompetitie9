@@ -44,11 +44,14 @@ namespace ChampionsLeagueTickets.Services
             throw new NotImplementedException();
         }
 
-        public Task<List<Order>> GetAllByUserId(string userId)
-        public Task<IEnumerable<Order>?> GetAllOrderInformationFromUser(string userId)
-        {
+        public Task<List<Order>> GetAllByUserId(string userId) { 
+   
            return _orderDAO.GetAllByUserId(userId);
 
+        }
+
+        public Task<IEnumerable<Order>?> GetAllOrderInformationFromUser(string userId)
+        {
             throw new NotImplementedException();
         }
 

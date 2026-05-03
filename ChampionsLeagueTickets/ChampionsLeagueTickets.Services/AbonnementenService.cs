@@ -24,9 +24,9 @@ namespace ChampionsLeagueTickets.Services
             await _abonnementenDAO.AddAsync(entity);
         }
 
-        public Task DeleteAsync(Abonnementen entity)
+        public async Task DeleteAsync(Abonnementen entity)
         {
-            throw new NotImplementedException();
+            await _abonnementenDAO.DeleteAsync(entity);
         }
 
         public async Task<string> FindAbinementIdByStadonSeizoenZitplaatsAsynk(string stadionId, string seizoenId, string zitplaatsId)

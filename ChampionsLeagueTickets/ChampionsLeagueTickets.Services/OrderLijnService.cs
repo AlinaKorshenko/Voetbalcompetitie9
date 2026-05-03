@@ -19,14 +19,15 @@ namespace ChampionsLeagueTickets.Services
         
         }
 
-        public Task AddAsync(Orderlijnen entity)
+        public async Task AddAsync(Orderlijnen entity)
         {
-            throw new NotImplementedException();
+            await _orderLijnDAO.AddAsync(entity);
+
         }
 
-        public Task DeleteAsync(Orderlijnen entity)
+        public async Task DeleteAsync(Orderlijnen entity)
         {
-            return _orderLijnDAO.DeleteAsync(entity);
+            await _orderLijnDAO.DeleteAsync(entity);
         }
 
         public Task<Orderlijnen?> FindByIdAsync(string Id)
@@ -34,9 +35,9 @@ namespace ChampionsLeagueTickets.Services
             throw new NotImplementedException();
         }
 
-        public Task<Orderlijnen> FindByOrderIdAndOrderLijnNumber(string orderId, int orderLijnNumber)
+        public async Task<Orderlijnen> FindByOrderIdAndOrderLijnNumber(string orderId, int orderLijnNumber)
         {
-            return _orderLijnDAO.FindByOrderIdAndOrderLijnNumber(orderId, orderLijnNumber);
+            return await _orderLijnDAO.FindByOrderIdAndOrderLijnNumber(orderId, orderLijnNumber);
 
         }
 

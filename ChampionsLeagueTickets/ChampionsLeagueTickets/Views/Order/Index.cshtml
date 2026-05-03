@@ -1,0 +1,59 @@
+﻿@model List<ChampionsLeagueTickets.ViewModels.order.OrderVM>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+@foreach (var order in Model)
+{
+    <div class="card mb-4">
+
+        <div class="card-header">
+            Datum: @order.DatumTijdOrder.ToString("dd/MM/yyyy HH:mm")<br />
+            Status: @order.Status
+        </div>
+
+        <div class="card-body">
+
+            @foreach (var lijn in order.OrderLijnen)
+            {
+                <div class="border p-3 mb-3">
+
+
+                    @if (lijn.Ticket != null)
+                    {
+                        <p><strong>Type:</strong> Ticket</p>
+                        <p>@lijn.Ticket.ThuisTeam - @lijn.Ticket.BezoekTeam</p>
+                        <p>@lijn.Ticket.Stadion</p>
+                        <p>@lijn.Ticket.Datum.ToString("dd/MM/yyyy HH:mm")</p>
+                        
+
+                    }
+
+                    @if (lijn.Abonement != null)
+                    {
+                        <p><strong>Type:</strong> Abonnement</p>
+                        <p>@lijn.Abonement.SeizoenNaam</p>
+                        <p>@lijn.Abonement.StadionNaam</p>
+                    }
+
+                    <p><strong>Bedrag:</strong> € @lijn.bedrag</p>
+
+                    <form asp-action="Delete" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden" name="orderId" value="@order.OrderId" />
+                        <input type="hidden" name="orderLijnNummer" value="@lijn.orderLijnNummer" />
+
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            Annuleren
+                        </button>
+                    </form>
+
+                </div>
+            }
+
+        </div>
+    </div>
+}

@@ -34,9 +34,18 @@ namespace ChampionsLeagueTickets.Repositories
             }
         }
 
-        public Task DeleteAsync(Ticket entity)
+        public async Task DeleteAsync(Ticket entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _dbContext.Tickets.Remove(entity);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in DAO: " + ex.Message);
+                throw;
+            }
         }
 
         public Task<Ticket?> FindByIdAsync(string Id)

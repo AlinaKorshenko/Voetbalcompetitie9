@@ -48,12 +48,19 @@ namespace ChampionsLeagueTickets.AutoMapper
             CreateMap<Ticket, OrderTicketVM>()
                 .ForMember(dest => dest.MatchID, opt => opt.MapFrom(src => src.MatchId))
                 .ForMember(dest => dest.Prijs, opt => opt.MapFrom(src => src.Prijs))
-                .ForMember(dest => dest.Zitplaats, opt => opt.MapFrom(src => src.Zitplaatsen));
+                .ForMember(dest => dest.Zitplaats, opt => opt.MapFrom(src => src.Zitplaatsen))
+                .ForMember(dest => dest.ThuisTeam, opt => opt.MapFrom(src => src.Match.ThuisTeam.Naam))
+                .ForMember(dest => dest.BezoekTeam, opt => opt.MapFrom(src => src.Match.BezoekendTeam.Naam))
+                .ForMember(dest => dest.Datum, opt => opt.MapFrom(src => src.Match.DatumTijdStartMatch))
+                .ForMember(dest => dest.Stadion, opt => opt.MapFrom(src => src.Match.ThuisTeam.Stadion.Naam));
+
 
             CreateMap<Abonnementen, OrderAbonementVM>()
                 .ForMember(dest => dest.AbonnementId, opt => opt.MapFrom(src => src.AbonnementId))
                 .ForMember(dest => dest.Zitplaats, opt => opt.MapFrom(src => src.Zitplaatsen))
-                .ForMember(dest => dest.SeizoenNaam, opt => opt.MapFrom(src => src.Seizoen.Naam));
+                .ForMember(dest => dest.SeizoenNaam, opt => opt.MapFrom(src => src.Seizoen.Naam))
+                .ForMember(dest => dest.StadionNaam, opt => opt.MapFrom(src => src.Stadion.Naam));
+
 
             CreateMap<Orderlijnen, OrderLijnVM>()
                 .ForMember(dest => dest.orderLijnNummer, opt => opt.MapFrom(src => src.OrderLijnNummer))
