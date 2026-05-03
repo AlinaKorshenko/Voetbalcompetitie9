@@ -18,9 +18,10 @@ namespace ChampionsLeagueTickets.Services
         {
             _orderDAO = orderDAO;
         }
-        public Task AddAsync(Order entity)
+
+        public async Task AddAsync(Order entity)
         {
-            throw new NotImplementedException();
+            await _orderDAO.AddAsync(entity);
         }
 
         public Task DeleteAsync(Order entity)
@@ -33,15 +34,22 @@ namespace ChampionsLeagueTickets.Services
             return _orderDAO.FindByIdAsync(Id);
         }
 
+        public async Task<string> GenerateNextOrderIdAsync()
+        {
+            return await _orderDAO.GenerateNextOrderIdAsync();
+        }
+
         public Task<IEnumerable<Order>?> GetAllAsync()
         {
             throw new NotImplementedException();
         }
 
         public Task<List<Order>> GetAllByUserId(string userId)
+        public Task<IEnumerable<Order>?> GetAllOrderInformationFromUser(string userId)
         {
            return _orderDAO.GetAllByUserId(userId);
 
+            throw new NotImplementedException();
         }
 
         public Task UpdateAsync(Order entity)

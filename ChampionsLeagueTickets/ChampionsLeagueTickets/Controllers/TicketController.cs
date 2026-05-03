@@ -5,6 +5,7 @@ using ChampionsLeagueTickets.Services;
 using ChampionsLeagueTickets.Services.Interfaces;
 using ChampionsLeagueTickets.View_Models;
 using ChampionsLeagueTickets.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using ChampionsLeagueTickets.ViewModels.ShoppingCart;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -30,14 +31,31 @@ namespace Voetbalcompetitie9.Controllers
             _ticketPrijsService = ticketPrijsService;
         }
 
-        public async Task<IActionResult> Matches()
+        public async Task<IActionResult> Matches(string club)
         {
             var list = await _matchesService.GetAllAsync();
-            List<MatchVM> matches = _mapper.Map<List<MatchVM>>(list);
+
+            if (!string.IsNullOrEmpty(club))
+            {
+                list = list.Where(m =>
+                    m.ThuisTeam.Naam == club ||
+                    m.BezoekendTeam.Naam == club
+                ).ToList();
+            }
+
+            var matches = _mapper.Map<List<MatchVM>>(list);
+
+            foreach (var match in matches)
+            {
+                match.IsKoopbaar = IsTicketBeschikbaar(match.DatumTijdStartMatch);
+            }
+
+            ViewBag.SelectedClub = club;
 
             return View(matches);
         }
 
+        [Authorize]
         public async Task<IActionResult> ChooseSeats(string matchID) {
             var vakTypes = (await _vakService.GetAllAsync())
              .Select(v => new
@@ -55,6 +73,7 @@ namespace Voetbalcompetitie9.Controllers
             return View(ticketVM);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> ChooseSeats(TicketStoelVM ticketVM)
         {
@@ -73,7 +92,7 @@ namespace Voetbalcompetitie9.Controllers
 
             ticketVM.Prijs = await _ticketPrijsService.GetTicketPrijsByMatchAndSectionAsync(ticketVM.MatchID, ticketVM.StadionVak);
 
-            var stadion = await _matchesService.GetStadionByIMatchdAsync(ticketVM.MatchID);
+            var stadion = await _matchesService.GetStadionByMatchIdAsync(ticketVM.MatchID);
 
             if (stadion == null)
             {
@@ -100,12 +119,17 @@ namespace Voetbalcompetitie9.Controllers
                         DisplayName = "Stoel " + s.StoelNummer
                     });
 
-                ticketVM.StoelenLijst = new SelectList(vrijeStoelen, "ZitplaatsId", "DisplayName", ticketVM.GeselecteerdeZitplaatsId);
+                ticketVM.StoelenLijst = new SelectList(
+                    vrijeStoelen,
+                    "ZitplaatsId",
+                    "DisplayName"
+                );
             }
 
             return View(ticketVM);
         }
 
+        [Authorize]
         public async Task<IActionResult> OverzichtInfoTicket(TicketStoelVM vm)
         {
             var match = await _matchesService.FindByIdAsync(vm.MatchID);
@@ -142,6 +166,7 @@ namespace Voetbalcompetitie9.Controllers
             return View(zitplaatsInfoVM);
         }
 
+        [Authorize]
         public async Task<IActionResult> BevestigTicket(string ZitplaatsID, string MatchID) {
             if (string.IsNullOrEmpty(ZitplaatsID) || string.IsNullOrEmpty(MatchID))
             {
@@ -203,6 +228,14 @@ namespace Voetbalcompetitie9.Controllers
             HttpContext.Session.SetObject("ShoppingCartTicket", cart);
 
             return RedirectToAction("Index", "ShoppingCart");
+        }
+
+        private bool IsTicketBeschikbaar(DateTime matchDatum)
+        {
+            var now = DateTime.Now;
+            var oneMonthBeforeMatch = matchDatum.AddMonths(-1);
+
+            return now >= oneMonthBeforeMatch && now < matchDatum;
         }
     }
 }

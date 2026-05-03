@@ -14,6 +14,14 @@
 
 <div class="container py-5">
 
+@if (TempData["Error"] != null)
+{
+        <div class="alert alert-warning alert-dismissible fade show mb-4">
+            <strong>Waarschuwing:</strong> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+}
+
 <div class="container py-5">
     <div class="mb-4">
         <h1 class="cart-page-title">
@@ -87,13 +95,6 @@
 
                                     <button type="submit" class="btn btn-outline-danger btn-sm">
                                         <i class="bi bi-trash"></i> -
-                                    </button>
-                                </form>
-                                <form asp-action="VoegTicketToe" method="post">
-                                    <input type="hidden" name="matchId" value="@item.MatchId" />
-                                    <input type="hidden" name="zitplaatsId" value="@item.ZitplaatsId" />
-                                    <button type="submit" class="btn btn-outline-success btn-sm">
-                                        <i class="bi bi-chevron-up"></i> +
                                     </button>
                                 </form>
                             </div>
@@ -174,6 +175,13 @@
                         </div>
                     }
                 }
+                    else
+                    {
+                        <div class="empty-cart-box">
+                            <i class="bi bi-cart-x"></i>
+                            <p>Er zitten nog geen abonnementen in je winkelmandje.</p>
+                        </div>
+                    }
             </section>
 
         </div>
@@ -206,18 +214,12 @@
                     <strong>€@totaal</strong>
                 </div>
 
-                <button class="btn btn-success w-100 mt-3">
-                    <i class="bi bi-credit-card"></i> Verder naar afrekenen
-                </button>
+                <form asp-action="Checkout" method="post">
+                    <button type="submit" class="btn btn-success w-100 mt-3">
+                        Bestel
+                    </button>
+                </form>
             </div>
         </div>
     </div>
 </div>
-
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <strong>Waarschuwing:</strong> @TempData["Error"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-}

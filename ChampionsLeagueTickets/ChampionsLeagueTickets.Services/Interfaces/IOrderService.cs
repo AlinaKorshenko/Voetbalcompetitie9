@@ -1,4 +1,5 @@
 ﻿using ChampionsLeagueTickets.Domain.EntitiesDB;
+using ChampionsLeagueTickets.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,7 @@ namespace ChampionsLeagueTickets.Services.Interfaces
         Task<List<Order>> GetAllByUserId(string userId);
 
 
+        Task<IEnumerable<Order>?> GetAllOrderInformationFromUser(string userId);
+        Task<string> GenerateNextOrderIdAsync();
     }
 }

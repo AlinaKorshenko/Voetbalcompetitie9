@@ -18,9 +18,9 @@ namespace ChampionsLeagueTickets.Services
         {
             _ticketsDAO = ticketsDAO;
         }
-        public Task AddAsync(Ticket entity)
+        public async Task AddAsync(Ticket entity)
         {
-            throw new NotImplementedException();
+            await _ticketsDAO.AddAsync(entity);
         }
 
         public Task DeleteAsync(Ticket entity)
@@ -33,9 +33,29 @@ namespace ChampionsLeagueTickets.Services
             throw new NotImplementedException();
         }
 
+        public Task<Ticket?> FindByMatchAndSeatAsync(string matchId, string seatId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<string> GenerateNextTicketIdAsync()
+        {
+            return await _ticketsDAO.GenerateNextTicketIdAsync();
+        }
+
+        public async Task<int> GetAantalTicketsVoorMatchEnUser(string userId, string matchId)
+        {
+            return await _ticketsDAO.GetAantalTicketsVoorMatchEnUser(userId, matchId);
+        }
+
         public async Task<IEnumerable<Ticket>?> GetAllAsync()
         {
             return await _ticketsDAO.GetAllAsync();
+        }
+
+        public async Task<bool> HasTicketOnSameDay(string userId, string matchId, DateTime matchDatum)
+        {
+            return await _ticketsDAO.HasTicketOnSameDay(userId, matchId, matchDatum);
         }
 
         public Task UpdateAsync(Ticket entity)

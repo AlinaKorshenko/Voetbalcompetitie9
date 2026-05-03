@@ -101,5 +101,67 @@ namespace ChampionsLeagueTickets.Services
         </body>
         </html>
         """;
+
+        public static string OrderConfirmationSimple(
+            DateTime orderDate,
+            List<string> tickets,
+            List<string> abonnementen,
+            decimal total
+        )
+        {
+            var ticketHtml = (tickets != null && tickets.Any())
+                ? string.Join("", tickets.Select(t => $"<li>{t}</li>"))
+                : "<li>Geen tickets besteld</li>";
+
+            var abonnementHtml = (abonnementen != null && abonnementen.Any())
+                ? string.Join("", abonnementen.Select(a => $"<li>{a}</li>"))
+                : "<li>Geen abonnementen besteld</li>";
+
+            return 
+            $"""
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="utf-8">
+                <style>{BaseStyle}</style>
+            </head>
+
+            <body style="margin:0; padding:0; background-color:#0d0e1a;">
+              <div class="wrapper">
+
+                <div class="header">
+                  <h1>⚽ Orderbevestiging</h1>
+                  <p>Champions League Tickets</p>
+                </div>
+
+                <div class="body">
+
+                  <h2>Bedankt voor je bestelling!</h2>
+
+                  <div class="info-box">
+                    <p><strong>Datum bestelling:</strong> {orderDate:dd/MM/yyyy HH:mm}</p>
+                  </div>
+
+                  <h3 style="color:white;">🎟 Tickets</h3>
+                  <ul>{ticketHtml}</ul>
+
+                  <h3 style="color:white;">🏟 Abonnementen</h3>
+                  <ul>{abonnementHtml}</ul>
+
+                  <hr class="divider" />
+
+                  <p><strong>Totaal:</strong> €{total:0.00}</p>
+
+                </div>
+
+                <div class="footer">
+                  <p>&copy; Champions League Tickets - Schoolproject</p>
+                </div>
+
+              </div>
+            </body>
+            </html>
+            """;
+        }
     }
 }

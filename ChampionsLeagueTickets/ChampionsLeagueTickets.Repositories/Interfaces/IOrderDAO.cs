@@ -13,5 +13,7 @@ namespace ChampionsLeagueTickets.Repositories.Interfaces
         Task<List<Order>> GetAllByUserId(string userId);
 
 
+        Task<IEnumerable<Order>?> GetAllOrderInformationFromUser(string userId);
+        Task<string> GenerateNextOrderIdAsync();
     }
 }

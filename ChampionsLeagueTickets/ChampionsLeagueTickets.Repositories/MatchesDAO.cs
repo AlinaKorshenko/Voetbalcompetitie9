@@ -62,6 +62,7 @@ namespace ChampionsLeagueTickets.Repositories
                         .ThenInclude(t => t.Stadion)
                     .Include(m => m.BezoekendTeam)
                     .Where(m => m.DatumTijdStartMatch > DateTime.Now)
+                    .OrderBy(m => m.DatumTijdStartMatch)
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -80,6 +81,7 @@ namespace ChampionsLeagueTickets.Repositories
                         .ThenInclude(t => t.Stadion)
                     .Include(m => m.BezoekendTeam)
                     .Where(match => match.ThuisTeamId == homeTeamId && match.BezoekendTeamId == awayTeamId)
+                    .OrderBy(m => m.DatumTijdStartMatch)
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -89,12 +91,20 @@ namespace ChampionsLeagueTickets.Repositories
             }
         }
 
-        public async Task<Stadion> GetStadionByIMatchdAsync(string matchId)
+        public async Task<Stadion> GetStadionByMatchIdAsync(string matchId)
         {
-            return await _dbContext.Matches
-    .Where(m => m.MatchId == matchId)
-    .Select(m => m.ThuisTeam.Stadion)
-    .FirstOrDefaultAsync();
+            try
+            {
+                return await _dbContext.Matches
+                    .Where(m => m.MatchId == matchId)
+                    .Select(m => m.ThuisTeam.Stadion)
+                    .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in DAO: " + ex.Message);
+                throw;
+            }
         }
 
         public Task UpdateAsync(Match entity)

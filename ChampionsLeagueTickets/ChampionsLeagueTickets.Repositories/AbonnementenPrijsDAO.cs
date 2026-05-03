@@ -41,6 +41,7 @@ namespace ChampionsLeagueTickets.Repositories
                 return await _dbContext.AbonnementenPrijs
                     .Include(ap => ap.Stadion)
                     .Include(ap => ap.Seizoen)
+                    .OrderByDescending(ap => ap.Seizoen.StartDatum)
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -52,7 +53,6 @@ namespace ChampionsLeagueTickets.Repositories
 
         public async Task<decimal> GetPriceBySeizoenIdAndStadionId(string seizoenID, string stadionId)
         {
-
             try
             {
                 var ticket = await _dbContext.AbonnementenPrijs

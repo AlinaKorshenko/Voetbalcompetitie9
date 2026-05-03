@@ -19,9 +19,18 @@ namespace ChampionsLeagueTickets.Repositories
             _dbContext = dbContext;
         }
 
-        public Task AddAsync(Abonnementen entity)
+        public async Task AddAsync(Abonnementen entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _dbContext.Abonnementens.AddAsync(entity);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in DAO: " + ex.Message);
+                throw;
+            }
         }
 
         public Task DeleteAsync(Abonnementen entity)
@@ -29,38 +38,69 @@ namespace ChampionsLeagueTickets.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<string> FindAbinementIdByStadonSeizoenZitplaatsAsynk(string stadionId, string seirzoenId, string zitplaatsId)
+        public async Task<string> FindAbinementIdByStadonSeizoenZitplaatsAsynk(string stadionId, string seizoenId, string zitplaatsId)
         {
 
-             try
-    {
-        return await _dbContext.Abonnementens
-            .Where(a =>
-                a.StadionId == stadionId &&
-                a.SeizoenId == seirzoenId &&
-                a.ZitplaatsId == zitplaatsId)
-            .Select(a => a.AbonnementId)
-            .FirstOrDefaultAsync();
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine("Error in DAO: " + ex.Message);
-        throw;
-    }
+            try
+            {
+                return await _dbContext.Abonnementens
+                    .Where(a =>
+                        a.StadionId == stadionId &&
+                        a.SeizoenId == seizoenId &&
+                        a.ZitplaatsId == zitplaatsId)
+                    .Select(a => a.AbonnementId)
+                    .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in DAO: " + ex.Message);
+                throw;
+            }
         }
 
         public async Task<Abonnementen> FindAbonnementByStadionIdAndAbonnementId(string abonnementId, string stadionId)
         {
-            return await _dbContext.Abonnementens
-      .Include(a => a.Zitplaatsen) 
-      .Include(b=> b.Stadion)
-      .FirstOrDefaultAsync(a => a.AbonnementId == abonnementId
-                             && a.StadionId == stadionId);
+            try
+            {
+                return await _dbContext.Abonnementens
+                      .Include(a => a.Zitplaatsen)
+                      .Include(b => b.Stadion)
+                      .FirstOrDefaultAsync(a => a.AbonnementId == abonnementId
+                                             && a.StadionId == stadionId);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in DAO: " + ex.Message);
+                throw;
+            }
         }
 
         public Task<Abonnementen?> FindByIdAsync(string Id)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<string> GenerateNextAbonnementenIdAsync()
+        {
+            try
+            {
+                var lastAbonnement = await _dbContext.Abonnementens
+                    .OrderByDescending(o => o.AbonnementId)
+                    .FirstOrDefaultAsync();
+
+                if (lastAbonnement == null)
+                    return "A0001";
+
+                var lastNumber = int.Parse(lastAbonnement.AbonnementId.Substring(1));
+                var newNumber = lastNumber + 1;
+
+                return $"O{newNumber.ToString("D4")}";
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in DAO: " + ex.Message);
+                throw;
+            }
         }
 
         public async Task<IEnumerable<Abonnementen>?> GetAllAsync()

@@ -19,9 +19,9 @@ namespace ChampionsLeagueTickets.Services
             _abonnementenDAO = abonnementenDAO;
         }
 
-        public Task AddAsync(Abonnementen entity)
+        public async Task AddAsync(Abonnementen entity)
         {
-            throw new NotImplementedException();
+            await _abonnementenDAO.AddAsync(entity);
         }
 
         public Task DeleteAsync(Abonnementen entity)
@@ -42,6 +42,11 @@ namespace ChampionsLeagueTickets.Services
         public Task<Abonnementen?> FindByIdAsync(string Id)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<string> GenerateNextAbonnementenIdAsync()
+        {
+            return await _abonnementenDAO.GenerateNextAbonnementenIdAsync();
         }
 
         public async Task<IEnumerable<Abonnementen>?> GetAllAsync()

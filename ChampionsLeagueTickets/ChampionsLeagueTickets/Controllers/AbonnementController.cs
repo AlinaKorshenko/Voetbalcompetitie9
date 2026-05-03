@@ -7,6 +7,7 @@ using ChampionsLeagueTickets.View_Models;
 using ChampionsLeagueTickets.ViewModels;
 using ChampionsLeagueTickets.ViewModels.order;
 using ChampionsLeagueTickets.ViewModels.ShoppingCart;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -35,9 +36,23 @@ namespace ChampionsLeagueTickets.Controllers
         {
             var abonnementenPrijzen = await _abonnementenPrijsService.GetAllAsync();
             var vm = _mapper.Map<IEnumerable<AbonnementenInformatieVM>>(abonnementenPrijzen);
+
+            foreach (var abonnement in vm)
+            {
+                abonnement.IsKoopbaar = IsAbonnementBeschikbaar(abonnement.StartDatum);
+            }
+
             return View(vm);
         }
 
+        private bool IsAbonnementBeschikbaar(DateOnly startDatum)
+        {
+            var vandaag = DateOnly.FromDateTime(DateTime.Now);
+
+            return vandaag < startDatum;
+        }
+
+        [Authorize]
         public async Task<IActionResult> ChooseSeats(AbonnementenInformatieVM abonement)
         {
             var vakTypes = (await _vakService.GetAllAsync())
@@ -58,6 +73,7 @@ namespace ChampionsLeagueTickets.Controllers
             return View(abonementStoelVM);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> ChooseSeats(AbonementStoelVM abonementStoelVM)
         {
@@ -105,6 +121,7 @@ namespace ChampionsLeagueTickets.Controllers
             return View(abonementStoelVM);
         }
 
+        [Authorize]
         public async Task<IActionResult> OverzichtInfoAbonement(AbonementStoelVM stoelVm) {
 
             var stadion = await _stadionService.FindByIdAsync(stoelVm.StadionID);
@@ -135,10 +152,9 @@ namespace ChampionsLeagueTickets.Controllers
             };
 
             return View(zitplaatsInfoVM);
-
-
         }
 
+        [Authorize]
         public async Task<IActionResult> Bevestig(string SeizoenId, string StadionID, string ZitplaatsId)
         {
             if (string.IsNullOrEmpty(SeizoenId) || string.IsNullOrEmpty(StadionID) || string.IsNullOrEmpty(ZitplaatsId))
@@ -156,7 +172,6 @@ namespace ChampionsLeagueTickets.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-
             cart.Add(new ShoppingCartAbonementItemKortVM
             {
                 StadionId = StadionID,
@@ -165,17 +180,9 @@ namespace ChampionsLeagueTickets.Controllers
 
             });
 
-
-
             HttpContext.Session.SetObject("ShoppingCartAbonement", cart);
 
             return RedirectToAction("Index", "ShoppingCart");
         }
     }
-
-
-
 }
-    
-       
-    

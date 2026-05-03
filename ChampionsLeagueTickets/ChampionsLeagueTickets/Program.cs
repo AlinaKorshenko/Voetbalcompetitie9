@@ -18,7 +18,6 @@ using Microsoft.OpenApi.Models;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text;
-using Azure.Identity;
 using Azure.Extensions.AspNetCore.Configuration.Secrets;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,6 +33,7 @@ builder.Configuration.AddAzureKeyVault(
 
 //Services
 var connectionString = builder.Configuration["DefaultConnection"] ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
@@ -59,6 +59,17 @@ builder.Services.AddTransient<Microsoft.AspNetCore.Identity.UI.Services.IEmailSe
 builder.Services.AddRazorPages();
 
 builder.Services.AddControllers();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Identity/Account/Login";
+
+    options.Events.OnRedirectToLogin = context =>
+    {
+        context.Response.Redirect(context.RedirectUri);
+        return Task.CompletedTask;
+    };
+});
 
 //Localization
 builder.Services.AddLocalization();
@@ -148,6 +159,10 @@ builder.Services.AddScoped<ISeizoenenService, SeizoenenService>();
 builder.Services.AddScoped<IAbonementenPrijsDAO, AbonnementenPrijsDAO>();
 builder.Services.AddScoped<IAbonementenPrijsService, AbonnementenPrijsService>();
 
+//Tickets
+builder.Services.AddScoped<ITicketDAO, TicketDAO>();
+builder.Services.AddScoped<ITicketService, TicketService>();
+
 //TicketPrijs
 builder.Services.AddScoped<ITicketPrijsDAO, TicketPrijsDAO>();
 builder.Services.AddScoped<ITicketPrijsService, TicketsPrijsService>();
@@ -166,6 +181,13 @@ builder.Services.AddScoped<IOrderLijnService, OrderLijnService>();
 
 //Users
 builder.Services.AddScoped<IUserService, UserService>();
+
+//Orders
+builder.Services.AddScoped<IOrderDAO, OrderDAO>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+
+builder.Services.AddScoped<IDAO<Orderlijnen>, OrderlijnenDAO>();
+builder.Services.AddScoped<IService<Orderlijnen>, OrderlijnenService>();
 
 //Hotel API
 //builder.Services.AddScoped<IHotelService, HotelService>();
@@ -188,26 +210,31 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(15);
 });
 
-//JWT
-builder.Services
-.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-
-.AddJwtBearer(cfg =>
-{
-    cfg.RequireHttpsMetadata = false;
-    cfg.SaveToken = true;
-    cfg.TokenValidationParameters = new TokenValidationParameters
+//JWT en authenticatie
+builder.Services.AddAuthentication()
+    .AddJwtBearer(cfg =>
     {
-        ValidIssuer = builder.Configuration["JwtIssuer"],
-        ValidAudience = builder.Configuration["JwtAudience"],
-        IssuerSigningKey = new
-                SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtKey"])),
-        ClockSkew = TimeSpan.Zero
+        cfg.RequireHttpsMetadata = false;
+        cfg.SaveToken = true;
+        cfg.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidIssuer = builder.Configuration["JwtIssuer"],
+            ValidAudience = builder.Configuration["JwtAudience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["JwtKey"])
+            ),
+            ClockSkew = TimeSpan.Zero
+        };
+    });
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Identity/Account/Login";
+
+    options.Events.OnRedirectToLogin = context =>
+    {
+        context.Response.Redirect(context.RedirectUri);
+        return Task.CompletedTask;
     };
 });
 
