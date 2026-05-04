@@ -87,7 +87,6 @@ namespace ChampionsLeagueTickets.Controllers
             return View(vm);
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> ChooseSeats(AbonementStoelVM abonementStoelVM)
         {

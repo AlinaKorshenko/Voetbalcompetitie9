@@ -49,11 +49,6 @@ namespace ChampionsLeagueTickets.Repositories
             throw new NotImplementedException();
         }
 
-        public Task UpdateAsync(Orderlijnen entity)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<Orderlijnen> FindByOrderIdAndOrderLijnNumber(string orderId, int orderLijnNumber)
         {
             return _dbContext.Orderlijnens

@@ -99,11 +99,6 @@ namespace ChampionsLeagueTickets.Repositories
             throw new NotImplementedException();
         }
 
-        public Task UpdateAsync(Order entity)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task DeleteAsync(Order entity)
         {
             try
