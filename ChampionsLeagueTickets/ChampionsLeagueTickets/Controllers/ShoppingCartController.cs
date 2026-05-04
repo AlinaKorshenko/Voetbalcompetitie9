@@ -39,9 +39,8 @@ namespace ChampionsLeagueTickets.Controllers
         private readonly IPdfService _pdfService;
         private const int maxAantalTickets = 4;
         private readonly IMapper _mapper;
-        public ShoppingCartController(IAppEmailSender appEmailSender, IOrderLijnService orderlijnenService, IOrderService orderService, IAbonnementService abonnementService, ITicketService ticketService, IMatchService matchesService, IService<VakType> vakService, IZitplaatsenService zitplatsenService, ITicketPrijsService ticketPrijsService, IService<Stadion> stadionService, IAbonementenPrijsService abonementenPrijsService, ISeizoenenService seizoenenService, IMapper mapper)
 
-        public ShoppingCartController(IMatchService matchesService, IService<VakType> vakService, ITicketService ticketService, IAbonnementService abonnementService, IZitplaatsenService zitplatsenService, ITicketPrijsService ticketPrijsService, IService<Stadion> stadionService, IAbonementenPrijsService abonementenPrijsService, ISeizoenenService seizoenenService, IOrderService orderService, IService<Orderlijnen> orderlijnenService, IAppEmailSender appEmailSender, IPdfService pdfService)
+        public ShoppingCartController(IMatchService matchesService, IService<VakType> vakService, ITicketService ticketService, IAbonnementService abonnementService, IZitplaatsenService zitplatsenService, ITicketPrijsService ticketPrijsService, IService<Stadion> stadionService, IAbonementenPrijsService abonementenPrijsService, ISeizoenenService seizoenenService, IOrderService orderService, IOrderLijnService orderlijnenService, IAppEmailSender appEmailSender, IPdfService pdfService, IMapper mapper)
         {
             _matchesService = matchesService;
             _vakService = vakService;
@@ -390,7 +389,7 @@ namespace ChampionsLeagueTickets.Controllers
                 });
 
                 var pdf = _pdfService.GenerateAbonnementPdf(
-                    a.zitplaats.VakNummerNavigation.Omschrijving,
+                    a.zitplaats.VakOmschrijving,
                     a.zitplaats.RijNummer,
                     a.zitplaats.StoelNummer,
                     startDatum,
