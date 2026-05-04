@@ -9,8 +9,6 @@ namespace ChampionsLeagueTickets.Repositories.Interfaces
 {
     public interface IAbonementenPrijsDAO : IDAO<AbonnementenPrijs>
     {
-
         Task<decimal> GetPriceBySeizoenIdAndStadionId(string seizoenID, string stadionId);
-
     }
 }
