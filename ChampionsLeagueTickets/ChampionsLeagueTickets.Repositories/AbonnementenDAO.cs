@@ -61,7 +61,9 @@ namespace ChampionsLeagueTickets.Repositories
                     .FirstOrDefaultAsync();
 
                 if (lastAbonnement == null)
+                {
                     return "A0001";
+                }
 
                 var lastNumber = int.Parse(lastAbonnement.AbonnementId.Substring(1));
                 var newNumber = lastNumber + 1;

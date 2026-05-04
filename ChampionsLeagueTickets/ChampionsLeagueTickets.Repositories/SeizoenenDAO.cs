@@ -33,8 +33,15 @@ namespace ChampionsLeagueTickets.Repositories
         {
             try
             {
-                return await _dbContext.Seizoenens
+                var seizoen = await _dbContext.Seizoenens
                     .FirstOrDefaultAsync(s => s.SeizoenId == Id);
+
+                if(seizoen == null)
+                {
+                    throw new Exception("Seizoen not found for the given SeizoenId.");
+                }
+
+                return seizoen;
             }
             catch (Exception ex)
             {

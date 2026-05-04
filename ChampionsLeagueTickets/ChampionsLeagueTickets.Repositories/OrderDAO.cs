@@ -30,9 +30,24 @@ namespace ChampionsLeagueTickets.Repositories
 
         public async Task<Order?> FindByIdAsync(string id)
         {
-            return await _dbContext.Orders
-                .Include(o => o.Orderlijnens)
-                .FirstOrDefaultAsync(o => o.OrderId == id);
+            try
+            {
+                var order = await _dbContext.Orders
+                    .Include(o => o.Orderlijnens)
+                    .FirstOrDefaultAsync(o => o.OrderId == id);
+
+                if (order == null)
+                {
+                    throw new Exception("Order not found for the given OrderId.");
+                }
+
+                return order;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in DAO: " + ex.Message);
+                throw;
+            }
         }
 
         public async Task<string> GenerateNextOrderIdAsync()
@@ -62,7 +77,7 @@ namespace ChampionsLeagueTickets.Repositories
         {
             try
             {
-                return await _dbContext.Orders
+                var orders = await _dbContext.Orders
                     .AsNoTracking()
                     .Where(o => o.UserId == userId)
                     .Include(o => o.Orderlijnens)
@@ -70,9 +85,8 @@ namespace ChampionsLeagueTickets.Repositories
                             .ThenInclude(t => t.Zitplaatsen)
                     .Include(o => o.Orderlijnens)
                         .ThenInclude(ol => ol.Ticket)
-                        .ThenInclude(t => t.Match)
-                        .ThenInclude(m => m.ThuisTeam)
-                            .ThenInclude(tt => tt.Stadion)
+                            .ThenInclude(t => t.Match)
+                                .ThenInclude(m => m.ThuisTeam.Stadion)
                     .Include(o => o.Orderlijnens)
                         .ThenInclude(ol => ol.Ticket)
                             .ThenInclude(t => t.Match.BezoekendTeam)
@@ -82,10 +96,17 @@ namespace ChampionsLeagueTickets.Repositories
                     .Include(o => o.Orderlijnens)
                         .ThenInclude(ol => ol.Abonnementen)
                             .ThenInclude(a => a.Seizoen)
-                            .Include(o => o.Orderlijnens)
+                    .Include(o => o.Orderlijnens)
                         .ThenInclude(ol => ol.Abonnementen)
-                        .ThenInclude(a => a.Stadion)
+                            .ThenInclude(a => a.Stadion)
                     .ToListAsync();
+
+                if (!orders.Any())
+                {
+                    throw new Exception("Orders not found for the given OrderId.");
+                }
+
+                return orders;
             }
             catch (Exception ex)
             {
