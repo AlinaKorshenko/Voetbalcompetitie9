@@ -33,11 +33,6 @@ namespace ChampionsLeagueTickets.Services
             throw new NotImplementedException();
         }
 
-        public Task<Ticket?> FindByMatchAndSeatAsync(string matchId, string seatId)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<string> GenerateNextTicketIdAsync()
         {
             return await _ticketsDAO.GenerateNextTicketIdAsync();
