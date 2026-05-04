@@ -10,11 +10,8 @@ namespace ChampionsLeagueTickets.Services.Interfaces
 {
     public interface IOrderService : IService<Order>
     {
-
         Task<List<Order>> GetAllByUserId(string userId);
 
-
-        Task<IEnumerable<Order>?> GetAllOrderInformationFromUser(string userId);
         Task<string> GenerateNextOrderIdAsync();
     }
 }

@@ -63,29 +63,29 @@ namespace ChampionsLeagueTickets.Repositories
             try
             {
                 return await _dbContext.Orders
-     .AsNoTracking()
-     .Where(o => o.UserId == userId)
-     .Include(o => o.Orderlijnens)
-         .ThenInclude(ol => ol.Ticket)
-             .ThenInclude(t => t.Zitplaatsen)
-     .Include(o => o.Orderlijnens)
-    .ThenInclude(ol => ol.Ticket)
-        .ThenInclude(t => t.Match)
-            .ThenInclude(m => m.ThuisTeam)
-                .ThenInclude(tt => tt.Stadion)
-     .Include(o => o.Orderlijnens)
-         .ThenInclude(ol => ol.Ticket)
-             .ThenInclude(t => t.Match.BezoekendTeam)
-     .Include(o => o.Orderlijnens)
-         .ThenInclude(ol => ol.Abonnementen)
-             .ThenInclude(a => a.Zitplaatsen)
-     .Include(o => o.Orderlijnens)
-         .ThenInclude(ol => ol.Abonnementen)
-             .ThenInclude(a => a.Seizoen)
-             .Include(o => o.Orderlijnens)
-         .ThenInclude(ol => ol.Abonnementen)
-         .ThenInclude(a => a.Stadion)
-     .ToListAsync();
+                    .AsNoTracking()
+                    .Where(o => o.UserId == userId)
+                    .Include(o => o.Orderlijnens)
+                        .ThenInclude(ol => ol.Ticket)
+                            .ThenInclude(t => t.Zitplaatsen)
+                    .Include(o => o.Orderlijnens)
+                        .ThenInclude(ol => ol.Ticket)
+                        .ThenInclude(t => t.Match)
+                        .ThenInclude(m => m.ThuisTeam)
+                            .ThenInclude(tt => tt.Stadion)
+                    .Include(o => o.Orderlijnens)
+                        .ThenInclude(ol => ol.Ticket)
+                            .ThenInclude(t => t.Match.BezoekendTeam)
+                    .Include(o => o.Orderlijnens)
+                        .ThenInclude(ol => ol.Abonnementen)
+                            .ThenInclude(a => a.Zitplaatsen)
+                    .Include(o => o.Orderlijnens)
+                        .ThenInclude(ol => ol.Abonnementen)
+                            .ThenInclude(a => a.Seizoen)
+                            .Include(o => o.Orderlijnens)
+                        .ThenInclude(ol => ol.Abonnementen)
+                        .ThenInclude(a => a.Stadion)
+                    .ToListAsync();
             }
             catch (Exception ex)
             {
@@ -95,11 +95,6 @@ namespace ChampionsLeagueTickets.Repositories
         }
 
         public Task<IEnumerable<Order>?> GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<Order>?> GetAllOrderInformationFromUser(string userId)
         {
             throw new NotImplementedException();
         }

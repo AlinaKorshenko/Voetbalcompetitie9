@@ -50,11 +50,6 @@ namespace ChampionsLeagueTickets.Services
 
         }
 
-        public Task<IEnumerable<Order>?> GetAllOrderInformationFromUser(string userId)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task UpdateAsync(Order entity)
         {
             throw new NotImplementedException();
