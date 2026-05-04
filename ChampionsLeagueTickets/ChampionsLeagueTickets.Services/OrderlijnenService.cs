@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace ChampionsLeagueTickets.Services
 {
-    public class OrderlijnenService : IService<Orderlijnen>
+    public class OrderLijnenService : IOrderLijnenService
     {
-        private IDAO<Orderlijnen> _orderlijnenDAO;
+        private IOrderLijnenDAO _orderlijnenDAO;
 
-        public OrderlijnenService(IDAO<Orderlijnen> orderlijnenDAO)
+        public OrderLijnenService(IOrderLijnenDAO orderlijnenDAO)
         {
             _orderlijnenDAO = orderlijnenDAO;
         }
@@ -41,6 +41,11 @@ namespace ChampionsLeagueTickets.Services
         public Task UpdateAsync(Orderlijnen entity)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<Orderlijnen> FindByOrderIdAndOrderLijnNumber(string orderId, int orderLijnNumber)
+        {
+            return await _orderlijnenDAO.FindByOrderIdAndOrderLijnNumber(orderId, orderLijnNumber);
         }
     }
 }

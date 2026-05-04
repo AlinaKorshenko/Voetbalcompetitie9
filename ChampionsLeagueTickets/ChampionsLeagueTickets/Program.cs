@@ -180,10 +180,6 @@ builder.Services.AddScoped<IAbonnementService, AbonnementenService>();
 builder.Services.AddScoped<IOrderDAO, OrderDAO>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 
-//OrderLijns
-builder.Services.AddScoped<IOrderLijnDAO, OrderLijnDAO>();
-builder.Services.AddScoped<IOrderLijnService, OrderLijnService>();
-
 //Users
 builder.Services.AddScoped<IUserService, UserService>();
 
@@ -191,8 +187,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IOrderDAO, OrderDAO>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 
-builder.Services.AddScoped<IDAO<Orderlijnen>, OrderlijnenDAO>();
-builder.Services.AddScoped<IService<Orderlijnen>, OrderlijnenService>();
+builder.Services.AddScoped<IOrderLijnenDAO, OrderLijnenDAO>();
+builder.Services.AddScoped<IOrderLijnenService, OrderLijnenService>();
 
 //Matches
 builder.Services.AddScoped<IMatchDAO, MatchesDAO>();

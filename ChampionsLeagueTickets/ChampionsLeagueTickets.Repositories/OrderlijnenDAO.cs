@@ -10,11 +10,12 @@ using System.Threading.Tasks;
 
 namespace ChampionsLeagueTickets.Repositories
 {
-    public class OrderlijnenDAO : IDAO<Orderlijnen>
+    public class OrderLijnenDAO : IOrderLijnenDAO
     {
+
         private readonly FootballDbContext _dbContext;
 
-        public OrderlijnenDAO(FootballDbContext dbContext)
+        public OrderLijnenDAO(FootballDbContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -51,6 +52,14 @@ namespace ChampionsLeagueTickets.Repositories
         public Task UpdateAsync(Orderlijnen entity)
         {
             throw new NotImplementedException();
+        }
+
+        public Task<Orderlijnen> FindByOrderIdAndOrderLijnNumber(string orderId, int orderLijnNumber)
+        {
+            return _dbContext.Orderlijnens
+                .Include(o => o.Ticket)
+                .Include(o => o.Abonnementen)
+                 .FirstOrDefaultAsync(l => l.OrderId == orderId && l.OrderLijnNummer == orderLijnNumber);
         }
     }
 }
