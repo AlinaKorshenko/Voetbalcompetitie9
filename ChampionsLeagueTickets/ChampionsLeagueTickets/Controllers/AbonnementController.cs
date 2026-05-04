@@ -16,12 +16,12 @@ namespace ChampionsLeagueTickets.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IAbonementenPrijsService _abonnementenPrijsService;
-        private readonly ISeizoenenService _seizoenenService;
+        private readonly IService<Seizoenen> _seizoenenService;
         private readonly IZitplaatsenService _zitplaatsenService;
         private readonly IService<VakType> _vakService;
         private readonly IService<Stadion> _stadionService;
 
-        public AbonnementController(IMapper mapper, IAbonementenPrijsService abonnementenPrijsService, ISeizoenenService seizoenenService, IZitplaatsenService zitplaatsenService, IService<VakType> vakCervice, IService<Stadion> stadionService)
+        public AbonnementController(IMapper mapper, IAbonementenPrijsService abonnementenPrijsService, IService<Seizoenen> seizoenenService, IZitplaatsenService zitplaatsenService, IService<VakType> vakCervice, IService<Stadion> stadionService)
         {
             _mapper = mapper;
             _abonnementenPrijsService = abonnementenPrijsService;

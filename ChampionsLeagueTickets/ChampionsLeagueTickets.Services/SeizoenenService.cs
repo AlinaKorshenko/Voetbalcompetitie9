@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace ChampionsLeagueTickets.Services
 {
-    public class SeizoenenService : ISeizoenenService
+    public class SeizoenenService : IService<Seizoenen>
     {
-        private ISeizoenenDAO _seizoenenDAO;
+        private IDAO<Seizoenen> _seizoenenDAO;
 
-        public SeizoenenService(ISeizoenenDAO seizoenenDAO)
+        public SeizoenenService(IDAO<Seizoenen> seizoenenDAO)
         {
             _seizoenenDAO = seizoenenDAO;
         }
@@ -36,11 +36,6 @@ namespace ChampionsLeagueTickets.Services
         public async Task<IEnumerable<Seizoenen>?> GetAllAsync()
         {
             return await _seizoenenDAO.GetAllAsync();
-        }
-
-        public async Task<IEnumerable<Seizoenen>?> GetCurrentSeizoen()
-        {
-            return await _seizoenenDAO.GetCurrentSeizoen();
         }
 
         public Task UpdateAsync(Seizoenen entity)
