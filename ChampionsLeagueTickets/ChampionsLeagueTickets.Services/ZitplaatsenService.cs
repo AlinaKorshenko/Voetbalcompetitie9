@@ -70,10 +70,5 @@ namespace ChampionsLeagueTickets.Services
         {
             return await _zitplaatsenDAO.GetFreeSeatsForSeasonSectionAndRowAsync(stadionId, seizoenId, vakNummer, rijNummer);
         }
-
-        public Task UpdateAsync(Zitplaatsen entity)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

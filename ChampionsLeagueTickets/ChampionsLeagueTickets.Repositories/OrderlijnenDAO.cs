@@ -51,10 +51,25 @@ namespace ChampionsLeagueTickets.Repositories
 
         public Task<Orderlijnen> FindByOrderIdAndOrderLijnNumber(string orderId, int orderLijnNumber)
         {
-            return _dbContext.Orderlijnens
-                .Include(o => o.Ticket)
-                .Include(o => o.Abonnementen)
-                 .FirstOrDefaultAsync(l => l.OrderId == orderId && l.OrderLijnNummer == orderLijnNumber);
+            try
+            {
+                var orderlijnen = _dbContext.Orderlijnens
+                    .Include(o => o.Ticket)
+                    .Include(o => o.Abonnementen)
+                        .FirstOrDefaultAsync(l => l.OrderId == orderId && l.OrderLijnNummer == orderLijnNumber);
+
+                if (orderlijnen == null)
+                {
+                    throw new Exception("Orderlijnen not found for the given OrderId.");
+                }
+
+                return orderlijnen;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in DAO: " + ex.Message);
+                throw;
+            }
         }
     }
 }

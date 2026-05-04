@@ -71,7 +71,6 @@ namespace ChampionsLeagueTickets.Repositories
                 Console.WriteLine("Error in DAO: " + ex.Message);
                 throw;
             }
-
         }
     }
 }
