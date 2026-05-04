@@ -33,11 +33,6 @@ namespace ChampionsLeagueTickets.Services
             throw new NotImplementedException();
         }
 
-        public Task<Ticket?> FindByMatchAndSeatAsync(string matchId, string seatId)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<string> GenerateNextTicketIdAsync()
         {
             return await _ticketsDAO.GenerateNextTicketIdAsync();
@@ -56,11 +51,6 @@ namespace ChampionsLeagueTickets.Services
         public async Task<bool> HasTicketOnSameDay(string userId, string matchId, DateTime matchDatum)
         {
             return await _ticketsDAO.HasTicketOnSameDay(userId, matchId, matchDatum);
-        }
-
-        public Task UpdateAsync(Ticket entity)
-        {
-            throw new NotImplementedException();
         }
     }
 }

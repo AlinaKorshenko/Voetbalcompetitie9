@@ -14,11 +14,11 @@ namespace ChampionsLeagueTickets.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IOrderService _orderService;
         private readonly IMapper _mapper;
-        private readonly IOrderLijnService _orderLijnService;
+        private readonly IOrderLijnenService _orderLijnService;
         private readonly ITicketService _ticketService;
         private readonly IAbonnementService _abonementService;
 
-        public OrderController(UserManager<IdentityUser> userManager, IOrderService orderService, IMapper mapper, IOrderLijnService orderLijnService, ITicketService ticketService, IAbonnementService abonnementService)
+        public OrderController(UserManager<IdentityUser> userManager, IOrderService orderService, IMapper mapper, IOrderLijnenService orderLijnService, ITicketService ticketService, IAbonnementService abonnementService)
         {
             _userManager = userManager;
             _orderService = orderService;

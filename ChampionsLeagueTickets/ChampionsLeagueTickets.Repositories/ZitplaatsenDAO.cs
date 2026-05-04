@@ -108,7 +108,6 @@ namespace ChampionsLeagueTickets.Repositories
             }
         }
 
-
         public async Task<List<(Zitplaatsen Zitplaats, bool IsBezet)>> GetSeatsForMatchSectionAndRowAsync(
             string matchId, string vakNummer, string rijNummer)
         {
@@ -161,11 +160,11 @@ namespace ChampionsLeagueTickets.Repositories
         }
 
         public async Task<List<Zitplaatsen>> GetFreeSeatsForSeasonSectionAndRowAsync(
-     string stadionId,
-     string seizoenId,
-     string vakNummer,
-     string rijNummer)
-        {
+             string stadionId,
+             string seizoenId,
+             string vakNummer,
+             string rijNummer)
+                {
             var seizoen = await _dbContext.Seizoenens
                 .FirstOrDefaultAsync(s => s.SeizoenId == seizoenId);
 
@@ -203,11 +202,6 @@ namespace ChampionsLeagueTickets.Repositories
             return seats
                 .OrderBy(z => ParseNumber(z.StoelNummer))
                 .ToList();
-        }
-
-        public Task UpdateAsync(Zitplaatsen entity)
-        {
-            throw new NotImplementedException();
         }
     }
 }

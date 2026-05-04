@@ -57,10 +57,5 @@ namespace ChampionsLeagueTickets.Repositories
                 throw;
             }
         }
-
-        public Task UpdateAsync(Stadion entity)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

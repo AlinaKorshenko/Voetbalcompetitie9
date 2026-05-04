@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Interfaces\IOrderLijnDAO.cs">
+    <Compile Update="Interfaces\IOrderLijnenDAO.cs">
       <CustomToolNamespace>DAO</CustomToolNamespace>
     </Compile>
   </ItemGroup>

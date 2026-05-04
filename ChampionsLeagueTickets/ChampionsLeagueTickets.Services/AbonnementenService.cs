@@ -29,16 +29,6 @@ namespace ChampionsLeagueTickets.Services
             await _abonnementenDAO.DeleteAsync(entity);
         }
 
-        public async Task<string> FindAbinementIdByStadonSeizoenZitplaatsAsynk(string stadionId, string seizoenId, string zitplaatsId)
-        {
-            return await _abonnementenDAO.FindAbinementIdByStadonSeizoenZitplaatsAsynk(stadionId, seizoenId, zitplaatsId);
-        }
-
-        public Task<Abonnementen> FindAbonnementByStadionIdAndAbonnementId(string abonnementId, string stadionId)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<Abonnementen?> FindByIdAsync(string Id)
         {
             throw new NotImplementedException();
@@ -52,11 +42,6 @@ namespace ChampionsLeagueTickets.Services
         public async Task<IEnumerable<Abonnementen>?> GetAllAsync()
         {
             return await _abonnementenDAO.GetAllAsync();
-        }
-
-        public Task UpdateAsync(Abonnementen entity)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace ChampionsLeagueTickets.Repositories.Interfaces
 {
-    public interface ISeizoenenDAO : IDAO<Seizoenen>
+    public interface IOrderLijnenDAO : IDAO<Orderlijnen>
     {
-        Task<IEnumerable<Seizoenen>?> GetCurrentSeizoen();
+        Task<Orderlijnen> FindByOrderIdAndOrderLijnNumber(string orderId, int orderLijnNumber);
     }
 }

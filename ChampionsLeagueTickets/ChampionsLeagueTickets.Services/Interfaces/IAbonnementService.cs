@@ -9,9 +9,6 @@ namespace ChampionsLeagueTickets.Services.Interfaces
 {
     public interface IAbonnementService :IService<Abonnementen>
     {
-
-        Task<string> FindAbinementIdByStadonSeizoenZitplaatsAsynk(string stadionId, string seizoenId, string zitplaatsId);
-        Task<Abonnementen> FindAbonnementByStadionIdAndAbonnementId(string abonnementId, string stadionId);
         Task<string> GenerateNextAbonnementenIdAsync();
     }
 }
