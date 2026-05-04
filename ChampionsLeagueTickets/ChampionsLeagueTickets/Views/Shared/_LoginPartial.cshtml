@@ -25,14 +25,14 @@
                     </form>
                 </li>
                 <li>
-                    <form asp-area="Identity" asp-page="/Account/Logout" method="post">
-                        <button type="submit" class="dropdown-item">Log uit</button>
-                    </form>
-                </li>
-                <li>
                     <a class="dropdown-item" asp-area="" asp-controller="Order" asp-action="Index">
                         Mijn orders
                     </a>
+                </li>
+                <li>
+                    <form asp-area="Identity" asp-page="/Account/Logout" method="post">
+                        <button type="submit" class="dropdown-item">Log uit</button>
+                    </form>
                 </li>
             </ul>
         </li>

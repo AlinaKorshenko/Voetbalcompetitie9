@@ -1,59 +1,90 @@
 ﻿@model List<ChampionsLeagueTickets.ViewModels.order.OrderVM>
-
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Bestellingen";
 }
 
+<h2 class="mb-2">Bestellingen</h2>
+<p class="mb-4">Hier vindt u een overzicht van al uw bestellingen en de bijhorende details.</p>
 
-@foreach (var order in Model)
+@if (Model.Any())
 {
-    <div class="card mb-4">
-
-        <div class="card-header">
-            Datum: @order.DatumTijdOrder.ToString("dd/MM/yyyy HH:mm")<br />
-            Status: @order.Status
-        </div>
-
-        <div class="card-body">
-
-            @foreach (var lijn in order.OrderLijnen)
-            {
-                <div class="border p-3 mb-3">
-
-
-                    @if (lijn.Ticket != null)
-                    {
-                        <p><strong>Type:</strong> Ticket</p>
-                        <p>@lijn.Ticket.ThuisTeam - @lijn.Ticket.BezoekTeam</p>
-                        <p>@lijn.Ticket.Stadion</p>
-                        <p>@lijn.Ticket.Datum.ToString("dd/MM/yyyy HH:mm")</p>
-                        
-
-                    }
-
-                    @if (lijn.Abonement != null)
-                    {
-                        <p><strong>Type:</strong> Abonnement</p>
-                        <p>@lijn.Abonement.SeizoenNaam</p>
-                        <p>@lijn.Abonement.StadionNaam</p>
-                    }
-
-                    <p><strong>Bedrag:</strong> € @lijn.bedrag</p>
-
-                    <form asp-action="Delete" method="post">
-                        @Html.AntiForgeryToken()
-
-                        <input type="hidden" name="orderId" value="@order.OrderId" />
-                        <input type="hidden" name="orderLijnNummer" value="@lijn.orderLijnNummer" />
-
-                        <button type="submit" class="btn btn-danger btn-sm">
-                            Annuleren
-                        </button>
-                    </form>
-
+    @foreach (var order in Model)
+    {
+        <div class="card shadow-sm mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center py-3">
+                <div>
+                    <span class="ms-3">
+                        <i class="bi bi-calendar-event me-1"></i>
+                        @order.DatumTijdOrder.ToString("dd/MM/yyyy HH:mm")
+                    </span>
                 </div>
-            }
+                <span class="badge @(order.Status == "Betaald" ? "bg-success" : order.Status == "Geannuleerd" ? "bg-danger" : "bg-secondary")">
+                    @order.Status
+                </span>
+            </div>
 
+            <div class="card-body p-0">
+                @foreach (var lijn in order.OrderLijnen)
+                {
+                    <div class="d-flex justify-content-between align-items-center px-4 py-3 border-bottom">
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="mt-1">
+                                @if (lijn.Ticket != null)
+                                {
+                                    <i class="bi bi-ticket-perforated fs-5 text-dark"></i>
+                                }
+                                else if (lijn.Abonement != null)
+                                {
+                                    <i class="bi bi-card-checklist fs-5 text-dark"></i>
+                                }
+                            </div>
+                            <div>
+                                @if (lijn.Ticket != null)
+                                {
+                                    <p class="mb-0 fw-bold">@lijn.Ticket.ThuisTeam – @lijn.Ticket.BezoekTeam</p>
+                                    <p class="mb-0 text-muted small">
+                                        <i class="bi bi-geo-alt me-1"></i>@lijn.Ticket.Stadion
+                                    </p>
+                                    <p class="mb-0 text-muted small">
+                                        <i class="bi bi-clock me-1"></i>@lijn.Ticket.Datum.ToString("dd/MM/yyyy HH:mm")
+                                    </p>
+                                }
+                                @if (lijn.Abonement != null)
+                                {
+                                    <p class="mb-0 fw-bold">@lijn.Abonement.StadionNaam</p>
+                                    <p class="mb-0 text-muted small">
+                                        <i class="bi bi-calendar-range me-1"></i>@lijn.Abonement.SeizoenNaam
+                                    </p>
+                                }
+                                <span class="badge bg-light text-dark border mt-1">
+                                    @(lijn.Ticket != null ? "Ticket" : "Abonnement")
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-3">
+                            <strong class="fs-5">€ @lijn.bedrag.ToString("F2")</strong>
+                            <form asp-action="Delete" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="orderId" value="@order.OrderId" />
+                                <input type="hidden" name="orderLijnNummer" value="@lijn.orderLijnNummer" />
+                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                    <i class="bi bi-x-circle me-1"></i>Annuleren
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="card-footer d-flex justify-content-end py-2">
+                <span class="me-2 align-self-center">Totaal:</span>
+                <strong class="fs-5">€ @order.OrderLijnen.Sum(l => l.bedrag).ToString("F2")</strong>
+            </div>
         </div>
-    </div>
+    }
+}
+else
+{
+    <p class="text-muted mt-3">U heeft nog geen bestellingen geplaatst.</p>
 }
