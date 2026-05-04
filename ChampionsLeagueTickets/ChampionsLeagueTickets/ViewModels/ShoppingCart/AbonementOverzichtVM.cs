@@ -1,4 +1,5 @@
 ﻿using ChampionsLeagueTickets.Domain.EntitiesDB;
+using ChampionsLeagueTickets.ViewModels.Zitplaatsen;
 using System.ComponentModel.DataAnnotations;
 
 namespace ChampionsLeagueTickets.ViewModels.ShoppingCart

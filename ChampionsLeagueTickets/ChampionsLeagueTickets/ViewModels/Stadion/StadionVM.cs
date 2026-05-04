@@ -1,6 +1,6 @@
 ﻿using ChampionsLeagueTickets.Domain.EntitiesDB;
 
-namespace ChampionsLeagueTickets.ViewModels
+namespace ChampionsLeagueTickets.ViewModels.Stadion
 {
     public class StadionVM
     {

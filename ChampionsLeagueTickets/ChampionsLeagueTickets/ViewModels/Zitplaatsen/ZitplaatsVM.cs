@@ -1,4 +1,4 @@
-﻿namespace ChampionsLeagueTickets.ViewModels
+﻿namespace ChampionsLeagueTickets.ViewModels.Zitplaatsen
 {
     public class ZitplaatsVM
     {

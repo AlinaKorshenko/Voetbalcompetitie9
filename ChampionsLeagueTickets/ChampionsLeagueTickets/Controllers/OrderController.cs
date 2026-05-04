@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ChampionsLeagueTickets.Services.Interfaces;
 using ChampionsLeagueTickets.ViewModels.order;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,14 +11,12 @@ namespace ChampionsLeagueTickets.Controllers
 {
     public class OrderController : Controller
     {
-
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IOrderService _orderService;
         private readonly IMapper _mapper;
         private readonly IOrderLijnService _orderLijnService;
         private readonly ITicketService _ticketService;
         private readonly IAbonnementService _abonementService;
-
 
         public OrderController(UserManager<IdentityUser> userManager, IOrderService orderService, IMapper mapper, IOrderLijnService orderLijnService, ITicketService ticketService, IAbonnementService abonnementService)
         {
@@ -29,10 +28,9 @@ namespace ChampionsLeagueTickets.Controllers
             _abonementService = abonnementService;
         }
 
-
+        [Authorize]
         public async Task<IActionResult> Index()
         {
-
             var user = await _userManager.GetUserAsync(User);
             var userId = user.Id;
 
@@ -40,15 +38,13 @@ namespace ChampionsLeagueTickets.Controllers
 
             var ordersVM = _mapper.Map<List<OrderVM>>(orders);
 
-
-
             return View(ordersVM);
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(string orderId, int orderLijnNummer) {
-
             var orderLijn = await _orderLijnService.FindByOrderIdAndOrderLijnNumber(orderId, orderLijnNummer);
 
             if (orderLijn == null)
@@ -77,8 +73,6 @@ namespace ChampionsLeagueTickets.Controllers
             }
 
             return RedirectToAction(nameof(Index));
-
         }
-
     }
 }

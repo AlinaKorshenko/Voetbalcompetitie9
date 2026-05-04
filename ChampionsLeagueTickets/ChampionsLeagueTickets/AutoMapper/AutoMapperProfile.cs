@@ -2,7 +2,10 @@
 using ChampionsLeagueTickets.Domain.EntitiesDB;
 using ChampionsLeagueTickets.Services.DTO;
 using ChampionsLeagueTickets.ViewModels;
+using ChampionsLeagueTickets.ViewModels.Abonnementen;
 using ChampionsLeagueTickets.ViewModels.order;
+using ChampionsLeagueTickets.ViewModels.Stadion;
+using ChampionsLeagueTickets.ViewModels.Zitplaatsen;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ChampionsLeagueTickets.AutoMapper

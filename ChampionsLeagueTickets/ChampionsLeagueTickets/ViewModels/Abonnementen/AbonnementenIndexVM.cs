@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace ChampionsLeagueTickets.ViewModels
+namespace ChampionsLeagueTickets.ViewModels.Abonnementen
 {
     public class AbonnementenIndexVM
     {

@@ -1,4 +1,6 @@
-﻿namespace ChampionsLeagueTickets.ViewModels.order
+﻿using ChampionsLeagueTickets.ViewModels.Zitplaatsen;
+
+namespace ChampionsLeagueTickets.ViewModels.order
 {
     public class OrderAbonementVM
     {

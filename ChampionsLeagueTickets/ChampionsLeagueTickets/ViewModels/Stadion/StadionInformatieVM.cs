@@ -1,4 +1,6 @@
-﻿namespace ChampionsLeagueTickets.ViewModels
+﻿using ChampionsLeagueTickets.ViewModels.Zitplaatsen;
+
+namespace ChampionsLeagueTickets.ViewModels.Stadion
 {
     public class StadionInformatieVM
     {

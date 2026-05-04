@@ -2,9 +2,10 @@
 using ChampionsLeagueTickets.Domain.EntitiesDB;
 using ChampionsLeagueTickets.Extentions;
 using ChampionsLeagueTickets.Services.Interfaces;
-using ChampionsLeagueTickets.ViewModels;
+using ChampionsLeagueTickets.ViewModels.Abonnementen;
 using ChampionsLeagueTickets.ViewModels.order;
 using ChampionsLeagueTickets.ViewModels.ShoppingCart;
+using ChampionsLeagueTickets.ViewModels.Zitplaatsen;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;

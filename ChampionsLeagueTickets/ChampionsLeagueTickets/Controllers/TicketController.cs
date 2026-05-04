@@ -3,13 +3,13 @@ using ChampionsLeagueTickets.Domain.EntitiesDB;
 using ChampionsLeagueTickets.Extentions;
 using ChampionsLeagueTickets.Services;
 using ChampionsLeagueTickets.Services.Interfaces;
-using ChampionsLeagueTickets.View_Models;
 using ChampionsLeagueTickets.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using ChampionsLeagueTickets.ViewModels.ShoppingCart;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
+using ChampionsLeagueTickets.ViewModels.Zitplaatsen;
 
 namespace Voetbalcompetitie9.Controllers
 {

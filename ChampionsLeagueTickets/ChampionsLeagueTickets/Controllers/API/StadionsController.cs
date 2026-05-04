@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using ChampionsLeagueTickets.Domain.EntitiesDB;
 using ChampionsLeagueTickets.Services.Interfaces;
-using ChampionsLeagueTickets.ViewModels;
+using ChampionsLeagueTickets.ViewModels.Stadion;
+using ChampionsLeagueTickets.ViewModels.Zitplaatsen;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
