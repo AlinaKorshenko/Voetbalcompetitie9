@@ -37,10 +37,5 @@ namespace ChampionsLeagueTickets.Services
         {
             return await _seizoenenDAO.GetAllAsync();
         }
-
-        public Task UpdateAsync(Seizoenen entity)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

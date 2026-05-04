@@ -47,10 +47,5 @@ namespace ChampionsLeagueTickets.Services
         {
             return await _matchesDAO.GetStadionByMatchIdAsync(matchId);
         }
-
-        public Task UpdateAsync(Match entity)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

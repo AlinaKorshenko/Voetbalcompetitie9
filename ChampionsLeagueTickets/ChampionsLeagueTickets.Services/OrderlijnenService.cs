@@ -38,11 +38,6 @@ namespace ChampionsLeagueTickets.Services
             throw new NotImplementedException();
         }
 
-        public Task UpdateAsync(Orderlijnen entity)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<Orderlijnen> FindByOrderIdAndOrderLijnNumber(string orderId, int orderLijnNumber)
         {
             return await _orderlijnenDAO.FindByOrderIdAndOrderLijnNumber(orderId, orderLijnNumber);

@@ -43,10 +43,5 @@ namespace ChampionsLeagueTickets.Services
         {
             return await _abonnementenDAO.GetAllAsync();
         }
-
-        public Task UpdateAsync(Abonnementen entity)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

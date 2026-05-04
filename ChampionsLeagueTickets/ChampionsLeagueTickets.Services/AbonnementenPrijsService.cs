@@ -42,10 +42,5 @@ namespace ChampionsLeagueTickets.Services
         {
             return await _abonnementenPrijsDAO.GetPriceBySeizoenIdAndStadionId(seizoenID, stadionId);
         }
-
-        public Task UpdateAsync(AbonnementenPrijs entity)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

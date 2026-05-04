@@ -52,10 +52,5 @@ namespace ChampionsLeagueTickets.Services
         {
             return await _ticketsDAO.HasTicketOnSameDay(userId, matchId, matchDatum);
         }
-
-        public Task UpdateAsync(Ticket entity)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

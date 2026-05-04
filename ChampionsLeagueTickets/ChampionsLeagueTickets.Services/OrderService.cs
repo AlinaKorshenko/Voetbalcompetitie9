@@ -49,10 +49,5 @@ namespace ChampionsLeagueTickets.Services
            return _orderDAO.GetAllByUserId(userId);
 
         }
-
-        public Task UpdateAsync(Order entity)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
