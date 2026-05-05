@@ -42,7 +42,6 @@ namespace ChampionsLeagueTickets.Repositories
 
         public async Task<decimal> GetTicketPrijsByMatchAndSectionAsync(string MatchID, string VakNummer)
         {
-
             try {
                 var ticket = await _dbContext.TicketsPrijs
                     .FirstOrDefaultAsync(tp => tp.MatchId == MatchID && tp.VakNummer == VakNummer);

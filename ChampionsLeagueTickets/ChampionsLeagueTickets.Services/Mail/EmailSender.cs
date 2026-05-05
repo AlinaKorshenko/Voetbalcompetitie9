@@ -43,7 +43,7 @@ namespace ChampionsLeagueTickets.Services.Mail
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to send email to {Email} — {Subject}", email, subject);
+                _logger.LogError(ex, "Gefaald om een mail te sturen naar {Email} — {Subject}", email, subject);
                 throw;
             }
         }

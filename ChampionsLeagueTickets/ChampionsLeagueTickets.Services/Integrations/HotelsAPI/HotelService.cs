@@ -29,7 +29,9 @@ namespace ChampionsLeagueTickets.Services.Integrations.HotelsAPI
             var result = JsonConvert.DeserializeObject<GoogleHotelApiDTO>(json);
 
             if (result?.Status != "OK" && result?.Status != "ZERO_RESULTS")
+            {
                 throw new Exception($"Google Places API error: {result?.Status}");
+            }
 
             return result;
         }
