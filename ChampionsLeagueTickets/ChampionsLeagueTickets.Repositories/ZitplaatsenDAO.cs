@@ -161,10 +161,10 @@ namespace ChampionsLeagueTickets.Repositories
         }
 
         public async Task<List<Zitplaatsen>> GetFreeSeatsForSeasonSectionAndRowAsync(
-     string stadionId,
-     string seizoenId,
-     string vakNummer,
-     string rijNummer)
+         string stadionId,
+         string seizoenId,
+         string vakNummer,
+         string rijNummer)
         {
             var seizoen = await _dbContext.Seizoenens
                 .FirstOrDefaultAsync(s => s.SeizoenId == seizoenId);

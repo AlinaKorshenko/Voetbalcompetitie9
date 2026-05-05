@@ -9,8 +9,6 @@ namespace ChampionsLeagueTickets.Services.Interfaces
 {
     public interface IOrderLijnenService : IService<Orderlijnen>
     {
-
         Task<Orderlijnen> FindByOrderIdAndOrderLijnNumber(string orderId, int orderLijnNumber);
-
     }
 }

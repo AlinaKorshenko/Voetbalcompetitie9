@@ -10,87 +10,78 @@ namespace ChampionsLeagueTickets.Services.Mail
 {
     public class EmailSender : IAppEmailSender, IEmailSender
     {
-        private readonly IConfiguration _config;
+        private readonly IConfiguration _configuration;
         private readonly ILogger<EmailSender> _logger;
+        private readonly string _mailServer;
+        private readonly int _mailPort;
+        private readonly string _senderName;
+        private readonly string _senderEmail;
+        private readonly string _username;
+        private readonly string _password;
 
         public EmailSender(IConfiguration config, ILogger<EmailSender> logger)
         {
-            _config = config;
             _logger = logger;
+            _configuration = config;
+
+            _mailServer = _configuration["EmailSettings:MailServer"]!;
+            _mailPort = int.Parse(_configuration["EmailSettings:MailPort"]!);
+            _senderName = _configuration["EmailSettings:SenderName"]!;
+            _senderEmail = _configuration["EmailSettings:SenderEmail"]!;
+            _username = _configuration["EmailSettings:Username"]!;
+            _password = _configuration["EmailSettingsPassword"]!;
         }
 
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
             try
             {
-                var s = _config.GetSection("EmailSettings");
-
-                var password = _config["EmailSettingsPassword"];
-
                 var message = new MimeMessage();
-                message.From.Add(new MailboxAddress(s["SenderName"], s["SenderEmail"]));
+                message.From.Add(new MailboxAddress(_senderName, _senderEmail));
                 message.To.Add(MailboxAddress.Parse(email));
                 message.Subject = subject;
                 message.Body = new BodyBuilder { HtmlBody = htmlMessage }.ToMessageBody();
 
                 using var smtp = new SmtpClient();
-                await smtp.ConnectAsync(s["MailServer"], int.Parse(s["MailPort"]!), SecureSocketOptions.StartTls);
-
-                await smtp.AuthenticateAsync(s["Username"], password);
-
+                await smtp.ConnectAsync(_mailServer, _mailPort, SecureSocketOptions.StartTls);
+                await smtp.AuthenticateAsync(_username, _password);
                 await smtp.SendAsync(message);
                 await smtp.DisconnectAsync(true);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to send email to {Email} — {Subject}", email, subject);
+                _logger.LogError(ex, "Gefaald om een mail te sturen naar {Email} — {Subject}", email, subject);
                 throw;
             }
         }
 
         public async Task SendOrderConfirmationAsync(
-                string email,
-                DateTime orderDate,
-                List<string> tickets,
-                List<string> abonnementen,
-                decimal total,
-                List<(byte[] File, string FileName)> attachments
-            )
-            {
+            string email,
+            DateTime orderDate,
+            List<string> tickets,
+            List<string> abonnementen,
+            decimal total,
+            List<(byte[] File, string FileName)> attachments)
+        {
             try
             {
-                var s = _config.GetSection("EmailSettings");
-                var password = _config["EmailSettingsPassword"];
-
                 var subject = "Bevestiging van je bestelling";
-
-                var body = EmailTemplateService.OrderConfirmationSimple(
-                    orderDate,
-                    tickets,
-                    abonnementen,
-                    total
-                );
+                var body = EmailTemplateService.OrderConfirmationSimple(orderDate, tickets, abonnementen, total);
 
                 var message = new MimeMessage();
-                message.From.Add(new MailboxAddress(s["SenderName"], s["SenderEmail"]));
+                message.From.Add(new MailboxAddress(_senderName, _senderEmail));
                 message.To.Add(MailboxAddress.Parse(email));
                 message.Subject = subject;
 
-                var builder = new BodyBuilder
-                {
-                    HtmlBody = body
-                };
-
+                var builder = new BodyBuilder { HtmlBody = body };
                 foreach (var att in attachments)
-                {
                     builder.Attachments.Add(att.FileName, att.File);
-                }
 
                 message.Body = builder.ToMessageBody();
 
                 using var smtp = new SmtpClient();
-                await smtp.ConnectAsync(s["MailServer"], int.Parse(s["MailPort"]!), SecureSocketOptions.StartTls);
-                await smtp.AuthenticateAsync(s["Username"], password);
+                await smtp.ConnectAsync(_mailServer, _mailPort, SecureSocketOptions.StartTls);
+                await smtp.AuthenticateAsync(_username, _password);
                 await smtp.SendAsync(message);
                 await smtp.DisconnectAsync(true);
             }
