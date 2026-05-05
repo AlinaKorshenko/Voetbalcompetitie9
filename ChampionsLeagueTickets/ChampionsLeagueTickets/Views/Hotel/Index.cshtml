@@ -13,6 +13,7 @@
 </p>
 
 <form method="post">
+    @Html.AntiForgeryToken()
     <div class="mb-4">
         <label for="stadiumSelect" class="form-label fw-bold">Selecteer een stadion</label>
         @Html.DropDownListFor(m => m.SelectedStadiumId, Model.Stadiums!, "Selecteer een stadion", new { @class = "form-select", id = "stadiumSelect", style = "max-width: 350px;" })
@@ -26,56 +27,52 @@
     {
         <h5 class="mb-3">@Model.Hotels.Count hotels gevonden dichtbij @Model.SelectedStadiumName</h5>
 
-        <table class="table border-0">
-            <thead>
-                <tr>
-                    <th>Hotels</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var hotel in Model.Hotels)
-                {
-                    <tr>
-                        <td>
-                            <div class="card p-3 shadow-sm mb-3">
-                                <div class="d-flex justify-content-between align-items-center">
+        <div class="row">
+            @foreach (var hotel in Model.Hotels)
+            {
+                <div class="col-12 mb-3">
+                    <div class="card p-3 shadow-sm">
 
-                                    <div>
-                                        <h5 class="mb-1">@hotel.Name</h5>
-                                        <span class="text-muted">📍 @hotel.Vicinity</span>
-                                    </div>
+                        <div class="d-flex justify-content-between align-items-center">
 
-                                    <div class="text-center">
-                                    </div>
-                                    <div class="text-end">
-                                        @if (hotel.Rating.HasValue)
-                                        {
-                                            <span class="badge bg-dark mx-2">⭐ @hotel.Rating / 5</span>
-                                            @if (hotel.UserRatingsTotal.HasValue)
-                                            {
-                                                <small class="text-muted">@hotel.UserRatingsTotal reviews</small>
-                                            }
-                                            <br />
-                                        }
-                                        @if (hotel.PriceLevel.HasValue)
-                                        {
-                                            <strong>@string.Concat(Enumerable.Repeat("€", hotel.PriceLevel.Value))</strong>
-                                            <br />
-                                        }
-                                        @if (hotel.OpeningHours?.OpenNow.HasValue == true)
-                                        {
-                                            <span class="badge @(hotel.OpeningHours.OpenNow.Value ? "bg-success" : "bg-secondary")">
-                                                @(hotel.OpeningHours.OpenNow.Value ? "Open now" : "Closed")
-                                            </span>
-                                        }
-                                    </div>
-                                </div>
+                            <div>
+                                <h5 class="mb-1">@hotel.Name</h5>
+                                <span class="text-muted">📍 @hotel.Vicinity</span>
                             </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+
+                            <div class="text-end">
+                                @if (hotel.Rating.HasValue)
+                                {
+                                    <span class="badge bg-dark mx-2">⭐ @hotel.Rating / 5</span>
+
+                                    @if (hotel.UserRatingsTotal.HasValue)
+                                    {
+                                        <small class="text-muted">@hotel.UserRatingsTotal reviews</small>
+                                    }
+                                    <br />
+                                }
+
+                                @if (hotel.PriceLevel.HasValue)
+                                {
+                                    <strong>@string.Concat(Enumerable.Repeat("€", hotel.PriceLevel.Value))</strong>
+                                    <br />
+                                }
+
+                                @if (hotel.OpeningHours?.OpenNow == true)
+                                {
+                                    <span class="badge bg-success">Open now</span>
+                                }
+                                else if (hotel.OpeningHours?.OpenNow == false)
+                                {
+                                    <span class="badge bg-secondary">Closed</span>
+                                }
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
     }
     else
     {

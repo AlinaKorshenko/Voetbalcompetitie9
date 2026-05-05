@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="~/images/icon_football.png" />
     <title>@ViewData["Title"] - ChampionsLeagueTickets</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
@@ -16,7 +17,9 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3 football-header">
             <div class="container-fluid">
-                <img src="~/images/logo.png" width="200" height="75" />
+                <a asp-controller="Info" asp-action="Introductie" class="navbar-brand">
+                    <img src="~/images/logo.png" width="200" height="75" alt="Champions League Tickets logo" />
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>

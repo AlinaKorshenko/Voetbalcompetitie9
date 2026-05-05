@@ -101,11 +101,6 @@ namespace ChampionsLeagueTickets.Repositories
                             .ThenInclude(a => a.Stadion)
                     .ToListAsync();
 
-                if (!orders.Any())
-                {
-                    throw new Exception("Orders not found for the given OrderId.");
-                }
-
                 return orders;
             }
             catch (Exception ex)

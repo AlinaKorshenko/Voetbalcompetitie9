@@ -22,6 +22,6 @@ namespace ChampionsLeagueTickets.ViewModels.ShoppingCart
 
         public decimal Prijs { get; set; }
 
-
+        public string VakNummer { get; set; }
     }
 }

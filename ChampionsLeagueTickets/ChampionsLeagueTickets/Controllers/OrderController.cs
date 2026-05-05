@@ -32,9 +32,16 @@ namespace ChampionsLeagueTickets.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
-            var userId = user.Id;
 
-            var orders = await _orderService.GetAllByUserId(userId);
+            if (user == null)
+                return Challenge();
+
+            var orders = await _orderService.GetAllByUserId(user.Id);
+
+            if (orders == null || !orders.Any())
+            {
+                return View(new List<OrderVM>());
+            }
 
             var ordersVM = _mapper.Map<List<OrderVM>>(orders);
 
