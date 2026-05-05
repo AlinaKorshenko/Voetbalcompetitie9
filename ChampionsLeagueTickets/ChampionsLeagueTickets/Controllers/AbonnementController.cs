@@ -71,6 +71,7 @@ namespace ChampionsLeagueTickets.Controllers
             return vandaag < startDatum;
         }
 
+        [Authorize]
         public async Task<IActionResult> ChooseSeats(string seizoenId, string stadionId, string vakNummer)
         {
             if (string.IsNullOrWhiteSpace(seizoenId) ||
@@ -100,6 +101,7 @@ namespace ChampionsLeagueTickets.Controllers
             return View(vm);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> ChooseSeats(AbonementStoelVM model)
         {
