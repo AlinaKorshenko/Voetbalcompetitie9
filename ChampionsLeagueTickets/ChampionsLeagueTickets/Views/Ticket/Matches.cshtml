@@ -20,6 +20,13 @@
         Mis ze niet.
     </p>
 
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-warning">
+            @TempData["Error"]
+        </div>
+    }
+
     <div class="mb-4">
         <label for="clubFilter" class="form-label fw-bold">Filter op club</label>
 
@@ -133,11 +140,4 @@ else
             noMatchesMessage.classList.toggle("d-none", visibleCount > 0);
         });
     </script>
-}
-
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-warning">
-        @TempData["Error"]
-    </div>
 }
