@@ -8,7 +8,6 @@
 <div class="container mt-5">
     <div class="card shadow rounded-4">
 
-        <!-- Header -->
         <div class="text-center card-header">
             <h3 class="mb-0">
                 <i class="bi bi-ticket-perforated"></i> Ticketoverzicht
@@ -17,7 +16,6 @@
 
         <div class="card-body p-4">
 
-            <!-- Teams -->
             <div class="text-center mb-4">
                 <h4 class="fw-bold">
                     ⚽ @Model.ThuisTeam 
@@ -26,7 +24,6 @@
                 </h4>
             </div>
 
-            <!-- Wedstrijd info -->
             <div class="mb-4">
                 <h5 class="fw-bold text-primary">
                     <i class="bi bi-info-circle"></i> Wedstrijdinformatie
@@ -38,7 +35,6 @@
                 </p>
             </div>
 
-            <!-- Plaats info -->
             <div class="mb-4">
                 <h5 class="fw-bold text-primary">
                     <i class="bi bi-grid"></i> Gekozen plaats
@@ -47,17 +43,17 @@
 
                 <p>
                     <i class="bi bi-layers-fill text-warning"></i>
-                    <strong>Vak:</strong> @Model.Zitplaats.VakOmschrijving
+                    <strong>Vak:</strong> @Model.Zitplaats?.VakOmschrijving
                 </p>
 
                 <p>
                     <i class="bi bi-list-ol text-info"></i>
-                    <strong>Rij:</strong> @Model.Zitplaats.RijNummer
+                    <strong>Rij:</strong> @Model.Zitplaats?.RijNummer
                 </p>
 
                 <p>
                     <i class="bi bi-person text-info"></i>
-                    <strong>Stoel:</strong> @Model.Zitplaats.StoelNummer
+                    <strong>Stoel:</strong> @Model.Zitplaats?.StoelNummer
                 </p>
                 <p> 
                     <i class="bi bi-cash-coin text-success"></i>
@@ -65,12 +61,11 @@
                 </p>
             </div>
 
-            <!-- Buttons -->
             <div class="d-flex justify-content-between mt-4">
                 <a asp-action="ChooseSeats"
                    asp-route-matchID="@Model.MatchID"
-                   asp-route-stadionVak="@Model.Zitplaats.VakNummer"
-                   asp-route-rijNummer="@Model.Zitplaats.RijNummer"
+                   asp-route-stadionVak="@Model.Zitplaats?.VakNummer"
+                   asp-route-rijNummer="@Model.Zitplaats?.RijNummer"
                    class="btn btn-outline-secondary px-4">
                     <i class="bi bi-arrow-left"></i> Terug
                 </a>
