@@ -71,16 +71,29 @@ namespace ChampionsLeagueTickets.Controllers
             return vandaag < startDatum;
         }
 
-        public async Task<IActionResult> ChooseSeats(AbonnementenInformatieVM abonement)
+        public async Task<IActionResult> ChooseSeats(string seizoenId, string stadionId, string vakNummer)
         {
-            var rijen = await _zitplaatsenService.GetRowsForSectionAsync(abonement.StadionId, abonement.VakNummer);
-
-            AbonementStoelVM vm = new AbonementStoelVM()
+            if (string.IsNullOrWhiteSpace(seizoenId) ||
+                string.IsNullOrWhiteSpace(stadionId))
             {
-                SeizoenId = abonement.SeizoenId,
-                StadionID = abonement.StadionId,
-                VakNummer = abonement.VakNummer,
-                VakNaam = abonement.VakNaam,
+                return BadRequest();
+            }
+
+            var vakken = await _vakService.GetAllAsync();
+
+            // ✅ If vakNummer missing or invalid → fallback to first valid
+            var vak = vakken.FirstOrDefault(v => v.VakNummer == vakNummer)
+                      ?? vakken.First();
+
+            // 🔥 IMPORTANT: always rebuild display name from DB
+            var rijen = await _zitplaatsenService.GetRowsForSectionAsync(stadionId, vak.VakNummer);
+
+            var vm = new AbonementStoelVM
+            {
+                SeizoenId = seizoenId,
+                StadionID = stadionId,
+                VakNummer = vak.VakNummer,
+                VakNaam = vak.Omschrijving, // 👈 THIS FIXES YOUR MISSING TEXT ISSUE
                 RijenLijst = new SelectList(rijen)
             };
 
@@ -88,26 +101,37 @@ namespace ChampionsLeagueTickets.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ChooseSeats(AbonementStoelVM abonementStoelVM)
+        public async Task<IActionResult> ChooseSeats(AbonementStoelVM model)
         {
             if (!ModelState.IsValid)
-            {
-                return View(abonementStoelVM);
-            }
+                return View(model);
 
-            var rijen = await _zitplaatsenService.GetRowsForSectionAsync(abonementStoelVM.StadionID, abonementStoelVM.VakNummer);
-            abonementStoelVM.RijenLijst = new SelectList(rijen, abonementStoelVM.RijNummer);
+            var vakken = await _vakService.GetAllAsync();
 
-            if (!string.IsNullOrEmpty(abonementStoelVM.RijNummer))
+            var vak = vakken.FirstOrDefault(v => v.VakNummer == model.VakNummer);
+
+            if (vak == null)
+                vak = vakken.First(); // fallback safety
+
+            model.VakNummer = vak.VakNummer;
+            model.VakNaam = vak.Omschrijving; // 🔥 FIX missing display text
+
+            var rijen = await _zitplaatsenService.GetRowsForSectionAsync(
+                model.StadionID,
+                model.VakNummer);
+
+            model.RijenLijst = new SelectList(rijen, model.RijNummer);
+
+            if (!string.IsNullOrEmpty(model.RijNummer))
             {
                 var vrijeStoelen = await _zitplaatsenService.GetFreeSeatsForSeasonSectionAndRowAsync(
-                    abonementStoelVM.StadionID,
-                    abonementStoelVM.SeizoenId,
-                    abonementStoelVM.VakNummer,
-                    abonementStoelVM.RijNummer
+                    model.StadionID,
+                    model.SeizoenId,
+                    model.VakNummer,
+                    model.RijNummer
                 );
 
-                abonementStoelVM.StoelenLijst = new SelectList(
+                model.StoelenLijst = new SelectList(
                     vrijeStoelen.Select(s => new
                     {
                         ZitplaatsId = s.ZitplaatsId,
@@ -115,11 +139,11 @@ namespace ChampionsLeagueTickets.Controllers
                     }),
                     "ZitplaatsId",
                     "DisplayName",
-                    abonementStoelVM.GeselecteerdeZitplaatsId
+                    model.GeselecteerdeZitplaatsId
                 );
             }
 
-            return View(abonementStoelVM);
+            return View(model);
         }
 
         [Authorize]
@@ -144,6 +168,7 @@ namespace ChampionsLeagueTickets.Controllers
                 SeizoenNaam = seizoen.Naam,
                 StartDatum = seizoen.StartDatum,
                 EindDatum = seizoen.EindDatum,
+                VakNummer = stoelVm.VakNummer,
                 Prijs = await _abonnementenPrijsService.GetPriceBySeizoenIdAndStadionId(stoelVm.SeizoenId, stoelVm.StadionID)
             };
 
