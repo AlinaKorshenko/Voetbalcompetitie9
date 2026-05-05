@@ -6,6 +6,10 @@ using ChampionsLeagueTickets.Repositories;
 using ChampionsLeagueTickets.Repositories.Interfaces;
 using ChampionsLeagueTickets.Services;
 using ChampionsLeagueTickets.Services.Interfaces;
+using ChampionsLeagueTickets.Services.Mail;
+using ChampionsLeagueTickets.Services.Mail.Interfaces;
+using ChampionsLeagueTickets.Services.Pdf;
+using ChampionsLeagueTickets.Services.Pdf.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
@@ -13,41 +17,33 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi;
 using Microsoft.OpenApi.Models;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text;
-using Azure.Extensions.AspNetCore.Configuration.Secrets;
-using ChampionsLeagueTickets.Services.Pdf;
-using ChampionsLeagueTickets.Services.Pdf.Interfaces;
-using ChampionsLeagueTickets.Services.Mail.Interfaces;
-using ChampionsLeagueTickets.Services.Mail;
-using ChampionsLeagueTickets.Services.Integrations.HotelsAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//Keyvault
-var keyVaultUrl = builder.Configuration["KeyVault:Url"]
-    ?? throw new InvalidOperationException("KeyVault URL ontbreekt");
+//keyvault
+var keyVaultUrl = builder.Configuration["KeyVault:Url"];
 
 builder.Configuration.AddAzureKeyVault(
-    new Uri(keyVaultUrl),
+    new Uri(keyVaultUrl!),
     new DefaultAzureCredential()
 );
 
-//Services
-var connectionString = builder.Configuration["DefaultConnection"] ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+//database
+var defaultConnection = builder.Configuration["DefaultConnection"];
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseSqlServer(defaultConnection));
 
 builder.Services.AddDbContext<FootballDbContext>(options =>
-    options.UseSqlServer(connectionString));
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+    options.UseSqlServer(defaultConnection));
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+//identity
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
     options.SignIn.RequireConfirmedAccount = true;
@@ -56,15 +52,43 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 .AddDefaultUI()
 .AddDefaultTokenProviders();
 
-builder.Services.AddTransient<IAppEmailSender, EmailSender>();
-builder.Services.AddTransient<Microsoft.AspNetCore.Identity.UI.Services.IEmailSender>(
-    sp => (Microsoft.AspNetCore.Identity.UI.Services.IEmailSender)sp.GetRequiredService<IAppEmailSender>()
-);
+//jwt authentication
+var jwtIssuer = builder.Configuration["JwtIssuer"];
+var jwtAudience = builder.Configuration["JwtAudience"];
+var jwtKey = builder.Configuration["JwtKey"];
 
-builder.Services.AddRazorPages();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+.AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
 
-builder.Services.AddControllers();
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
 
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtAudience,
+
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(jwtKey!)
+        ),
+
+        ClockSkew = TimeSpan.Zero
+    };
+});
+
+//authorization
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("User", policy => policy.RequireRole("User"));
+});
+
+//cookie
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Identity/Account/Login";
@@ -76,7 +100,14 @@ builder.Services.ConfigureApplicationCookie(options =>
     };
 });
 
-//Localization
+//email
+builder.Services.AddTransient<IAppEmailSender, EmailSender>();
+builder.Services.AddTransient<Microsoft.AspNetCore.Identity.UI.Services.IEmailSender>(
+    sp => (Microsoft.AspNetCore.Identity.UI.Services.IEmailSender)
+        sp.GetRequiredService<IAppEmailSender>()
+);
+
+//localization
 builder.Services.AddLocalization();
 
 builder.Services.Configure<RequestLocalizationOptions>(options =>
@@ -99,17 +130,17 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     };
 });
 
-//Swagger
+//swagger
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "API voor Champions League Tickets applicatie",
-        Version = "version 1",
-        Description = "Een API om GET-requests uit te voeren op de Champions League Tickets applicatie. U moet ingelogd zijn om deze API te kunnen gebruiken (zie login endpoint).",
+        Title = "API Champions League Tickets",
+        Version = "v1",
+        Description = "API voor Champions League Tickets applicatie",
         Contact = new OpenApiContact
         {
-            Name = "Ilona Defevere & Alina Korshenko",
+            Name = "Ilona & Alina",
             Email = "championsleagueticketsstudapp@gmail.com"
         }
     });
@@ -121,7 +152,7 @@ builder.Services.AddSwaggerGen(c =>
         Scheme = "Bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "Enter 'Bearer {token}'"
+        Description = "Enter: Bearer {token}"
     });
 
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -140,137 +171,89 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-//Automapper
+//auto mapper
 builder.Services.AddAutoMapper(typeof(Program));
 
 //DI
-//Stadion
+//stadion
 builder.Services.AddScoped<IDAO<Stadion>, StadionDAO>();
 builder.Services.AddScoped<IService<Stadion>, StadionService>();
 
-//VakType
+//matches
+builder.Services.AddScoped<IMatchDAO, MatchesDAO>();
+builder.Services.AddScoped<IMatchService, MatchesService>();
+
+//vaktypes
 builder.Services.AddScoped<IDAO<VakType>, VakTypeDAO>();
 builder.Services.AddScoped<IService<VakType>, VakTypeService>();
 
-//Zitplaatsen
+//zitplaatsen
 builder.Services.AddScoped<IZitplaatsenDAO, ZitplaatsenDAO>();
 builder.Services.AddScoped<IZitplaatsenService, ZitplaatsenService>();
 
-//Seizoenen
+//seizoenen
 builder.Services.AddScoped<IDAO<Seizoenen>, SeizoenenDAO>();
 builder.Services.AddScoped<IService<Seizoenen>, SeizoenenService>();
 
-//AbonnementenPrijs
-builder.Services.AddScoped<IAbonementenPrijsDAO, AbonnementenPrijsDAO>();
-builder.Services.AddScoped<IAbonementenPrijsService, AbonnementenPrijsService>();
-
-//Tickets
-builder.Services.AddScoped<ITicketDAO, TicketDAO>();
-builder.Services.AddScoped<ITicketService, TicketService>();
-
-//TicketPrijs
-builder.Services.AddScoped<ITicketPrijsDAO, TicketPrijsDAO>();
-builder.Services.AddScoped<ITicketPrijsService, TicketsPrijsService>();
-
-//Abonementen
+//abonnementen
 builder.Services.AddScoped<IAbonnementDAO, AbonnementenDAO>();
 builder.Services.AddScoped<IAbonnementService, AbonnementenService>();
 
-//Orders
-builder.Services.AddScoped<IOrderDAO, OrderDAO>();
-builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IAbonementenPrijsDAO, AbonnementenPrijsDAO>();
+builder.Services.AddScoped<IAbonementenPrijsService, AbonnementenPrijsService>();
 
-//Users
-builder.Services.AddScoped<IUserService, UserService>();
+//tickets
+builder.Services.AddScoped<ITicketDAO, TicketDAO>();
+builder.Services.AddScoped<ITicketService, TicketService>();
 
-//Orders
+builder.Services.AddScoped<ITicketPrijsDAO, TicketPrijsDAO>();
+builder.Services.AddScoped<ITicketPrijsService, TicketsPrijsService>();
+
+//orders
 builder.Services.AddScoped<IOrderDAO, OrderDAO>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 
 builder.Services.AddScoped<IOrderLijnenDAO, OrderLijnenDAO>();
 builder.Services.AddScoped<IOrderLijnenService, OrderLijnenService>();
 
-//Matches
-builder.Services.AddScoped<IMatchDAO, MatchesDAO>();
-builder.Services.AddScoped<IMatchService, MatchesService>();
+//gebruikers identity
+builder.Services.AddScoped<IUserService, UserService>();
 
-//Tickets
-builder.Services.AddScoped<ITicketDAO, TicketDAO>();
-builder.Services.AddScoped<ITicketService, TicketService>();
-
-//Hotel API
+//hotels api
 builder.Services.AddScoped<IHotelService, HotelService>();
 builder.Services.AddHttpClient<HotelService>();
 
-//Pdf
+//pdf service
 builder.Services.AddScoped<IPdfService, PdfService>();
 
-//Automapper
-builder.Services.AddAutoMapper(typeof(Program));
-
-//Session
+//session
 builder.Services.AddDistributedMemoryCache();
+
 builder.Services.AddSession(options =>
 {
     options.Cookie.Name = "be.ChampionsLeagueTickets.Session";
     options.IdleTimeout = TimeSpan.FromMinutes(15);
 });
 
-//JWT en authenticatie
-builder.Services.AddAuthentication()
-    .AddJwtBearer(cfg =>
-    {
-        cfg.RequireHttpsMetadata = false;
-        cfg.SaveToken = true;
-        cfg.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidIssuer = builder.Configuration["JwtIssuer"],
-            ValidAudience = builder.Configuration["JwtAudience"],
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["JwtKey"])
-            ),
-            ClockSkew = TimeSpan.Zero
-        };
-    });
-
-builder.Services.ConfigureApplicationCookie(options =>
-{
-    options.LoginPath = "/Identity/Account/Login";
-
-    options.Events.OnRedirectToLogin = context =>
-    {
-        context.Response.Redirect(context.RedirectUri);
-        return Task.CompletedTask;
-    };
-});
-
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("Admin", policy =>
-    {
-        policy.RequireRole("Admin");
-    });
-    options.AddPolicy("User", policy =>
-    {
-        policy.RequireRole("User");
-    });
-});
-
+//cors
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
-        builder => builder.AllowAnyOrigin()
-                          .AllowAnyHeader()
-                          .AllowAnyMethod());
+        b => b.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod());
 });
 
-var cs = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddRazorPages();
+builder.Services.AddControllers();
+
+//debug connection check
 Debug.WriteLine("CONNECTION STRING:");
-Debug.WriteLine(cs);
+Debug.WriteLine(defaultConnection);
 
 try
 {
-    using var conn = new SqlConnection(cs);
+    using var conn = new SqlConnection(defaultConnection);
     conn.Open();
     Debug.WriteLine("SQL CONNECTIE GELUKT");
 }
@@ -280,13 +263,15 @@ catch (Exception ex)
     Debug.WriteLine(ex.Message);
 }
 
+//build
 var app = builder.Build();
 
-//rollen
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
     string[] roles = { "Admin", "User" };
+
     foreach (var role in roles)
     {
         if (!await roleManager.RoleExistsAsync(role))
@@ -306,9 +291,7 @@ else
 
 app.UseHttpsRedirection();
 app.UseRouting();
-
 app.UseSession();
-
 app.UseCors("AllowAll");
 
 app.UseSwagger();
@@ -317,7 +300,9 @@ app.UseSwaggerUI();
 app.UseAuthentication();
 app.UseAuthorization();
 
-var locOptions = app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value;
+var locOptions = app.Services
+    .GetRequiredService<IOptions<RequestLocalizationOptions>>().Value;
+
 app.UseRequestLocalization(locOptions);
 
 app.MapStaticAssets();
@@ -327,7 +312,6 @@ app.MapControllerRoute(
     pattern: "{controller=Info}/{action=Introductie}/{id?}")
     .WithStaticAssets();
 
-app.MapRazorPages()
-   .WithStaticAssets();
+app.MapRazorPages().WithStaticAssets();
 
 app.Run();
