@@ -134,3 +134,10 @@ else
         });
     </script>
 }
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-warning">
+        @TempData["Error"]
+    </div>
+}
