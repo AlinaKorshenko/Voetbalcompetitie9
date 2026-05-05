@@ -75,7 +75,10 @@
 
             <!-- Buttons -->
             <div class="d-flex justify-content-between mt-4">
-                <a asp-action="Bevestig" class="btn btn-outline-secondary px-4">
+                <a asp-action="ChooseSeats"
+                   asp-route-SeizoenId="@Model.SeizoenId"
+                   asp-route-StadionId="@Model.StadionID"
+                   class="btn btn-outline-secondary px-4">
                     <i class="bi bi-arrow-left"></i> Terug
                 </a>
 
