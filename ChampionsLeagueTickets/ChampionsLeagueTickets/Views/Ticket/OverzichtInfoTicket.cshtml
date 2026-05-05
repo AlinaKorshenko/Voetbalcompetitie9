@@ -67,7 +67,11 @@
 
             <!-- Buttons -->
             <div class="d-flex justify-content-between mt-4">
-                <a asp-action="Matches" class="btn btn-outline-secondary px-4">
+                <a asp-action="ChooseSeats"
+                   asp-route-matchID="@Model.MatchID"
+                   asp-route-stadionVak="@Model.Zitplaats.VakNummer"
+                   asp-route-rijNummer="@Model.Zitplaats.RijNummer"
+                   class="btn btn-outline-secondary px-4">
                     <i class="bi bi-arrow-left"></i> Terug
                 </a>
 
