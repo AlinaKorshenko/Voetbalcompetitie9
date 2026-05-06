@@ -63,7 +63,7 @@ namespace ChampionsLeagueTickets.Repositories
                                         .Include(ap => ap.Stadion)
                     .Include(ap => ap.Seizoen)
                     .Include(ap => ap.VakNummerNavigation)
-                    .OrderByDescending(ap => ap.Seizoen.StartDatum)
+                    .OrderBy(ap => ap.Seizoen.StartDatum)
                     .ToListAsync();
             }
             catch (Exception ex)
