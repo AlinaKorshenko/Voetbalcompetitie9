@@ -170,5 +170,20 @@ namespace ChampionsLeagueTickets.Services
             }
             
         }
+
+        public async Task<Dictionary<string, List<Zitplaatsen>>> GetAllGroupedByStadionAsync()
+        {
+            try
+            {
+                var all = await _zitplaatsenDAO.GetAllAsync();
+                return all
+                    .GroupBy(z => z.StadionId)
+                    .ToDictionary(g => g.Key, g => g.ToList());
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Het is niet gelukt om alle Zitplaatsen gegroepeerd per stadion op te halen: ", ex);
+            }
+        }
     }
 }

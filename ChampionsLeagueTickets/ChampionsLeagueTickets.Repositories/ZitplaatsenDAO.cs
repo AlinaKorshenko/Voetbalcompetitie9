@@ -44,6 +44,7 @@ namespace ChampionsLeagueTickets.Repositories
         public async Task<IEnumerable<Zitplaatsen>?> GetAllAsync()
         {
             return await _dbContext.Zitplaatsens
+                .Include(z => z.VakNummerNavigation)
                 .ToListAsync();
         }
 

@@ -21,28 +21,22 @@ namespace ChampionsLeagueTickets.Controllers
 
         public async Task<IActionResult> Index()
         {
-
             var teams = await _setviceTeam.GetAllAsync();
+            var zitplaatsenPerStadion = await _zitplaatsenService.GetAllGroupedByStadionAsync();
 
-            var model = new List<StadionVanTeamVM>();
-
-            foreach (var team in teams)
+            var model = teams.Select(team =>
             {
-                var zitplaatsen =
-                    await _zitplaatsenService.GetByStadionIdAsync(team.StadionId);
+                var zitplaatsen = zitplaatsenPerStadion.GetValueOrDefault(team.StadionId, new List<Zitplaatsen>());
 
-                var vm = new StadionVanTeamVM
+                return new StadionVanTeamVM
                 {
                     TeamNaam = team.Naam,
-
                     StadionNaam = team.Stadion.Naam,
                     Land = team.Stadion.Land,
                     Adres = team.Stadion.Adres,
                     Postcode = team.Stadion.Postcode,
                     Gemeente = team.Stadion.Gemeente,
-
-                    AantalZitplaatsen = zitplaatsen.Count(),
-
+                    AantalZitplaatsen = zitplaatsen.Count,
                     VakTypes = zitplaatsen
                         .GroupBy(z => new
                         {
@@ -52,17 +46,13 @@ namespace ChampionsLeagueTickets.Controllers
                         })
                         .Select(g => new VakTypeVanStadionVM
                         {
-                            VakTypeNaam =
-                                "Vak " + g.Key.VakNummer +
-                                " | Ring " + g.Key.Ring +
-                                " | " + g.Key.Omschrijving,
-
+                            VakTypeNaam = $"Vak {g.Key.VakNummer} | Ring {g.Key.Ring} | {g.Key.Omschrijving}",
                             Capaciteit = g.Count()
                         })
                         .ToList()
                 };
-                model.Add(vm);
-            }
+            }).ToList();
+
             return View(model);
         }
     }
