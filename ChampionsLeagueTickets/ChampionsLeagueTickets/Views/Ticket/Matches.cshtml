@@ -13,19 +13,20 @@
 
 @if (Model != null && Model.Any())
 {
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-warning alert-dismissible fade show mb-4">
+            <strong>Waarschuwing:</strong> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
     <h1>De wedstrijden</h1>
     <p>
         Stuk voor stuk topmatches in de beste Europese stadions.
         <br />
         Mis ze niet.
     </p>
-
-    @if (TempData["Error"] != null)
-    {
-        <div class="alert alert-warning">
-            @TempData["Error"]
-        </div>
-    }
 
     <div class="mb-4">
         <label for="clubFilter" class="form-label fw-bold">Filter op club</label>
