@@ -40,7 +40,7 @@ namespace ChampionsLeagueTickets.Controllers
         private const int maxAantalTickets = 4;
         private readonly IMapper _mapper;
 
-        public ShoppingCartController(IMatchService matchesService, IService<VakType> vakService, ITicketService ticketService, IAbonnementService abonnementService, IZitplaatsenService zitplatsenService, ITicketPrijsService ticketPrijsService, IService<Stadion> stadionService, IAbonementenPrijsService abonementenPrijsService, ISeizoenenService seizoenenService, IOrderService orderService, IOrderLijnenService orderlijnenService, IAppEmailSender appEmailSender, IPdfService pdfService, IMapper mapper)
+        public ShoppingCartController(IZitplaatsenService zitplaatsenService, IMatchService matchesService, IService<VakType> vakService, ITicketService ticketService, IAbonnementService abonnementService, IZitplaatsenService zitplatsenService, ITicketPrijsService ticketPrijsService, IService<Stadion> stadionService, IAbonementenPrijsService abonementenPrijsService, ISeizoenenService seizoenenService, IOrderService orderService, IOrderLijnenService orderlijnenService, IAppEmailSender appEmailSender, IPdfService pdfService, IMapper mapper)
         {
             _appEmailSender = appEmailSender;
             _orderlijnenService = orderlijnenService;

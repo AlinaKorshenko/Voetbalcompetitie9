@@ -34,9 +34,10 @@ namespace ChampionsLeagueTickets.Repositories
             }
         }
 
-        public Task DeleteAsync(Orderlijnen entity)
+        public async Task DeleteAsync(Orderlijnen entity)
         {
-            throw new NotImplementedException();
+            _dbContext.Orderlijnens.Remove(entity);
+            await _dbContext.SaveChangesAsync();
         }
 
         public Task<Orderlijnen?> FindByIdAsync(string Id)

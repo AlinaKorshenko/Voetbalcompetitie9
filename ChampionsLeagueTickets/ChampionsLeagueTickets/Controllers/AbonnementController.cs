@@ -110,10 +110,7 @@ namespace ChampionsLeagueTickets.Controllers
                 model.StadionID,
                 model.VakNummer);
 
-            var rijen = await _zitplaatsenService.GetRowsForSectionAsync(
-                abonementStoelVM.StadionID,
-                abonementStoelVM.VakNummer
-            );
+           
             model.RijenLijst = new SelectList(rijen, model.RijNummer);
 
             if (!string.IsNullOrEmpty(model.RijNummer))
@@ -135,7 +132,7 @@ namespace ChampionsLeagueTickets.Controllers
                     .Where(s =>
                         !abonnementCart.Any(a =>
                             a.ZitplaatsId == s.ZitplaatsId &&
-                            a.SeizoenId == abonementStoelVM.SeizoenId
+                            a.SeizoenId == model.SeizoenId
                         )
                         &&
                         !ticketCart.Any(t =>
@@ -148,7 +145,7 @@ namespace ChampionsLeagueTickets.Controllers
                         DisplayName = "Stoel " + s.StoelNummer
                     });
 
-                abonementStoelVM.StoelenLijst = new SelectList(
+                model.StoelenLijst = new SelectList(
                     vrijeStoelenGefilterd,
                     "ZitplaatsId",
                     "DisplayName",
