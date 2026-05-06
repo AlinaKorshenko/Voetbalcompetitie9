@@ -73,6 +73,11 @@ namespace ChampionsLeagueTickets.AutoMapper
 
             CreateMap<Order, OrderVM>()
                 .ForMember(dest => dest.OrderLijnen, opt => opt.MapFrom(src => src.Orderlijnens));
+
+
+            // StadionVanTeam
+
+
         }
     }
 }

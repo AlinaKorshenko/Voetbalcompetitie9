@@ -216,12 +216,19 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IOrderLijnenDAO, OrderLijnenDAO>();
 builder.Services.AddScoped<IOrderLijnenService, OrderLijnenService>();
 
+//StadionVanTeam
+
+builder.Services.AddScoped<IDAO<Team>, TeamDAO>();
+builder.Services.AddScoped<IService<Team>, TeamService>();
+
 //gebruikers identity
 builder.Services.AddScoped<IUserService, UserService>();
 
 //hotels api
 builder.Services.AddScoped<IHotelService, HotelService>();
 builder.Services.AddHttpClient<HotelService>();
+
+
 
 //pdf service
 builder.Services.AddScoped<IPdfService, PdfService>();

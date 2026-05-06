@@ -162,5 +162,13 @@ namespace ChampionsLeagueTickets.Repositories
                 .OrderBy(z => ParseNumber(z.StoelNummer))
                 .ToList();
         }
+
+        public async Task<List<Zitplaatsen>> GetByStadionIdAsync(string stadionId)
+        {
+            return await _dbContext.Zitplaatsens
+       .Where(z => z.StadionId == stadionId)
+       .Include(z => z.VakNummerNavigation)
+       .ToListAsync();
+        }
     }
 }

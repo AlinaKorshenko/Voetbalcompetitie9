@@ -145,5 +145,23 @@ namespace ChampionsLeagueTickets.Services
         {
             return await _zitplaatsenDAO.GetFreeSeatsForSeasonSectionAndRowAsync(stadionId, seizoenId, vakNummer, rijNummer);
         }
+
+        public Task<List<Zitplaatsen>> GetByStadionIdAsync(string stadionId)
+        {
+
+            try
+            {
+
+                if (stadionId == null)
+                {
+                    throw new ArgumentNullException("Het meegegeven stadionId mag niet null zijn.");
+                }
+                return _zitplaatsenDAO.GetByStadionIdAsync(stadionId);
+            }
+            catch {
+                throw new Exception($"Het is niet gelukt om de Zitplaatsen op te halen voor stadionId '{stadionId}'");
+            }
+            
+        }
     }
 }
