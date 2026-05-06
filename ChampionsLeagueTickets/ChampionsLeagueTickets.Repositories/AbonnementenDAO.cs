@@ -47,43 +47,6 @@ namespace ChampionsLeagueTickets.Repositories
             }
         }
 
-        public async Task<string> FindAbinementIdByStadonSeizoenZitplaatsAsynk(string stadionId, string seizoenId, string zitplaatsId)
-        {
-
-            try
-            {
-                return await _dbContext.Abonnementens
-                    .Where(a =>
-                        a.StadionId == stadionId &&
-                        a.SeizoenId == seizoenId &&
-                        a.ZitplaatsId == zitplaatsId)
-                    .Select(a => a.AbonnementId)
-                    .FirstOrDefaultAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error in DAO: " + ex.Message);
-                throw;
-            }
-        }
-
-        public async Task<Abonnementen> FindAbonnementByStadionIdAndAbonnementId(string abonnementId, string stadionId)
-        {
-            try
-            {
-                return await _dbContext.Abonnementens
-                      .Include(a => a.Zitplaatsen)
-                      .Include(b => b.Stadion)
-                      .FirstOrDefaultAsync(a => a.AbonnementId == abonnementId
-                                             && a.StadionId == stadionId);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error in DAO: " + ex.Message);
-                throw;
-            }
-        }
-
         public Task<Abonnementen?> FindByIdAsync(string Id)
         {
             throw new NotImplementedException();
@@ -98,7 +61,9 @@ namespace ChampionsLeagueTickets.Repositories
                     .FirstOrDefaultAsync();
 
                 if (lastAbonnement == null)
+                {
                     return "A0001";
+                }
 
                 var lastNumber = int.Parse(lastAbonnement.AbonnementId.Substring(1));
                 var newNumber = lastNumber + 1;
@@ -124,11 +89,6 @@ namespace ChampionsLeagueTickets.Repositories
                 Console.WriteLine("Error in DAO: " + ex.Message);
                 throw;
             }
-        }
-
-        public Task UpdateAsync(Abonnementen entity)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -5,12 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChampionsLeagueTickets.Repositories.Interfaces
+namespace ChampionsLeagueTickets.Services.Interfaces
 {
-    public interface IOrderLijnDAO : IDAO<Orderlijnen>
+    public interface IOrderLijnenService : IService<Orderlijnen>
     {
-
         Task<Orderlijnen> FindByOrderIdAndOrderLijnNumber(string orderId, int orderLijnNumber);
-
     }
 }

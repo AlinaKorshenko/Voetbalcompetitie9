@@ -41,7 +41,7 @@ namespace ChampionsLeagueTickets.Repositories
                     .Include(z => z.Stadion)
                     .FirstOrDefaultAsync(m => m.ZitplaatsId == Id);
 
-                if(zitplaats == null)
+                if (zitplaats == null)
                 {
                     throw new Exception("De ingegeven zitplaats is niet gevonden");
                 }
@@ -161,10 +161,10 @@ namespace ChampionsLeagueTickets.Repositories
         }
 
         public async Task<List<Zitplaatsen>> GetFreeSeatsForSeasonSectionAndRowAsync(
-     string stadionId,
-     string seizoenId,
-     string vakNummer,
-     string rijNummer)
+         string stadionId,
+         string seizoenId,
+         string vakNummer,
+         string rijNummer)
         {
             var seizoen = await _dbContext.Seizoenens
                 .FirstOrDefaultAsync(s => s.SeizoenId == seizoenId);
@@ -203,11 +203,6 @@ namespace ChampionsLeagueTickets.Repositories
             return seats
                 .OrderBy(z => ParseNumber(z.StoelNummer))
                 .ToList();
-        }
-
-        public Task UpdateAsync(Zitplaatsen entity)
-        {
-            throw new NotImplementedException();
         }
     }
 }

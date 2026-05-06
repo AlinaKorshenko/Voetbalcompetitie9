@@ -7,9 +7,9 @@ using ChampionsLeagueTickets.Services;
 using ChampionsLeagueTickets.Services.Interfaces;
 using ChampionsLeagueTickets.Services.Mail.Interfaces;
 using ChampionsLeagueTickets.Services.Pdf.Interfaces;
-using ChampionsLeagueTickets.ViewModels;
 using ChampionsLeagueTickets.ViewModels.order;
 using ChampionsLeagueTickets.ViewModels.ShoppingCart;
+using ChampionsLeagueTickets.ViewModels.Zitplaatsen;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -34,12 +34,13 @@ namespace ChampionsLeagueTickets.Controllers
         private readonly IAbonementenPrijsService _abonementenPrijsService;
         private readonly ISeizoenenService _seizoenenService;
         private readonly IOrderService _orderService;
-        private readonly IOrderLijnService _orderlijnenService;
+        private readonly IOrderLijnenService _orderlijnenService;
         private readonly IAppEmailSender _appEmailSender;
         private readonly IPdfService _pdfService;
         private const int maxAantalTickets = 4;
         private readonly IMapper _mapper;
-        public ShoppingCartController(IAppEmailSender appEmailSender, IOrderLijnService orderlijnenService, IOrderService orderService, IAbonnementService abonnementService, ITicketService ticketService, IMatchService matchesService, IService<VakType> vakService, IZitplaatsenService zitplaatsenService, ITicketPrijsService ticketPrijsService, IService<Stadion> stadionService, IAbonementenPrijsService abonementenPrijsService, ISeizoenenService seizoenenService,  IMapper mapper,IPdfService pdfService)
+
+        public ShoppingCartController(IMatchService matchesService, IService<VakType> vakService, ITicketService ticketService, IAbonnementService abonnementService, IZitplaatsenService zitplatsenService, ITicketPrijsService ticketPrijsService, IService<Stadion> stadionService, IAbonementenPrijsService abonementenPrijsService, ISeizoenenService seizoenenService, IOrderService orderService, IOrderLijnenService orderlijnenService, IAppEmailSender appEmailSender, IPdfService pdfService, IMapper mapper)
         {
             _appEmailSender = appEmailSender;
             _orderlijnenService = orderlijnenService;
@@ -120,12 +121,9 @@ namespace ChampionsLeagueTickets.Controllers
 
             }
 
-            var cartAbonementen = HttpContext.Session.GetObject<List<ShoppingCartAbonementItemKortVM>>(CartKeyAbonement);
-
-            if (cartAbonementen == null || !cartAbonementen.Any())
-            {
-                return result;
-            }
+            var cartAbonementen = HttpContext.Session
+                .GetObject<List<ShoppingCartAbonementItemKortVM>>(CartKeyAbonement)
+                ?? new List<ShoppingCartAbonementItemKortVM>();
 
             foreach (var item in cartAbonementen)
             {
@@ -133,22 +131,24 @@ namespace ChampionsLeagueTickets.Controllers
                 var seizoen = await _seizoenenService.FindByIdAsync(item.SeizoenId);
                 var zitplaats = await _zitplaatsenService.FindByIdAsync(item.ZitplaatsId);
 
-                    var prijs = await _abonementenPrijsService.GetPriceBySeizoenIdAndStadionId(item.SeizoenId, item.StadionId);
+                if (stadion == null || seizoen == null || zitplaats == null)
+                    continue;
 
-                var zitplaatsVM = _mapper.Map<ZitplaatsVM>(zitplaats);
+                var prijs = await _abonementenPrijsService
+                    .GetPriceBySeizoenIdAndStadionId(item.SeizoenId, item.StadionId);
 
                 result.Abonementen.Add(new AbonementOverzichtVM
-                    {
-                        SeizoenId = item.SeizoenId,
-                        StadionID = item.StadionId,
-                        StadionNaam = stadion.Naam,
-                        zitplaats = zitplaatsVM,
-                        SeizoenNaam = seizoen.Naam,
-                        StartDatum = seizoen.StartDatum,
-                        EindDatum = seizoen.EindDatum,
-                        Prijs = prijs
-                    });
-                }
+                {
+                    SeizoenId = item.SeizoenId,
+                    StadionID = item.StadionId,
+                    StadionNaam = stadion.Naam,
+                    zitplaats = _mapper.Map<ZitplaatsVM>(zitplaats),
+                    SeizoenNaam = seizoen.Naam,
+                    StartDatum = seizoen.StartDatum,
+                    EindDatum = seizoen.EindDatum,
+                    Prijs = prijs
+                });
+            }
 
             return result;
         }
@@ -190,6 +190,14 @@ namespace ChampionsLeagueTickets.Controllers
             var cartTickets = HttpContext.Session
                 .GetObject<List<ShoppingCartTicketItemKortVM>>(CartKeyTicket)
                 ?? new List<ShoppingCartTicketItemKortVM>();
+
+            if (cartTickets.Any(x =>
+            x.MatchId == matchId &&
+            x.ZitplaatsId == zitplaatsId))
+            {
+                TempData["Error"] = "Deze zitplaats zit al in je winkelmandje voor deze match.";
+                return RedirectToAction("Index");
+            }
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 

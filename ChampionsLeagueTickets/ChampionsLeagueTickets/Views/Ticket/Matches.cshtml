@@ -11,8 +11,16 @@
         .ToList();
 }
 
-@if (Model != null)
+@if (Model != null && Model.Any())
 {
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-warning alert-dismissible fade show mb-4">
+            <strong>Waarschuwing:</strong> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
     <h1>De wedstrijden</h1>
     <p>
         Stuk voor stuk topmatches in de beste Europese stadions.

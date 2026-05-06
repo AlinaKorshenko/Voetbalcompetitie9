@@ -1,4 +1,5 @@
 ﻿using ChampionsLeagueTickets.Domain.EntitiesDB;
+using ChampionsLeagueTickets.ViewModels.Zitplaatsen;
 using System.ComponentModel.DataAnnotations;
 
 namespace ChampionsLeagueTickets.ViewModels.ShoppingCart
@@ -21,6 +22,6 @@ namespace ChampionsLeagueTickets.ViewModels.ShoppingCart
 
         public decimal Prijs { get; set; }
 
-
+        public string VakNummer { get; set; }
     }
 }

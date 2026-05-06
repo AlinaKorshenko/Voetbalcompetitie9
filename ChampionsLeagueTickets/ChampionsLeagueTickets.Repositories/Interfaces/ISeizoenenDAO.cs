@@ -9,6 +9,6 @@ namespace ChampionsLeagueTickets.Repositories.Interfaces
 {
     public interface ISeizoenenDAO : IDAO<Seizoenen>
     {
-        Task<IEnumerable<Seizoenen>?> GetCurrentSeizoen();
+        Task<IEnumerable<Seizoenen>?> GetAllFutureSeasons();
     }
 }

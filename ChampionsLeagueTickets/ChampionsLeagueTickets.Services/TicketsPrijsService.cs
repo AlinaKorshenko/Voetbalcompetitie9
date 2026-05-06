@@ -42,10 +42,5 @@ namespace ChampionsLeagueTickets.Services
         {
             return _ticketPrijsDAO.GetTicketPrijsByMatchAndSectionAsync(MatchID, VakNummer);
         }
-
-        public Task UpdateAsync(ZitplaatsenService entity)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

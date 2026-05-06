@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChampionsLeagueTickets.Services
+namespace ChampionsLeagueTickets.Services.Mail
 {
     public static class EmailTemplateService
     {
@@ -109,11 +109,11 @@ namespace ChampionsLeagueTickets.Services
             decimal total
         )
         {
-            var ticketHtml = (tickets != null && tickets.Any())
+            var ticketHtml = tickets != null && tickets.Any()
                 ? string.Join("", tickets.Select(t => $"<li>{t}</li>"))
                 : "<li>Geen tickets besteld</li>";
 
-            var abonnementHtml = (abonnementen != null && abonnementen.Any())
+            var abonnementHtml = abonnementen != null && abonnementen.Any()
                 ? string.Join("", abonnementen.Select(a => $"<li>{a}</li>"))
                 : "<li>Geen abonnementen besteld</li>";
 

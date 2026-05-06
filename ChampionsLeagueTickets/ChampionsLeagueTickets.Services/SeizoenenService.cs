@@ -38,14 +38,9 @@ namespace ChampionsLeagueTickets.Services
             return await _seizoenenDAO.GetAllAsync();
         }
 
-        public async Task<IEnumerable<Seizoenen>?> GetCurrentSeizoen()
+        public async Task<IEnumerable<Seizoenen>?> GetAllFutureSeasons()
         {
-            return await _seizoenenDAO.GetCurrentSeizoen();
-        }
-
-        public Task UpdateAsync(Seizoenen entity)
-        {
-            throw new NotImplementedException();
+            return await _seizoenenDAO.GetAllFutureSeasons();
         }
     }
 }

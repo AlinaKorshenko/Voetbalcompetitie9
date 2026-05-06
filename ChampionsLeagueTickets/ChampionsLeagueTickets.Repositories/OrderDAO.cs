@@ -30,9 +30,24 @@ namespace ChampionsLeagueTickets.Repositories
 
         public async Task<Order?> FindByIdAsync(string id)
         {
-            return await _dbContext.Orders
-                .Include(o => o.Orderlijnens)
-                .FirstOrDefaultAsync(o => o.OrderId == id);
+            try
+            {
+                var order = await _dbContext.Orders
+                    .Include(o => o.Orderlijnens)
+                    .FirstOrDefaultAsync(o => o.OrderId == id);
+
+                if (order == null)
+                {
+                    throw new Exception("Order not found for the given OrderId.");
+                }
+
+                return order;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in DAO: " + ex.Message);
+                throw;
+            }
         }
 
         public async Task<string> GenerateNextOrderIdAsync()
@@ -62,30 +77,31 @@ namespace ChampionsLeagueTickets.Repositories
         {
             try
             {
-                return await _dbContext.Orders
-     .AsNoTracking()
-     .Where(o => o.UserId == userId)
-     .Include(o => o.Orderlijnens)
-         .ThenInclude(ol => ol.Ticket)
-             .ThenInclude(t => t.Zitplaatsen)
-     .Include(o => o.Orderlijnens)
-    .ThenInclude(ol => ol.Ticket)
-        .ThenInclude(t => t.Match)
-            .ThenInclude(m => m.ThuisTeam)
-                .ThenInclude(tt => tt.Stadion)
-     .Include(o => o.Orderlijnens)
-         .ThenInclude(ol => ol.Ticket)
-             .ThenInclude(t => t.Match.BezoekendTeam)
-     .Include(o => o.Orderlijnens)
-         .ThenInclude(ol => ol.Abonnementen)
-             .ThenInclude(a => a.Zitplaatsen)
-     .Include(o => o.Orderlijnens)
-         .ThenInclude(ol => ol.Abonnementen)
-             .ThenInclude(a => a.Seizoen)
-             .Include(o => o.Orderlijnens)
-         .ThenInclude(ol => ol.Abonnementen)
-         .ThenInclude(a => a.Stadion)
-     .ToListAsync();
+                var orders = await _dbContext.Orders
+                    .AsNoTracking()
+                    .Where(o => o.UserId == userId)
+                    .Include(o => o.Orderlijnens)
+                        .ThenInclude(ol => ol.Ticket)
+                            .ThenInclude(t => t.Zitplaatsen)
+                    .Include(o => o.Orderlijnens)
+                        .ThenInclude(ol => ol.Ticket)
+                            .ThenInclude(t => t.Match)
+                                .ThenInclude(m => m.ThuisTeam.Stadion)
+                    .Include(o => o.Orderlijnens)
+                        .ThenInclude(ol => ol.Ticket)
+                            .ThenInclude(t => t.Match.BezoekendTeam)
+                    .Include(o => o.Orderlijnens)
+                        .ThenInclude(ol => ol.Abonnementen)
+                            .ThenInclude(a => a.Zitplaatsen)
+                    .Include(o => o.Orderlijnens)
+                        .ThenInclude(ol => ol.Abonnementen)
+                            .ThenInclude(a => a.Seizoen)
+                    .Include(o => o.Orderlijnens)
+                        .ThenInclude(ol => ol.Abonnementen)
+                            .ThenInclude(a => a.Stadion)
+                    .ToListAsync();
+
+                return orders;
             }
             catch (Exception ex)
             {
@@ -95,16 +111,6 @@ namespace ChampionsLeagueTickets.Repositories
         }
 
         public Task<IEnumerable<Order>?> GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<Order>?> GetAllOrderInformationFromUser(string userId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateAsync(Order entity)
         {
             throw new NotImplementedException();
         }

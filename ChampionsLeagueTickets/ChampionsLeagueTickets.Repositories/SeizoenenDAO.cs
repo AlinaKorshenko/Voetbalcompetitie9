@@ -33,8 +33,15 @@ namespace ChampionsLeagueTickets.Repositories
         {
             try
             {
-                return await _dbContext.Seizoenens
+                var seizoen = await _dbContext.Seizoenens
                     .FirstOrDefaultAsync(s => s.SeizoenId == Id);
+
+                if(seizoen == null)
+                {
+                    throw new Exception("Seizoen not found for the given SeizoenId.");
+                }
+
+                return seizoen;
             }
             catch (Exception ex)
             {
@@ -58,14 +65,15 @@ namespace ChampionsLeagueTickets.Repositories
             }
         }
 
-        public async Task<IEnumerable<Seizoenen>?> GetCurrentSeizoen()
+        public async Task<IEnumerable<Seizoenen>?> GetAllFutureSeasons()
         {
             try
             {
-                int currentYear = DateTime.Now.Year;
+                var vandaag = DateOnly.FromDateTime(DateTime.Now);
 
                 return await _dbContext.Seizoenens
-                    .Where(s => s.EindDatum.Year >= currentYear)
+                    .Where(s => s.StartDatum > vandaag)
+                    .OrderByDescending(s => s.StartDatum)
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -73,11 +81,6 @@ namespace ChampionsLeagueTickets.Repositories
                 Console.WriteLine("Error in DAO: " + ex.Message);
                 throw;
             }
-        }
-
-        public Task UpdateAsync(Seizoenen entity)
-        {
-            throw new NotImplementedException();
         }
     }
 }

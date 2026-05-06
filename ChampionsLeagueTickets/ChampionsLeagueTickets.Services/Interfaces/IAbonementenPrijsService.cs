@@ -10,5 +10,7 @@ namespace ChampionsLeagueTickets.Services.Interfaces
     public interface IAbonementenPrijsService : IService<AbonnementenPrijs>
     {
         Task<decimal> GetPriceBySeizoenIdAndStadionId(string seizoenID, string stadionId);
+
+        Task<IEnumerable<AbonnementenPrijs>?> GetAllPrijzenFromNextSeasons();
     }
 }

@@ -9,6 +9,6 @@ namespace ChampionsLeagueTickets.Services.Interfaces
 {
     public interface ISeizoenenService : IService<Seizoenen>
     {
-        Task<IEnumerable<Seizoenen>?> GetCurrentSeizoen();
+        Task<IEnumerable<Seizoenen>?> GetAllFutureSeasons();
     }
 }

@@ -3,13 +3,13 @@ using ChampionsLeagueTickets.Domain.EntitiesDB;
 using ChampionsLeagueTickets.Extentions;
 using ChampionsLeagueTickets.Services;
 using ChampionsLeagueTickets.Services.Interfaces;
-using ChampionsLeagueTickets.View_Models;
 using ChampionsLeagueTickets.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using ChampionsLeagueTickets.ViewModels.ShoppingCart;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
+using ChampionsLeagueTickets.ViewModels.Zitplaatsen;
 
 namespace Voetbalcompetitie9.Controllers
 {
@@ -56,19 +56,31 @@ namespace Voetbalcompetitie9.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> ChooseSeats(string matchID) {
+        public async Task<IActionResult> ChooseSeats(string matchID)
+        {
+            var match = await _matchesService.FindByIdAsync(matchID);
+
+            if (match == null)
+                return NotFound();
+
+            if (!IsTicketBeschikbaar(match.DatumTijdStartMatch))
+            {
+                TempData["Error"] = "Tickets voor deze match zijn nog niet beschikbaar.";
+                return RedirectToAction("Matches");
+            }
+
             var vakTypes = (await _vakService.GetAllAsync())
-             .Select(v => new
+                .Select(v => new
                 {
-                  v.VakNummer,
-                  DisplayName = "Ring " + v.Ring + " ( " + v.Omschrijving + " )" 
+                    v.VakNummer,
+                    DisplayName = "Ring " + v.Ring + " ( " + v.Omschrijving + " )"
                 });
 
             TicketStoelVM ticketVM = new TicketStoelVM()
             {
                 VakenLijst = new SelectList(vakTypes, "VakNummer", "DisplayName"),
                 MatchID = matchID
-            }; 
+            };
 
             return View(ticketVM);
         }
@@ -77,7 +89,19 @@ namespace Voetbalcompetitie9.Controllers
         [HttpPost]
         public async Task<IActionResult> ChooseSeats(TicketStoelVM ticketVM)
         {
-            if (!ModelState.IsValid) {
+            var match = await _matchesService.FindByIdAsync(ticketVM.MatchID);
+
+            if (match == null)
+                return NotFound();
+
+            if (!IsTicketBeschikbaar(match.DatumTijdStartMatch))
+            {
+                TempData["Error"] = "Tickets voor deze match zijn nog niet beschikbaar.";
+                return RedirectToAction("Matches");
+            }
+
+            if (!ModelState.IsValid)
+            {
                 return View(ticketVM);
             }
 
@@ -153,23 +177,31 @@ namespace Voetbalcompetitie9.Controllers
         public async Task<IActionResult> OverzichtInfoTicket(TicketStoelVM vm)
         {
             var match = await _matchesService.FindByIdAsync(vm.MatchID);
-            var thuisTeamNaam = match.ThuisTeam?.Naam;
-            var bezoekTeamNaam = match.BezoekendTeam?.Naam;
-            var stadionNaam = match.ThuisTeam?.Stadion?.Naam;
-            var datum = match.DatumTijdStartMatch;    
 
             if (match == null)
             {
                 return NotFound("Match niet gevonden");
             }
 
+            if (!IsTicketBeschikbaar(match.DatumTijdStartMatch))
+            {
+                TempData["Error"] = "Tickets voor deze match zijn nog niet beschikbaar.";
+                return RedirectToAction("Matches");
+            }
+
+            var thuisTeamNaam = match.ThuisTeam?.Naam;
+            var bezoekTeamNaam = match.BezoekendTeam?.Naam;
+            var stadionNaam = match.ThuisTeam?.Stadion?.Naam;
+            var datum = match.DatumTijdStartMatch;
+
             var zitplaats = await _zitplatsenService.FindByIdAsync(vm.GeselecteerdeZitplaatsId);
-            var zitplaatsVM = _mapper.Map<ZitplaatsVM>(zitplaats);
 
             if (zitplaats == null)
             {
                 return NotFound("Zitplaats niet gevonden");
             }
+
+            var zitplaatsVM = _mapper.Map<ZitplaatsVM>(zitplaats);
 
             var zitplaatsInfoVM = new TicketInfoVM
             {
@@ -180,17 +212,28 @@ namespace Voetbalcompetitie9.Controllers
                 Zitplaats = zitplaatsVM,
                 Prijs = (decimal)vm.Prijs,
                 Datum = datum
-
             };
 
             return View(zitplaatsInfoVM);
         }
 
         [Authorize]
-        public async Task<IActionResult> BevestigTicket(string ZitplaatsID, string MatchID) {
+        public async Task<IActionResult> BevestigTicket(string ZitplaatsID, string MatchID)
+        {
             if (string.IsNullOrEmpty(ZitplaatsID) || string.IsNullOrEmpty(MatchID))
-            {
                 return BadRequest();
+
+            var match = await _matchesService.FindByIdAsync(MatchID);
+
+            if (match == null)
+            {
+                return NotFound();
+            }
+
+            if (!IsTicketBeschikbaar(match.DatumTijdStartMatch))
+            {
+                TempData["Error"] = "Tickets voor deze match zijn nog niet beschikbaar.";
+                return RedirectToAction("Matches");
             }
 
             var cart = HttpContext.Session.GetObject<List<ShoppingCartTicketItemKortVM>>("ShoppingCartTicket")

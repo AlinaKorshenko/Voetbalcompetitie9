@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
-namespace ChampionsLeagueTickets.ViewModels
+namespace ChampionsLeagueTickets.ViewModels.Abonnementen
 {
     public class AbonementStoelVM
     {

@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Azure.Security.KeyVault.Secrets;
 
 namespace ChampionsLeagueTickets.Controllers.API
 {
@@ -62,14 +63,17 @@ namespace ChampionsLeagueTickets.Controllers.API
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
             };
 
-            foreach (var role in roles)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, role));
-            }
+            claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtKey"]));
+            var key = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(_configuration["JwtKey"]!)
+            );
+
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.UtcNow.AddDays(Convert.ToDouble(_configuration["JwtConfig:JwtExpireDays"]));
+
+            var expires = DateTime.UtcNow.AddDays(
+                Convert.ToDouble(_configuration["JwtExpireDays"])
+            );
 
             var token = new JwtSecurityToken(
                 _configuration["JwtIssuer"],

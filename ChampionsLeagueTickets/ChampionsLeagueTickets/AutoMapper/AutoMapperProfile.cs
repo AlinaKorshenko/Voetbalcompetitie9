@@ -2,7 +2,10 @@
 using ChampionsLeagueTickets.Domain.EntitiesDB;
 using ChampionsLeagueTickets.Services.DTO;
 using ChampionsLeagueTickets.ViewModels;
+using ChampionsLeagueTickets.ViewModels.Abonnementen;
 using ChampionsLeagueTickets.ViewModels.order;
+using ChampionsLeagueTickets.ViewModels.Stadion;
+using ChampionsLeagueTickets.ViewModels.Zitplaatsen;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ChampionsLeagueTickets.AutoMapper
@@ -40,12 +43,10 @@ namespace ChampionsLeagueTickets.AutoMapper
             CreateMap<AspNetUser, UserInfoResponse>();
             CreateMap<UserInfoResponse, UserVM>();
 
-
-
             //orders
             CreateMap<Zitplaatsen, ZitplaatsVM>()
-                .ForMember(dest => dest.VakOmschrijving, opt => opt.MapFrom(src => src.VakNummerNavigation.Omschrijving));
-
+                .ForMember(dest => dest.VakOmschrijving,
+                    opt => opt.MapFrom(src => src.VakNummerNavigation.Omschrijving));
 
             CreateMap<Ticket, OrderTicketVM>()
                 .ForMember(dest => dest.MatchID, opt => opt.MapFrom(src => src.MatchId))
@@ -56,14 +57,12 @@ namespace ChampionsLeagueTickets.AutoMapper
                 .ForMember(dest => dest.Datum, opt => opt.MapFrom(src => src.Match.DatumTijdStartMatch))
                 .ForMember(dest => dest.Stadion, opt => opt.MapFrom(src => src.Match.ThuisTeam.Stadion.Naam));
 
-
             CreateMap<Abonnementen, OrderAbonementVM>()
                 .ForMember(dest => dest.AbonnementId, opt => opt.MapFrom(src => src.AbonnementId))
                 .ForMember(dest => dest.Zitplaats, opt => opt.MapFrom(src => src.Zitplaatsen))
                 .ForMember(dest => dest.SeizoenNaam, opt => opt.MapFrom(src => src.Seizoen.Naam))
                 .ForMember(dest => dest.StadionNaam, opt => opt.MapFrom(src => src.Stadion.Naam))
                 .ForMember(dest => dest.StartDatum, opt => opt.MapFrom(src => src.Seizoen.StartDatum));
-
 
 
             CreateMap<Orderlijnen, OrderLijnVM>()
@@ -74,9 +73,6 @@ namespace ChampionsLeagueTickets.AutoMapper
 
             CreateMap<Order, OrderVM>()
                 .ForMember(dest => dest.OrderLijnen, opt => opt.MapFrom(src => src.Orderlijnens));
-
-
         }
-
     }
 }

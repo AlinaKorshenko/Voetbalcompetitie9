@@ -95,21 +95,23 @@ namespace ChampionsLeagueTickets.Repositories
         {
             try
             {
-                return await _dbContext.Matches
+                var match = await _dbContext.Matches
                     .Where(m => m.MatchId == matchId)
                     .Select(m => m.ThuisTeam.Stadion)
                     .FirstOrDefaultAsync();
+
+                if(match == null)
+                {
+                    throw new Exception("Match not found for the given MatchID.");
+                }
+
+                return match;
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error in DAO: " + ex.Message);
                 throw;
             }
-        }
-
-        public Task UpdateAsync(Match entity)
-        {
-            throw new NotImplementedException();
         }
     }
 }

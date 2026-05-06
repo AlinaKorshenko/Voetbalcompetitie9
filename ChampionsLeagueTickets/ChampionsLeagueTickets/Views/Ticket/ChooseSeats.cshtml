@@ -1,74 +1,90 @@
-﻿@model ChampionsLeagueTickets.View_Models.TicketStoelVM
+﻿@using ChampionsLeagueTickets.ViewModels.Zitplaatsen
+@model TicketStoelVM
 
 @{
     ViewData["Title"] = "ChooseSeats";
 }
 
-<h1>Kies een plaats</h1>
+<div class="container mt-4">
 
-<form asp-action="ChooseSeats" method="post" id="seatForm">
-    <input type="hidden" asp-for="MatchID" />
+    <h1 class="mb-4">Kies een plaats</h1>
 
-    <div class="mb-3">
-        <label asp-for="StadionVak" class="form-label">Vak</label>
-        <select asp-for="StadionVak"
-                asp-items="Model.VakenLijst"
-                class="form-control"
-                id="StadionVak">
-            <option value="">-- Kies vak --</option>
-        </select>
-    </div>
+    <form asp-action="ChooseSeats" method="post" id="seatForm">
 
-    @if (Model.RijenLijst != null)
-    {
-        <div class="mb-3">
-            <label asp-for="RijNummer" class="form-label">Rij</label>
-            <select asp-for="RijNummer"
-                    asp-items="Model.RijenLijst"
-                    class="form-control"
-                    id="RijNummer">
-                <option value="">-- Kies rij --</option>
-            </select>
-        </div>
-    }
-
-    @if (Model.StoelenLijst != null)
-    {
-        <div class="mb-3">
-            <label asp-for="GeselecteerdeZitplaatsId" class="form-label">Stoel</label>
-            <select asp-for="GeselecteerdeZitplaatsId"
-                    asp-items="Model.StoelenLijst"
-                    class="form-control"
-                    id="GeselecteerdeZitplaatsId">
-                <option value="">-- Kies stoel --</option>
-            </select>
-        </div>
-    }
-</form>
-
-@if (Model.Prijs.HasValue)
-{
-    <p class="prijsDisplay">Prijs : &#8364; @Model.Prijs</p>
-}
-
-@if (!string.IsNullOrEmpty(Model.GeselecteerdeZitplaatsId))
-{
-    <form asp-action="OverzichtInfoTicket" method="post">
         <input type="hidden" asp-for="MatchID" />
-        <input type="hidden" asp-for="Prijs" />
-        <input type="hidden" asp-for="StadionVak" />
-        <input type="hidden" asp-for="RijNummer" />
-        <input type="hidden" asp-for="GeselecteerdeZitplaatsId" />
 
-        <button type="submit" class="btn btn-success">
-            Verder gaan
-        </button>
+        <div class="mb-3">
+            <label asp-for="StadionVak" class="form-label fw-bold">Vak</label>
+
+            <select asp-for="StadionVak"
+                    asp-items="Model.VakenLijst"
+                    class="form-select"
+                    id="StadionVak">
+                <option value="">-- Kies vak --</option>
+            </select>
+        </div>
+
+        @if (Model.RijenLijst != null)
+        {
+            <div class="mb-3">
+                <label asp-for="RijNummer" class="form-label fw-bold">Rij</label>
+
+                <select asp-for="RijNummer"
+                        asp-items="Model.RijenLijst"
+                        class="form-select"
+                        id="RijNummer">
+                    <option value="">-- Kies rij --</option>
+                </select>
+            </div>
+        }
+
+        @if (Model.StoelenLijst != null)
+        {
+            <div class="mb-3">
+                <label asp-for="GeselecteerdeZitplaatsId" class="form-label fw-bold">Stoel</label>
+
+                <select asp-for="GeselecteerdeZitplaatsId"
+                        asp-items="Model.StoelenLijst"
+                        class="form-select"
+                        id="GeselecteerdeZitplaatsId">
+                    <option value="">-- Kies stoel --</option>
+                </select>
+            </div>
+        }
+
     </form>
-}
+
+    @if (Model.Prijs.HasValue)
+    {
+        <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+            <strong>Prijs:</strong> € @Model.Prijs
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.GeselecteerdeZitplaatsId))
+    {
+        <form asp-action="OverzichtInfoTicket" method="post" class="mt-3">
+
+            <input type="hidden" asp-for="MatchID" />
+            <input type="hidden" asp-for="Prijs" />
+            <input type="hidden" asp-for="StadionVak" />
+            <input type="hidden" asp-for="RijNummer" />
+            <input type="hidden" asp-for="GeselecteerdeZitplaatsId" />
+
+            <button type="submit" class="btn btn-success">
+                Verder gaan
+            </button>
+
+        </form>
+    }
+
+</div>
 
 @section Scripts {
     <script>
-        $(document).ready(function () {
+        $(function () {
+
             $('#StadionVak').on('change', function () {
                 $('#seatForm').submit();
             });
@@ -80,6 +96,7 @@
             $('#GeselecteerdeZitplaatsId').on('change', function () {
                 $('#seatForm').submit();
             });
+
         });
     </script>
 }

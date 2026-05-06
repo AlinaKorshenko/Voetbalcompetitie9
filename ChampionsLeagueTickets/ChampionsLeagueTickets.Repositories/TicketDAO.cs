@@ -53,27 +53,6 @@ namespace ChampionsLeagueTickets.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<Ticket?> FindByMatchAndSeatAsync(string matchId, string seatId)
-        {
-            try
-            {
-                var tickets = await _dbContext.Tickets
-                    .FirstOrDefaultAsync(t => t.MatchId == matchId && t.ZitplaatsId == seatId);
-
-                if(tickets == null)
-                {
-                    throw new Exception("Tickets met het ingegeven match- en seatId niet gevonden.");
-                }
-
-                return tickets;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error in DAO: " + ex.Message);
-                throw;
-            }
-        }
-
         public async Task<string> GenerateNextTicketIdAsync()
         {
             try
@@ -149,11 +128,6 @@ namespace ChampionsLeagueTickets.Repositories
                 Console.WriteLine("Error in DAO: " + ex.Message);
                 throw;
             }
-        }
-
-        public Task UpdateAsync(Ticket entity)
-        {
-            throw new NotImplementedException();
         }
     }
 }

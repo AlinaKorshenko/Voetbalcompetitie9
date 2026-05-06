@@ -3,6 +3,7 @@
 #nullable disable
 
 using ChampionsLeagueTickets.Services;
+using ChampionsLeagueTickets.Services.Mail;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;

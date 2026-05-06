@@ -8,7 +8,6 @@
 <div class="container mt-5">
     <div class="card shadow rounded-4">
 
-        <!-- Header -->
         <div class="text-center card-header">
             <h3 class="mb-0">
                 <i class="bi bi-card-checklist"></i> Abonnementoverzicht
@@ -17,7 +16,6 @@
 
         <div class="card-body p-4">
 
-            <!-- Seizoen info -->
             <div class="text-center mb-4">
                 <h4 class="fw-bold">
                     🏆 @Model.SeizoenNaam
@@ -27,7 +25,6 @@
                 </p>
             </div>
 
-            <!-- Stadion info -->
             <div class="mb-4">
                 <h5 class="fw-bold text-primary">
                     <i class="bi bi-info-circle"></i> Abonnementinformatie
@@ -45,7 +42,6 @@
                 </p>
             </div>
 
-            <!-- Plaats info -->
             <div class="mb-4">
                 <h5 class="fw-bold text-primary">
                     <i class="bi bi-grid"></i> Gekozen plaats
@@ -54,28 +50,29 @@
 
                 <p>
                     <i class="bi bi-layers-fill text-warning"></i>
-                    <strong>Vak:</strong> @Model.zitplaats.VakOmschrijving
+                    <strong>Vak:</strong>
+                    @(Model.zitplaats?.VakOmschrijving ?? "Onbekend")
                 </p>
 
                 <p>
                     <i class="bi bi-list-ol text-info"></i>
-                    <strong>Rij:</strong> @Model.zitplaats.RijNummer
+                    <strong>Rij:</strong>
+                    @(Model.zitplaats?.RijNummer ?? "-")
                 </p>
 
                 <p>
                     <i class="bi bi-person text-info"></i>
-                    <strong>Stoel:</strong> @Model.zitplaats.StoelNummer
-                </p>
-
-                <p>
-                    <i class="bi bi-cash-coin text-success"></i>
-                    <strong>Prijs:</strong> € @Model.Prijs
+                    <strong>Stoel:</strong>
+                    @(Model.zitplaats?.StoelNummer ?? "-")
                 </p>
             </div>
 
-            <!-- Buttons -->
             <div class="d-flex justify-content-between mt-4">
-                <a asp-action="Bevestig" class="btn btn-outline-secondary px-4">
+                <a asp-action="ChooseSeats"
+                   asp-route-seizoenId="@Model.SeizoenId"
+                   asp-route-stadionId="@Model.StadionID"
+                   asp-route-vakNummer="@Model.VakNummer"
+                   class="btn btn-outline-secondary px-4">
                     <i class="bi bi-arrow-left"></i> Terug
                 </a>
 
@@ -89,7 +86,6 @@
                     </button>
                 </form>
             </div>
-
         </div>
     </div>
 </div>

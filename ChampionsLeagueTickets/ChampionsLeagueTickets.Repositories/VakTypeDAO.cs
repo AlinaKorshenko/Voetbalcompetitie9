@@ -47,10 +47,5 @@ namespace ChampionsLeagueTickets.Repositories
                 throw;
             }
         }
-
-        public Task UpdateAsync(VakType entity)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

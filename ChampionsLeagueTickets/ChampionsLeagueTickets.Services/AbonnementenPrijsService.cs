@@ -38,14 +38,14 @@ namespace ChampionsLeagueTickets.Services
             return await _abonnementenPrijsDAO.GetAllAsync();
         }
 
+        public async Task<IEnumerable<AbonnementenPrijs>?> GetAllPrijzenFromNextSeasons()
+        {
+            return await _abonnementenPrijsDAO.GetAllPrijzenFromNextSeasons();
+        }
+
         public async Task<decimal> GetPriceBySeizoenIdAndStadionId(string seizoenID, string stadionId)
         {
             return await _abonnementenPrijsDAO.GetPriceBySeizoenIdAndStadionId(seizoenID, stadionId);
-        }
-
-        public Task UpdateAsync(AbonnementenPrijs entity)
-        {
-            throw new NotImplementedException();
         }
     }
 }

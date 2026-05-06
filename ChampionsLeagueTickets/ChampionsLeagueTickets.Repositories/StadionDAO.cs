@@ -33,8 +33,15 @@ namespace ChampionsLeagueTickets.Repositories
         {
             try
             {
-                return await _dbContext.Stadions
+                var stadion = await _dbContext.Stadions
                       .FirstOrDefaultAsync(s => s.StadionId == Id);
+
+                if(stadion == null)
+                {
+                    throw new Exception("Stadion not found for the given StadionId.");
+                }
+
+                return stadion;
             }
             catch (Exception ex)
             {
@@ -56,11 +63,6 @@ namespace ChampionsLeagueTickets.Repositories
                 Console.WriteLine("Error in DAO: " + ex.Message);
                 throw;
             }
-        }
-
-        public Task UpdateAsync(Stadion entity)
-        {
-            throw new NotImplementedException();
         }
     }
 }
