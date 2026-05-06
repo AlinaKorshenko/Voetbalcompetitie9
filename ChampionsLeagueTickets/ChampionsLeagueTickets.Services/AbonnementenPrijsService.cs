@@ -35,17 +35,48 @@ namespace ChampionsLeagueTickets.Services
 
         public async Task<IEnumerable<AbonnementenPrijs>?> GetAllAsync()
         {
-            return await _abonnementenPrijsDAO.GetAllAsync();
+            try
+            {
+                return await _abonnementenPrijsDAO.GetAllAsync();
+            } 
+            catch(Exception ex)
+            {
+                throw new Exception("Gefaald om abonnementen prijzen te laden: ", ex);
+            }
         }
 
         public async Task<IEnumerable<AbonnementenPrijs>?> GetAllPrijzenFromNextSeasons()
         {
-            return await _abonnementenPrijsDAO.GetAllPrijzenFromNextSeasons();
+            try
+            {
+                return await _abonnementenPrijsDAO.GetAllPrijzenFromNextSeasons();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Gefaald om abonnementen prijzen te laden voor volgende seizoenen: ", ex);
+            }
         }
 
         public async Task<decimal> GetPriceBySeizoenIdAndStadionId(string seizoenID, string stadionId)
         {
-            return await _abonnementenPrijsDAO.GetPriceBySeizoenIdAndStadionId(seizoenID, stadionId);
+            try
+            {
+                if(seizoenID == null)
+                {
+                    throw new ArgumentNullException("Het meegegeven seizoenId mag niet null zijn.");
+                }
+
+                if (stadionId == null)
+                {
+                    throw new ArgumentNullException("Het meegegeven stadionId mag niet null zijn.");
+                }
+
+                return await _abonnementenPrijsDAO.GetPriceBySeizoenIdAndStadionId(seizoenID, stadionId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Gefaald om abonnementen prijzen op te halen voor het meegegeven seizoenId {seizoenId} en stadionId {stadionId}: ", ex);
+            }
         }
     }
 }
