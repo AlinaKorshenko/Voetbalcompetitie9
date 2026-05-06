@@ -1,4 +1,5 @@
 ﻿using ChampionsLeagueTickets.Domain.EntitiesDB;
+using ChampionsLeagueTickets.Repositories;
 using ChampionsLeagueTickets.Repositories.Interfaces;
 using ChampionsLeagueTickets.Services.Interfaces;
 using System;
@@ -23,9 +24,24 @@ namespace ChampionsLeagueTickets.Services
             await _orderlijnenDAO.AddAsync(entity);
         }
 
-        public Task DeleteAsync(Orderlijnen entity)
+        public async Task DeleteAsync(Orderlijnen entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var entityFound = await _orderlijnenDAO
+                    .FindByOrderIdAndOrderLijnNumber(entity.OrderId, entity.OrderLijnNummer);
+
+                if (entityFound == null)
+                {
+                    throw new Exception("Orderlijn niet gevonden");
+                }
+
+                await _orderlijnenDAO.DeleteAsync(entity);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Fout bij verwijderen van orderlijn", ex);
+            }
         }
 
         public Task<Orderlijnen?> FindByIdAsync(string Id)

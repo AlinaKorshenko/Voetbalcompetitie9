@@ -34,9 +34,26 @@ namespace ChampionsLeagueTickets.Repositories
             }
         }
 
-        public Task DeleteAsync(Orderlijnen entity)
+        public async Task DeleteAsync(Orderlijnen entity)
         {
-            throw new NotImplementedException();
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            var trackedEntity = _dbContext.Orderlijnens.Local
+                .FirstOrDefault(e => e.OrderId == entity.OrderId
+                                  && e.OrderLijnNummer == entity.OrderLijnNummer);
+
+            if (trackedEntity != null)
+            {
+                _dbContext.Orderlijnens.Remove(trackedEntity);
+            }
+            else
+            {
+                _dbContext.Orderlijnens.Attach(entity);
+                _dbContext.Orderlijnens.Remove(entity);
+            }
+
+            await _dbContext.SaveChangesAsync();
         }
 
         public Task<Orderlijnen?> FindByIdAsync(string Id)
