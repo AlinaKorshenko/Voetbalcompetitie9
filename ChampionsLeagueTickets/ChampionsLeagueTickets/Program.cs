@@ -192,8 +192,8 @@ builder.Services.AddScoped<IZitplaatsenDAO, ZitplaatsenDAO>();
 builder.Services.AddScoped<IZitplaatsenService, ZitplaatsenService>();
 
 //seizoenen
-builder.Services.AddScoped<IDAO<Seizoenen>, SeizoenenDAO>();
-builder.Services.AddScoped<IService<Seizoenen>, SeizoenenService>();
+builder.Services.AddScoped<ISeizoenenDAO, SeizoenenDAO>();
+builder.Services.AddScoped<ISeizoenenService, SeizoenenService>();
 
 //abonnementen
 builder.Services.AddScoped<IAbonnementDAO, AbonnementenDAO>();
