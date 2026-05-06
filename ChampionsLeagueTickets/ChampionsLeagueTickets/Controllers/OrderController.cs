@@ -32,20 +32,12 @@ namespace ChampionsLeagueTickets.Controllers
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
-
-            if (user == null)
-                return Challenge();
-
-            var orders = await _orderService.GetAllByUserId(user.Id);
+            var orders = await _orderService.GetAllByUserId(user!.Id);
 
             if (orders == null || !orders.Any())
-            {
                 return View(new List<OrderVM>());
-            }
 
-            var ordersVM = _mapper.Map<List<OrderVM>>(orders);
-
-            return View(ordersVM);
+            return View(_mapper.Map<List<OrderVM>>(orders));
         }
 
         [Authorize]
@@ -55,7 +47,9 @@ namespace ChampionsLeagueTickets.Controllers
             var orderLijn = await _orderLijnService.FindByOrderIdAndOrderLijnNumber(orderId, orderLijnNummer);
 
             if (orderLijn == null)
+            {
                 return NotFound();
+            }
 
             var ticket = orderLijn.Ticket;
             var abonnement = orderLijn.Abonnementen;

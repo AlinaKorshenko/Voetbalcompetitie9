@@ -166,9 +166,9 @@ namespace ChampionsLeagueTickets.Repositories
         public async Task<List<Zitplaatsen>> GetByStadionIdAsync(string stadionId)
         {
             return await _dbContext.Zitplaatsens
-       .Where(z => z.StadionId == stadionId)
-       .Include(z => z.VakNummerNavigation)
-       .ToListAsync();
+               .Where(z => z.StadionId == stadionId)
+               .Include(z => z.VakNummerNavigation)
+               .ToListAsync();
         }
     }
 }

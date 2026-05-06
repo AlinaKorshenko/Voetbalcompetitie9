@@ -34,15 +34,6 @@ namespace ChampionsLeagueTickets.AutoMapper
                 .ForMember(dest => dest.VakNummer, opt => opt.MapFrom(src => src.VakNummer))
                 .ForMember(dest => dest.VakNaam, opt => opt.MapFrom(src => src.VakNummerNavigation.Omschrijving));
 
-            //api
-            //stadion
-            CreateMap<Stadion, StadionVM>();
-            CreateMap<VakType, VakTypeVM>();
-
-            //users
-            CreateMap<AspNetUser, UserInfoResponse>();
-            CreateMap<UserInfoResponse, UserVM>();
-
             //orders
             CreateMap<Zitplaatsen, ZitplaatsVM>()
                 .ForMember(dest => dest.VakOmschrijving,
@@ -74,10 +65,14 @@ namespace ChampionsLeagueTickets.AutoMapper
             CreateMap<Order, OrderVM>()
                 .ForMember(dest => dest.OrderLijnen, opt => opt.MapFrom(src => src.Orderlijnens));
 
+            //api
+            //stadion
+            CreateMap<Stadion, StadionVM>();
+            CreateMap<VakType, VakTypeVM>();
 
-            // StadionVanTeam
-
-
+            //users
+            CreateMap<AspNetUser, UserInfoResponse>();
+            CreateMap<UserInfoResponse, UserVM>();
         }
     }
 }

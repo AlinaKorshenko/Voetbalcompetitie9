@@ -15,14 +15,14 @@ namespace ChampionsLeagueTickets.Repositories
     public class TeamDAO : IDAO<Team>
     {
 
-            private readonly FootballDbContext _dbContext;
+        private readonly FootballDbContext _dbContext;
 
-            public TeamDAO(FootballDbContext dbContext)
-            {
-                _dbContext = dbContext;
-            }
+        public TeamDAO(FootballDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
 
-            public Task AddAsync(Team entity)
+        public Task AddAsync(Team entity)
         {
             throw new NotImplementedException();
         }
@@ -42,7 +42,6 @@ namespace ChampionsLeagueTickets.Repositories
             return await _dbContext.Teams
                 .Include(t => t.Stadion)
                 .ToListAsync();
-        
-    }
+        }
     }
 }

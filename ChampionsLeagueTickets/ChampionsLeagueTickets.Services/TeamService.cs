@@ -39,13 +39,11 @@ namespace ChampionsLeagueTickets.Services
             try
             {
                 return await _teams.GetAllAsync();
-
             }
             catch (Exception ex)
             {
-                throw new Exception("Het genereren van het volgende ticketId is niet gelukt: ", ex);
+                throw new Exception("Het ophalen van alle Teams is niet gelukt: ", ex);
             }
-
         }
     }
 }

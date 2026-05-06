@@ -143,7 +143,14 @@ namespace ChampionsLeagueTickets.Services
 
         public async Task<List<Zitplaatsen>> GetFreeSeatsForSeasonSectionAndRowAsync(string stadionId, string seizoenId, string vakNummer, string rijNummer)
         {
-            return await _zitplaatsenDAO.GetFreeSeatsForSeasonSectionAndRowAsync(stadionId, seizoenId, vakNummer, rijNummer);
+            try
+            {
+                return await _zitplaatsenDAO.GetFreeSeatsForSeasonSectionAndRowAsync(stadionId, seizoenId, vakNummer, rijNummer);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Het weergeven van de zitplaatsen is niet gelukt voor stadionId '{stadionId}', seizoenId '{seizoenId}', vakNummer '{vakNummer}' en rijNummer '{rijNummer}'", ex);
+            }
         }
 
         public Task<List<Zitplaatsen>> GetByStadionIdAsync(string stadionId)
@@ -151,11 +158,11 @@ namespace ChampionsLeagueTickets.Services
 
             try
             {
-
                 if (stadionId == null)
                 {
                     throw new ArgumentNullException("Het meegegeven stadionId mag niet null zijn.");
                 }
+
                 return _zitplaatsenDAO.GetByStadionIdAsync(stadionId);
             }
             catch {
