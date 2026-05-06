@@ -35,7 +35,14 @@ namespace ChampionsLeagueTickets.Services
 
         public async Task<IEnumerable<VakType>?> GetAllAsync()
         {
-            return await _vakTypeDAO.GetAllAsync();
+            try
+            {
+                return await _vakTypeDAO.GetAllAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Het ophalen van alle VakTypes is niet gelukt: ", ex);
+            }
         }
     }
 }

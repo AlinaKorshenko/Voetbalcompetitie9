@@ -32,38 +32,113 @@ namespace ChampionsLeagueTickets.Services
 
         public async Task<Zitplaatsen?> FindByIdAsync(string Id)
         {
-            return await _zitplaatsenDAO.FindByIdAsync(Id);
+            try
+            {
+                if(Id == null)
+                {
+                    throw new ArgumentNullException("Het meegegeven zitplaatsId mag niet null zijn.");
+                }
+
+                return await _zitplaatsenDAO.FindByIdAsync(Id);
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Het is niet gelukt om de Zitplaats op te halen voor meegegeven zitplaatsId '{Id}': ", ex);
+            }
         }
 
         public async Task<IEnumerable<Zitplaatsen>?> GetAllAsync()
         {
-            return await _zitplaatsenDAO.GetAllAsync();
+            try
+            {
+                return await _zitplaatsenDAO.GetAllAsync();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Het is niet gelukt om alle Zitplaatsen op te halen: ", ex);
+            }
         }
 
         public async Task<int> GetCountZitplaatsenByVakTypeAndStadion(Stadion stadion, VakType vaktype)
         {
-            return await _zitplaatsenDAO.GetCountZitplaatsenByVakTypeAndStadion(stadion, vaktype);
+            try
+            {
+                if(stadion == null)
+                {
+                    throw new ArgumentNullException("Het meegegeven Stadion mag niet null zijn.");
+                }
+
+                if (vaktype == null)
+                {
+                    throw new ArgumentNullException("Het meegegeven VakType mag niet null zijn.");
+                }
+
+                return await _zitplaatsenDAO.GetCountZitplaatsenByVakTypeAndStadion(stadion, vaktype);
+            }
+            catch(Exception ex)
+            {
+                throw new Exception($"Het is niet gelukt om het aantal zitplaatsen per Stadion '{stadion}' en VakType '{vaktype}' op te halen.", ex);
+            }
         }
 
         public Task<List<string>> GetRowsForSectionAsync(string stadionID, string vakNummer)
         {
-            return _zitplaatsenDAO.GetRowsForSectionAsync(stadionID, vakNummer);
+            try
+            {
+                if (stadionID == null)
+                {
+                    throw new ArgumentNullException("Het meegegeven stadionId mag niet null zijn.");
+                }
+
+                if (vakNummer == null)
+                {
+                    throw new ArgumentNullException("Het meegegeven vakNummer mag niet null zijn.");
+                }
+
+                return _zitplaatsenDAO.GetRowsForSectionAsync(stadionID, vakNummer);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Het is niet gelukt om de Zitplaatsen op te halen voor stadionId '{stadionID}' en vakNummer '{vakNummer}': ", ex);
+            }
         }
 
         public async Task<List<ZitplaatsDto>> GetSeatsForMatchSectionAndRowAsync(
             string matchId, string vakNummer, string rijNummer)
         {
-            var rawSeats = await _zitplaatsenDAO.GetSeatsForMatchSectionAndRowAsync(
+            try
+            {
+                if (matchId == null)
+                {
+                    throw new ArgumentNullException("Het meegegeven mathcId mag niet null zijn.");
+                }
+
+                if (vakNummer == null)
+                {
+                    throw new ArgumentNullException("Het meegegeven vakNummer mag niet null zijn.");
+                }
+
+                if (rijNummer == null)
+                {
+                    throw new ArgumentNullException("Het meegegeven rijNummer mag niet null zijn.");
+                }
+
+                var rawSeats = await _zitplaatsenDAO.GetSeatsForMatchSectionAndRowAsync(
                 matchId, vakNummer, rijNummer);
 
-            return rawSeats.Select(s => new ZitplaatsDto
+                return rawSeats.Select(s => new ZitplaatsDto
+                {
+                    ZitplaatsId = s.Zitplaats.ZitplaatsId,
+                    VakNummer = s.Zitplaats.VakNummer,
+                    RijNummer = s.Zitplaats.RijNummer,
+                    StoelNummer = s.Zitplaats.StoelNummer,
+                    IsBezet = s.IsBezet
+                }).ToList();
+            }
+            catch (Exception ex)
             {
-                ZitplaatsId = s.Zitplaats.ZitplaatsId,
-                VakNummer = s.Zitplaats.VakNummer,
-                RijNummer = s.Zitplaats.RijNummer,
-                StoelNummer = s.Zitplaats.StoelNummer,
-                IsBezet = s.IsBezet
-            }).ToList();
+                throw new Exception($"Het weergeven van de zitplaatsen is niet gelukt voor matchId '{matchId}', vakNummer '{vakNummer}' en rijNummer '{rijNummer}'", ex);
+            }
         }
 
         public async Task<List<Zitplaatsen>> GetFreeSeatsForSeasonSectionAndRowAsync(string stadionId, string seizoenId, string vakNummer, string rijNummer)
