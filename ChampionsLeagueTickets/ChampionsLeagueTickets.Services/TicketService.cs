@@ -110,9 +110,11 @@ namespace ChampionsLeagueTickets.Services
             {
                 return await _ticketsDAO.HasTicketOnSameDay(userId, matchId, matchDatum);
             }
-            catch(Exception ex) {
+            catch (Exception ex)
             {
-                throw new Exception($"Het is niet gelukt om de verificatie te doen voor het meegegeven userId '{userId}', matchId '{matchId}' en matchDatum '{matchDatum}': ", ex);
+                {
+                    throw new Exception($"Het is niet gelukt om de verificatie te doen voor het meegegeven userId '{userId}', matchId '{matchId}' en matchDatum '{matchDatum}': ", ex);
+                }
             }
         }
     }

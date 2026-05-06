@@ -23,25 +23,42 @@ public class HotelService : IHotelService
         double lng,
         int radiusMeters = 5000)
     {
-        var url =
+        try
+        {
+            if(lat == null)
+            {
+                throw new ArgumentNullException("De meegegeven latitude mag niet null zijn.");
+            }
+
+            if (lng == null)
+            {
+                throw new ArgumentNullException("De meegegeven lng mag niet null zijn.");
+            }
+
+            var url =
             $"{BaseUrl}?location={lat.ToString(System.Globalization.CultureInfo.InvariantCulture)}," +
             $"{lng.ToString(System.Globalization.CultureInfo.InvariantCulture)}" +
             $"&radius={radiusMeters}&type=lodging&key={_googleHotelApiKey}";
 
-        var response = await _httpClient.GetAsync(url);
-        response.EnsureSuccessStatusCode();
+            var response = await _httpClient.GetAsync(url);
+            response.EnsureSuccessStatusCode();
 
-        var json = await response.Content.ReadAsStringAsync();
+            var json = await response.Content.ReadAsStringAsync();
 
-        var result =
-            JsonConvert.DeserializeObject<GoogleHotelApiDTO>(json);
+            var result =
+                JsonConvert.DeserializeObject<GoogleHotelApiDTO>(json);
 
-        if (result?.Status != "OK" &&
-            result?.Status != "ZERO_RESULTS")
-        {
-            throw new Exception($"Google Places API error: {result?.Status}");
+            if (result?.Status != "OK" &&
+                result?.Status != "ZERO_RESULTS")
+            {
+                throw new Exception($"Google Places API error: {result?.Status}");
+            }
+
+            return result;
         }
-
-        return result;
+        catch (Exception ex)
+        {
+            throw new Exception("Het ophalen van de HotelAPI data is mislukt: ", ex);
+        }
     }
 }

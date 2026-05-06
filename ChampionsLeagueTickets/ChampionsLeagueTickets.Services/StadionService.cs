@@ -41,7 +41,7 @@ namespace ChampionsLeagueTickets.Services
             }
             catch (Exception ex)
             {
-                throw new Exception($"Het is niet gelukt om het Stadion te vinden met meegegeven stadionId '{Id}': ", ex)
+                throw new Exception($"Het is niet gelukt om het Stadion te vinden met meegegeven stadionId '{Id}': ", ex);
             }
         }
 
