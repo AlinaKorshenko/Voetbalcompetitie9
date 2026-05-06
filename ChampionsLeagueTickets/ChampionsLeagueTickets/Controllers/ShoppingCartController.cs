@@ -192,6 +192,14 @@ namespace ChampionsLeagueTickets.Controllers
                 .GetObject<List<ShoppingCartTicketItemKortVM>>(CartKeyTicket)
                 ?? new List<ShoppingCartTicketItemKortVM>();
 
+            if (cartTickets.Any(x =>
+            x.MatchId == matchId &&
+            x.ZitplaatsId == zitplaatsId))
+            {
+                TempData["Error"] = "Deze zitplaats zit al in je winkelmandje voor deze match.";
+                return RedirectToAction("Index");
+            }
+
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var item = cartTickets.FirstOrDefault(x =>
