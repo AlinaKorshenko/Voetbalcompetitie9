@@ -34,8 +34,7 @@ namespace ChampionsLeagueTickets.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error in servicelaag: " + ex.Message);
-                throw;
+                throw new Exception("Het is niet gelukt om alle gebruikers op te halen: ", ex);
             }
         }
     }

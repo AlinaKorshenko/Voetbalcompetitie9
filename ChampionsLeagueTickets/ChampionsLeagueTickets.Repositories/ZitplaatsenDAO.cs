@@ -33,79 +33,40 @@ namespace ChampionsLeagueTickets.Repositories
 
         public async Task<Zitplaatsen?> FindByIdAsync(string Id)
         {
+            var zitplaats = await _dbContext.Zitplaatsens
+                .Include(z => z.VakNummerNavigation)
+                .Include(z => z.Stadion)
+                .FirstOrDefaultAsync(m => m.ZitplaatsId == Id);
 
-            try
-            {
-                var zitplaats = await _dbContext.Zitplaatsens
-                    .Include(z => z.VakNummerNavigation)
-                    .Include(z => z.Stadion)
-                    .FirstOrDefaultAsync(m => m.ZitplaatsId == Id);
-
-                if (zitplaats == null)
-                {
-                    throw new Exception("De ingegeven zitplaats is niet gevonden");
-                }
-
-                return zitplaats;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error in DAO: " + ex.Message);
-                throw;
-            }
+            return zitplaats;
         }
 
         public async Task<IEnumerable<Zitplaatsen>?> GetAllAsync()
         {
-            try
-            {
-                return await _dbContext.Zitplaatsens
-                    .ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error in DAO: " + ex.Message);
-                throw;
-            }
+            return await _dbContext.Zitplaatsens
+                .ToListAsync();
         }
 
         public async Task<int> GetCountZitplaatsenByVakTypeAndStadion(Stadion stadion, VakType vaktype)
         {
-            try
-            {
-                return await _dbContext.Zitplaatsens
-                    .Where(zitplaats => zitplaats.StadionId == stadion.StadionId && zitplaats.VakNummer == vaktype.VakNummer)
-                    .CountAsync();
-            }
-            catch
-            {
-                Console.WriteLine("error in DAO");
-                throw;
-            }
+            return await _dbContext.Zitplaatsens
+                .Where(zitplaats => zitplaats.StadionId == stadion.StadionId && zitplaats.VakNummer == vaktype.VakNummer)
+                .CountAsync();
         }
 
         public async Task<List<string>> GetRowsForSectionAsync(string stadionID, string vakNummer)
         {
-            try
-            {
+            var rijen = await _dbContext.Zitplaatsens
+                .Where(z => z.StadionId == stadionID && z.VakNummer == vakNummer)
+                .Select(z => z.RijNummer)
+                .Distinct()
+                .ToListAsync();
 
-                var rijen = await _dbContext.Zitplaatsens
-                    .Where(z => z.StadionId == stadionID && z.VakNummer == vakNummer)
-                    .Select(z => z.RijNummer)
-                    .Distinct()
-                    .ToListAsync();
+            rijen = rijen
+                .OrderBy(r => ParseNumber(r))
+                .ToList();
 
-                rijen = rijen
-                    .OrderBy(r => ParseNumber(r))
-                    .ToList();
-
-                return rijen;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error in DAO: " + ex.Message);
-                throw;
-            }
+            return rijen;
         }
 
 
@@ -115,9 +76,6 @@ namespace ChampionsLeagueTickets.Repositories
             var match = await _dbContext.Matches
                 .Include(m => m.ThuisTeam)
                 .FirstOrDefaultAsync(m => m.MatchId == matchId);
-
-            if (match == null)
-                throw new Exception("Match niet gevonden.");
 
             var stadionId = match.ThuisTeam.StadionId;
             var matchDate = DateOnly.FromDateTime(match.DatumTijdStartMatch);

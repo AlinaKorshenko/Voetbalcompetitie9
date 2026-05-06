@@ -30,22 +30,70 @@ namespace ChampionsLeagueTickets.Services
 
         public async Task<Match?> FindByIdAsync(string Id)
         {
-            return await _matchesDAO.FindByIdAsync(Id);
+            try
+            {
+                if (Id == null)
+                {
+                    throw new ArgumentNullException("Het meegegeven matchId mag niet null zijn.");
+                }
+
+                return await _matchesDAO.FindByIdAsync(Id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"De match is niet gevonden voor het meegegeven matchId '{Id}': ", ex);
+            }
         }
 
         public async Task<IEnumerable<Match>?> GetAllAsync()
         {
-            return await _matchesDAO.GetAllAsync();
+            try
+            {
+                return await _matchesDAO.GetAllAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Gefaald om alle matches op te halen: ", ex);
+            }
         }
 
         public async Task<IEnumerable<Match>?> GetAllMatchesFromTeamsAsync(string homeTeamId, string awayTeamId)
         {
-            return await _matchesDAO.GetAllMatchesFromTeamsAsync(homeTeamId, awayTeamId);
+            try
+            {
+                if (homeTeamId == null)
+                {
+                    throw new ArgumentNullException("Het meegegeven homeTeamId mag niet null zijn.");
+                }
+
+                if (awayTeamId == null)
+                {
+                    throw new ArgumentNullException("Het meegegeven awayTeamId mag niet null zijn.");
+                }
+
+                return await _matchesDAO.GetAllMatchesFromTeamsAsync(homeTeamId, awayTeamId);
+            }
+            catch(Exception ex)
+            {
+                throw new Exception($"Er zijn geen matches gevonden voor de meegegeven teams '{homeTeamId}' en '{awayTeamId}'");
+            }
         }
 
         public async Task<Stadion> GetStadionByMatchIdAsync(string matchId)
         {
-            return await _matchesDAO.GetStadionByMatchIdAsync(matchId);
+            try
+            {
+                if (matchId == null)
+                {
+                    throw new ArgumentNullException("Het meegegeven matchId mag niet null zijn");
+                }
+
+                return await _matchesDAO.GetStadionByMatchIdAsync(matchId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Er zijn geen stadions gevonden voor het meegegeven matchId '{matchId}':", ex);
+            }
         }
     }
 }

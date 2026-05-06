@@ -22,21 +22,29 @@ namespace ChampionsLeagueTickets.Repositories
 
         public async Task AddAsync(Orderlijnen entity)
         {
-            try
-            {
-                await _dbContext.Orderlijnens.AddAsync(entity);
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error in DAO: " + ex.Message);
-                throw;
-            }
+            await _dbContext.Orderlijnens.AddAsync(entity);
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Orderlijnen entity)
         {
-            _dbContext.Orderlijnens.Remove(entity);
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            var trackedEntity = _dbContext.Orderlijnens.Local
+                .FirstOrDefault(e => e.OrderId == entity.OrderId
+                                  && e.OrderLijnNummer == entity.OrderLijnNummer);
+
+            if (trackedEntity != null)
+            {
+                _dbContext.Orderlijnens.Remove(trackedEntity);
+            }
+            else
+            {
+                _dbContext.Orderlijnens.Attach(entity);
+                _dbContext.Orderlijnens.Remove(entity);
+            }
+
             await _dbContext.SaveChangesAsync();
         }
 
@@ -52,25 +60,17 @@ namespace ChampionsLeagueTickets.Repositories
 
         public Task<Orderlijnen> FindByOrderIdAndOrderLijnNumber(string orderId, int orderLijnNumber)
         {
-            try
-            {
-                var orderlijnen = _dbContext.Orderlijnens
-                    .Include(o => o.Ticket)
-                    .Include(o => o.Abonnementen)
-                        .FirstOrDefaultAsync(l => l.OrderId == orderId && l.OrderLijnNummer == orderLijnNumber);
+            var orderlijnen = _dbContext.Orderlijnens
+                .Include(o => o.Ticket)
+                .Include(o => o.Abonnementen)
+                    .FirstOrDefaultAsync(l => l.OrderId == orderId && l.OrderLijnNummer == orderLijnNumber);
 
-                if (orderlijnen == null)
-                {
-                    throw new Exception("Orderlijnen not found for the given OrderId.");
-                }
-
-                return orderlijnen;
-            }
-            catch (Exception ex)
+            if (orderlijnen == null)
             {
-                Console.WriteLine("Error in DAO: " + ex.Message);
-                throw;
+                throw new Exception("Orderlijnen not found for the given OrderId.");
             }
+
+            return orderlijnen;
         }
     }
 }

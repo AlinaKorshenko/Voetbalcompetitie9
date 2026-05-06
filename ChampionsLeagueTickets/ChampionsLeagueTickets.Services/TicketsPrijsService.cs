@@ -40,7 +40,24 @@ namespace ChampionsLeagueTickets.Services
 
         public Task<decimal> GetTicketPrijsByMatchAndSectionAsync(string MatchID, string VakNummer)
         {
-            return _ticketPrijsDAO.GetTicketPrijsByMatchAndSectionAsync(MatchID, VakNummer);
+            try
+            {
+                if(MatchID == null)
+                {
+                    throw new ArgumentNullException("Het meegegeven matchId mag niet null zijn");
+                }
+
+                if (VakNummer == null)
+                {
+                    throw new ArgumentNullException("Het meegegeven vakNummer mag niet null zijn");
+                }
+
+                return _ticketPrijsDAO.GetTicketPrijsByMatchAndSectionAsync(MatchID, VakNummer);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Het is niet gelukt om de ticketprijs te vinden van meegegeven matchId '{MatchID}' en meegegeven vakNummer '{VakNummer}'", ex);
+            }
         }
     }
 }

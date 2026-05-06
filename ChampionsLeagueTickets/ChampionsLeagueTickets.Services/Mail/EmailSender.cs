@@ -1,4 +1,5 @@
-﻿using ChampionsLeagueTickets.Services.Mail.Interfaces;
+﻿using Azure.Core;
+using ChampionsLeagueTickets.Services.Mail.Interfaces;
 using MailKit.Security;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Configuration;
@@ -11,7 +12,6 @@ namespace ChampionsLeagueTickets.Services.Mail
     public class EmailSender : IAppEmailSender, IEmailSender
     {
         private readonly IConfiguration _configuration;
-        private readonly ILogger<EmailSender> _logger;
         private readonly string _mailServer;
         private readonly int _mailPort;
         private readonly string _senderName;
@@ -19,9 +19,8 @@ namespace ChampionsLeagueTickets.Services.Mail
         private readonly string _username;
         private readonly string _password;
 
-        public EmailSender(IConfiguration config, ILogger<EmailSender> logger)
+        public EmailSender(IConfiguration config)
         {
-            _logger = logger;
             _configuration = config;
 
             _mailServer = _configuration["EmailSettings:MailServer"]!;
@@ -50,8 +49,7 @@ namespace ChampionsLeagueTickets.Services.Mail
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Gefaald om een mail te sturen naar {Email} — {Subject}", email, subject);
-                throw;
+                throw new Exception($"Gefaald om een mail te sturen naar '{email}', met onderwerp '{subject}' en bericht '{htmlMessage}': ", ex);
             }
         }
 
@@ -87,8 +85,7 @@ namespace ChampionsLeagueTickets.Services.Mail
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Gefaald om een order te sturen naar {Email}", email);
-                throw;
+                throw new Exception($"Gefaald om een orderconfirmation mail te sturen naar '{email}': ", ex);
             }
         }
     }
