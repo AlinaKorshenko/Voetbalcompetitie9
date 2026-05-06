@@ -22,16 +22,8 @@ namespace ChampionsLeagueTickets.Repositories
 
         public async Task AddAsync(Orderlijnen entity)
         {
-            try
-            {
-                await _dbContext.Orderlijnens.AddAsync(entity);
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error in DAO: " + ex.Message);
-                throw;
-            }
+            await _dbContext.Orderlijnens.AddAsync(entity);
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Orderlijnen entity)
@@ -68,25 +60,17 @@ namespace ChampionsLeagueTickets.Repositories
 
         public Task<Orderlijnen> FindByOrderIdAndOrderLijnNumber(string orderId, int orderLijnNumber)
         {
-            try
-            {
-                var orderlijnen = _dbContext.Orderlijnens
-                    .Include(o => o.Ticket)
-                    .Include(o => o.Abonnementen)
-                        .FirstOrDefaultAsync(l => l.OrderId == orderId && l.OrderLijnNummer == orderLijnNumber);
+            var orderlijnen = _dbContext.Orderlijnens
+                .Include(o => o.Ticket)
+                .Include(o => o.Abonnementen)
+                    .FirstOrDefaultAsync(l => l.OrderId == orderId && l.OrderLijnNummer == orderLijnNumber);
 
-                if (orderlijnen == null)
-                {
-                    throw new Exception("Orderlijnen not found for the given OrderId.");
-                }
-
-                return orderlijnen;
-            }
-            catch (Exception ex)
+            if (orderlijnen == null)
             {
-                Console.WriteLine("Error in DAO: " + ex.Message);
-                throw;
+                throw new Exception("Orderlijnen not found for the given OrderId.");
             }
+
+            return orderlijnen;
         }
     }
 }

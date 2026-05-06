@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static iTextSharp.text.pdf.events.IndexEvents;
 
 namespace ChampionsLeagueTickets.Services
 {
@@ -21,12 +22,36 @@ namespace ChampionsLeagueTickets.Services
 
         public async Task AddAsync(Abonnementen entity)
         {
-            await _abonnementenDAO.AddAsync(entity);
+            try
+            {
+                if (entity == null)
+                {
+                    throw new ArgumentNullException("Het meegegeven Abonnement mag niet null zijn.");
+                }
+
+                await _abonnementenDAO.AddAsync(entity);
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Het toevoegen van het Abonnement is mislukt: ", ex);
+            }
         }
 
         public async Task DeleteAsync(Abonnementen entity)
         {
-            await _abonnementenDAO.DeleteAsync(entity);
+            try
+            {
+                if (entity == null)
+                {
+                    throw new ArgumentNullException("Het meegegeven Abonnement mag niet null zijn.");
+                }
+
+                await _abonnementenDAO.DeleteAsync(entity);
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Het verwijderen van het Abonnement is mislukt: ", ex);
+            }
         }
 
         public Task<Abonnementen?> FindByIdAsync(string Id)
@@ -36,12 +61,26 @@ namespace ChampionsLeagueTickets.Services
 
         public async Task<string> GenerateNextAbonnementenIdAsync()
         {
-            return await _abonnementenDAO.GenerateNextAbonnementenIdAsync();
+            try
+            {
+                return await _abonnementenDAO.GenerateNextAbonnementenIdAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Het genereren van het volgende abonnementenId is mislukt: ", ex);
+            }
         }
 
         public async Task<IEnumerable<Abonnementen>?> GetAllAsync()
         {
-            return await _abonnementenDAO.GetAllAsync();
+            try
+            {
+                return await _abonnementenDAO.GetAllAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Het genereren van het volgende abonnementenId is mislukt: ", ex);
+            }
         }
     }
 }

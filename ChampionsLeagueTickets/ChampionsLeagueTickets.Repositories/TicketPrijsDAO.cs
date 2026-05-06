@@ -42,22 +42,10 @@ namespace ChampionsLeagueTickets.Repositories
 
         public async Task<decimal> GetTicketPrijsByMatchAndSectionAsync(string MatchID, string VakNummer)
         {
-            try {
-                var ticket = await _dbContext.TicketsPrijs
-                    .FirstOrDefaultAsync(tp => tp.MatchId == MatchID && tp.VakNummer == VakNummer);
+            var ticket = await _dbContext.TicketsPrijs
+                .FirstOrDefaultAsync(tp => tp.MatchId == MatchID && tp.VakNummer == VakNummer);
 
-                if (ticket == null)
-                {
-                    throw new Exception("Ticket prijs not found for the given MatchID and VakNummer.");
-                }
-
-                return ticket.Prijs;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error in DAO: " + ex.Message);
-                throw;
-            }
+            return ticket.Prijs;
         }
     }
 }

@@ -31,38 +31,21 @@ namespace ChampionsLeagueTickets.Repositories
 
         public async Task<Stadion?> FindByIdAsync(string Id)
         {
-            try
-            {
-                var stadion = await _dbContext.Stadions
-                      .FirstOrDefaultAsync(s => s.StadionId == Id);
+            var stadion = await _dbContext.Stadions
+                    .FirstOrDefaultAsync(s => s.StadionId == Id);
 
-                if(stadion == null)
-                {
-                    throw new Exception("Stadion not found for the given StadionId.");
-                }
-
-                return stadion;
-            }
-            catch (Exception ex)
+            if(stadion == null)
             {
-                Console.WriteLine("Error in DAO: " + ex.Message);
-                throw;
+                throw new Exception("Stadion not found for the given StadionId.");
             }
 
+            return stadion;
         }
 
         public async Task<IEnumerable<Stadion>?> GetAllAsync()
         {
-            try
-            {
-                return await _dbContext.Stadions
-                    .ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error in DAO: " + ex.Message);
-                throw;
-            }
+            return await _dbContext.Stadions
+                .ToListAsync();
         }
     }
 }

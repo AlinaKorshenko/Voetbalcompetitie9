@@ -31,56 +31,27 @@ namespace ChampionsLeagueTickets.Repositories
 
         public async Task<Seizoenen?> FindByIdAsync(string Id)
         {
-            try
-            {
-                var seizoen = await _dbContext.Seizoenens
-                    .FirstOrDefaultAsync(s => s.SeizoenId == Id);
+            var seizoen = await _dbContext.Seizoenens
+                .FirstOrDefaultAsync(s => s.SeizoenId == Id);
 
-                if(seizoen == null)
-                {
-                    throw new Exception("Seizoen not found for the given SeizoenId.");
-                }
-
-                return seizoen;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error in DAO: " + ex.Message);
-                throw;
-            }
+            return seizoen;
         }
 
         public async Task<IEnumerable<Seizoenen>?> GetAllAsync()
         {
-            try
-            {
-                return await _dbContext.Seizoenens
-                    .OrderByDescending(s => s.StartDatum)
-                    .ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error in DAO: " + ex.Message);
-                throw;
-            }
+            return await _dbContext.Seizoenens
+                .OrderByDescending(s => s.StartDatum)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<Seizoenen>?> GetAllFutureSeasons()
         {
-            try
-            {
-                var vandaag = DateOnly.FromDateTime(DateTime.Now);
+            var vandaag = DateOnly.FromDateTime(DateTime.Now);
 
-                return await _dbContext.Seizoenens
-                    .Where(s => s.StartDatum > vandaag)
-                    .OrderByDescending(s => s.StartDatum)
-                    .ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error in DAO: " + ex.Message);
-                throw;
-            }
+            return await _dbContext.Seizoenens
+                .Where(s => s.StartDatum > vandaag)
+                .OrderByDescending(s => s.StartDatum)
+                .ToListAsync();
         }
     }
 }

@@ -30,12 +30,31 @@ namespace ChampionsLeagueTickets.Services
 
         public Task<Stadion?> FindByIdAsync(string Id)
         {
-            return _stadionDAO.FindByIdAsync(Id);    
+            try
+            {
+                if (Id == null)
+                {
+                    throw new ArgumentNullException("Het meegegeven stadionId mag niet null zijn.");
+                }
+
+                return _stadionDAO.FindByIdAsync(Id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Het is niet gelukt om het Stadion te vinden met meegegeven stadionId '{Id}': ", ex);
+            }
         }
 
         public async Task<IEnumerable<Stadion>?> GetAllAsync()
         {
-            return await _stadionDAO.GetAllAsync();
+            try
+            {
+                return await _stadionDAO.GetAllAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Het is niet gelukt om alle Stadions op te halen.");
+            }
         }
     }
 }

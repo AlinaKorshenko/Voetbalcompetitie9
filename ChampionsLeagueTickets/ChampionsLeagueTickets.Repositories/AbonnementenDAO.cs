@@ -21,30 +21,14 @@ namespace ChampionsLeagueTickets.Repositories
 
         public async Task AddAsync(Abonnementen entity)
         {
-            try
-            {
-                await _dbContext.Abonnementens.AddAsync(entity);
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error in DAO: " + ex.Message);
-                throw;
-            }
+            await _dbContext.Abonnementens.AddAsync(entity);
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Abonnementen entity)
         {
-            try
-            {
-                _dbContext.Abonnementens.Remove(entity);
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error in DAO: " + ex.Message);
-                throw;
-            }
+            _dbContext.Abonnementens.Remove(entity);
+            await _dbContext.SaveChangesAsync();
         }
 
         public Task<Abonnementen?> FindByIdAsync(string Id)
@@ -54,41 +38,25 @@ namespace ChampionsLeagueTickets.Repositories
 
         public async Task<string> GenerateNextAbonnementenIdAsync()
         {
-            try
+            var lastAbonnement = await _dbContext.Abonnementens
+                .OrderByDescending(o => o.AbonnementId)
+                .FirstOrDefaultAsync();
+
+            if (lastAbonnement == null)
             {
-                var lastAbonnement = await _dbContext.Abonnementens
-                    .OrderByDescending(o => o.AbonnementId)
-                    .FirstOrDefaultAsync();
-
-                if (lastAbonnement == null)
-                {
-                    return "A0001";
-                }
-
-                var lastNumber = int.Parse(lastAbonnement.AbonnementId.Substring(1));
-                var newNumber = lastNumber + 1;
-
-                return $"A{newNumber.ToString("D4")}";
+                return "A0001";
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error in DAO: " + ex.Message);
-                throw;
-            }
+
+            var lastNumber = int.Parse(lastAbonnement.AbonnementId.Substring(1));
+            var newNumber = lastNumber + 1;
+
+            return $"A{newNumber.ToString("D4")}";
         }
 
         public async Task<IEnumerable<Abonnementen>?> GetAllAsync()
         {
-            try
-            {
-                return await _dbContext.Abonnementens
-                    .ToListAsync();
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine("Error in DAO: " + ex.Message);
-                throw;
-            }
+            return await _dbContext.Abonnementens
+                .ToListAsync();
         }
     }
 }

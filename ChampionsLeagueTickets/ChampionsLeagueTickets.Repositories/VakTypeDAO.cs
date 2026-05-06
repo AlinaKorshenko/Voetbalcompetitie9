@@ -36,16 +36,8 @@ namespace ChampionsLeagueTickets.Repositories
 
         public async Task<IEnumerable<VakType>?> GetAllAsync()
         {
-            try
-            {
-                return await _dbContext.VakTypes
-                    .ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error in DAO: " + ex.Message);
-                throw;
-            }
+            return await _dbContext.VakTypes
+                .ToListAsync();
         }
     }
 }

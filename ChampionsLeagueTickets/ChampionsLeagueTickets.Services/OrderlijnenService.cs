@@ -21,26 +21,35 @@ namespace ChampionsLeagueTickets.Services
 
         public async Task AddAsync(Orderlijnen entity)
         {
-            await _orderlijnenDAO.AddAsync(entity);
+            try
+            {
+                if (entity == null)
+                {
+                    throw new ArgumentNullException("Het meegegeven Orderlijn mag niet null zijn.");
+                }
+
+                await _orderlijnenDAO.AddAsync(entity);
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Het toevoegen van het meegegeven Orderlijn is mislukt: ", ex);
+            }
         }
 
         public async Task DeleteAsync(Orderlijnen entity)
         {
             try
             {
-                var entityFound = await _orderlijnenDAO
-                    .FindByOrderIdAndOrderLijnNumber(entity.OrderId, entity.OrderLijnNummer);
-
-                if (entityFound == null)
+                if (entity == null)
                 {
-                    throw new Exception("Orderlijn niet gevonden");
+                    throw new ArgumentNullException("Het meegegeven Orderlijn mag niet null zijn.");
                 }
 
                 await _orderlijnenDAO.DeleteAsync(entity);
             }
             catch (Exception ex)
             {
-                throw new ApplicationException("Fout bij verwijderen van orderlijn", ex);
+                throw new ApplicationException("Het verwijderen van het meegegeven Orderlijn is mislukt: ", ex);
             }
         }
 
@@ -56,7 +65,14 @@ namespace ChampionsLeagueTickets.Services
 
         public async Task<Orderlijnen> FindByOrderIdAndOrderLijnNumber(string orderId, int orderLijnNumber)
         {
-            return await _orderlijnenDAO.FindByOrderIdAndOrderLijnNumber(orderId, orderLijnNumber);
+            try
+            {
+                return await _orderlijnenDAO.FindByOrderIdAndOrderLijnNumber(orderId, orderLijnNumber);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Het Orderlijn is niet gevonden voor de meegegeven orderId '{orderId}' en het meegegeven orderLijnNummer '{orderLijnNumber}'");
+            }
         }
     }
 }
