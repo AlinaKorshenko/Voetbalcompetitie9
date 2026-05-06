@@ -58,17 +58,20 @@ namespace ChampionsLeagueTickets.Controllers
             _pdfService = pdfService;
         }
 
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             var carts = await GetShoppingCart();
             return View(carts);
         }
 
+        [Authorize]
         public IActionResult OrderSucces()
         {
             return View();
         }
 
+        [Authorize]
         public IActionResult AddToCart(ShoppingCartVM vm)
         {
             if (!ModelState.IsValid)
@@ -153,6 +156,7 @@ namespace ChampionsLeagueTickets.Controllers
             return result;
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult VerwijderTicket(string matchId, string zitplaatsId)
         {
@@ -184,6 +188,7 @@ namespace ChampionsLeagueTickets.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> VoegTicketToe(string matchId, string zitplaatsId, string vakNummer)
         {
@@ -251,6 +256,7 @@ namespace ChampionsLeagueTickets.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult VerwijderAbonnement(string stadionId, string seizoenId, string zitplaatsId)
         {
@@ -279,6 +285,7 @@ namespace ChampionsLeagueTickets.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Checkout()
         {

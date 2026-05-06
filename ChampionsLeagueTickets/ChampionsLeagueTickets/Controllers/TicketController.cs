@@ -61,7 +61,9 @@ namespace Voetbalcompetitie9.Controllers
             var match = await _matchesService.FindByIdAsync(matchID);
 
             if (match == null)
+            {
                 return NotFound();
+            }
 
             if (!IsTicketBeschikbaar(match.DatumTijdStartMatch))
             {
