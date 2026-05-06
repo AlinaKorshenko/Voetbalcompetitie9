@@ -21,7 +21,19 @@ namespace ChampionsLeagueTickets.Services
 
         public async Task AddAsync(Orderlijnen entity)
         {
-            await _orderlijnenDAO.AddAsync(entity);
+            try
+            {
+                if (entity == null)
+                {
+                    throw new ArgumentNullException("Het meegegeven Orderlijn mag niet null zijn.");
+                }
+
+                await _orderlijnenDAO.AddAsync(entity);
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Het toevoegen van het meegegeven Orderlijn is mislukt: ", ex);
+            }
         }
 
         public async Task DeleteAsync(Orderlijnen entity)
@@ -40,7 +52,7 @@ namespace ChampionsLeagueTickets.Services
             }
             catch (Exception ex)
             {
-                throw new ApplicationException("Fout bij verwijderen van orderlijn", ex);
+                throw new ApplicationException("Het verwijderen van het meegegeven Orderlijn is mislukt: ", ex);
             }
         }
 

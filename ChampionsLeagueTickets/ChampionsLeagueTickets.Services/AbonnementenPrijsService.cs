@@ -75,7 +75,7 @@ namespace ChampionsLeagueTickets.Services
             }
             catch (Exception ex)
             {
-                throw new Exception("Gefaald om abonnementen prijzen op te halen voor het meegegeven seizoenId {seizoenId} en stadionId {stadionId}: ", ex);
+                throw new Exception($"Kon geen prijs ophalen voor seizoenId '{seizoenID}' en stadionId '{stadionId}': ", ex);
             }
         }
     }
