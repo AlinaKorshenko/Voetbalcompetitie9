@@ -28,7 +28,7 @@ namespace ChampionsLeagueTickets.Controllers
         private readonly IService<VakType> _vakService;
         private readonly ITicketService _ticketService;
         private readonly IAbonnementService _abonnementService;
-        private readonly IZitplaatsenService _zitplatsenService;
+        private readonly IZitplaatsenService _zitplaatsenService;
         private readonly ITicketPrijsService _ticketPrijsService;
         private readonly IService<Stadion> _stadionService;
         private readonly IAbonementenPrijsService _abonementenPrijsService;
@@ -39,23 +39,21 @@ namespace ChampionsLeagueTickets.Controllers
         private readonly IPdfService _pdfService;
         private const int maxAantalTickets = 4;
         private readonly IMapper _mapper;
-        public ShoppingCartController(IAppEmailSender appEmailSender, IOrderLijnService orderlijnenService, IOrderService orderService, IAbonnementService abonnementService, ITicketService ticketService, IMatchService matchesService, IService<VakType> vakService, IZitplaatsenService zitplatsenService, ITicketPrijsService ticketPrijsService, IService<Stadion> stadionService, IAbonementenPrijsService abonementenPrijsService, ISeizoenenService seizoenenService, IMapper mapper)
-
-        public ShoppingCartController(IMatchService matchesService, IService<VakType> vakService, ITicketService ticketService, IAbonnementService abonnementService, IZitplaatsenService zitplatsenService, ITicketPrijsService ticketPrijsService, IService<Stadion> stadionService, IAbonementenPrijsService abonementenPrijsService, ISeizoenenService seizoenenService, IOrderService orderService, IService<Orderlijnen> orderlijnenService, IAppEmailSender appEmailSender, IPdfService pdfService)
+        public ShoppingCartController(IAppEmailSender appEmailSender, IOrderLijnService orderlijnenService, IOrderService orderService, IAbonnementService abonnementService, ITicketService ticketService, IMatchService matchesService, IService<VakType> vakService, IZitplaatsenService zitplaatsenService, ITicketPrijsService ticketPrijsService, IService<Stadion> stadionService, IAbonementenPrijsService abonementenPrijsService, ISeizoenenService seizoenenService,  IMapper mapper,IPdfService pdfService)
         {
+            _appEmailSender = appEmailSender;
+            _orderlijnenService = orderlijnenService;
+            _orderService = orderService;
+            _abonnementService = abonnementService;
+            _ticketService = ticketService;
             _matchesService = matchesService;
             _vakService = vakService;
-            _ticketService = ticketService;
-            _abonnementService = abonnementService;
-            _zitplatsenService = zitplatsenService;
+            _zitplaatsenService = zitplaatsenService;
             _ticketPrijsService = ticketPrijsService;
             _stadionService = stadionService;
             _abonementenPrijsService = abonementenPrijsService;
             _seizoenenService = seizoenenService;
             _mapper = mapper;
-            _orderService = orderService;
-            _orderlijnenService = orderlijnenService;
-            _appEmailSender = appEmailSender;
             _pdfService = pdfService;
         }
 
@@ -91,7 +89,7 @@ namespace ChampionsLeagueTickets.Controllers
                 foreach (var item in cartTickets)
                 {
                     var match = await _matchesService.FindByIdAsync(item.MatchId);
-                    var zitplaats = await _zitplatsenService.FindByIdAsync(item.ZitplaatsId);
+                    var zitplaats = await _zitplaatsenService.FindByIdAsync(item.ZitplaatsId);
                     if (zitplaats == null || match == null || zitplaats.VakNummerNavigation == null)
                     {
                         continue;
@@ -133,7 +131,7 @@ namespace ChampionsLeagueTickets.Controllers
             {
                 var stadion = await _stadionService.FindByIdAsync(item.StadionId);
                 var seizoen = await _seizoenenService.FindByIdAsync(item.SeizoenId);
-                var zitplaats = await _zitplatsenService.FindByIdAsync(item.ZitplaatsId);
+                var zitplaats = await _zitplaatsenService.FindByIdAsync(item.ZitplaatsId);
 
                     var prijs = await _abonementenPrijsService.GetPriceBySeizoenIdAndStadionId(item.SeizoenId, item.StadionId);
 
@@ -319,7 +317,7 @@ namespace ChampionsLeagueTickets.Controllers
 
                 string ticketId = await _ticketService.GenerateNextTicketIdAsync();
 
-                Zitplaatsen zitplaats = await _zitplatsenService.FindByIdAsync(t.ZitplaatsId);
+                Zitplaatsen zitplaats = await _zitplaatsenService.FindByIdAsync(t.ZitplaatsId);
                 string stadionId = zitplaats.StadionId;
 
                 Match match = await _matchesService.FindByIdAsync(t.MatchId);
@@ -390,7 +388,7 @@ namespace ChampionsLeagueTickets.Controllers
                 });
 
                 var pdf = _pdfService.GenerateAbonnementPdf(
-                    a.zitplaats.VakNummerNavigation.Omschrijving,
+                    a.zitplaats.VakOmschrijving,
                     a.zitplaats.RijNummer,
                     a.zitplaats.StoelNummer,
                     startDatum,

@@ -95,8 +95,15 @@ namespace ChampionsLeagueTickets.Controllers
                 return View(abonementStoelVM);
             }
 
-            var rijen = await _zitplaatsenService.GetRowsForSectionAsync(abonementStoelVM.StadionID, abonementStoelVM.VakNummer);
-            abonementStoelVM.RijenLijst = new SelectList(rijen, abonementStoelVM.RijNummer);
+            var rijen = await _zitplaatsenService.GetRowsForSectionAsync(
+                abonementStoelVM.StadionID,
+                abonementStoelVM.VakNummer
+            );
+
+            abonementStoelVM.RijenLijst = new SelectList(
+                rijen,
+                abonementStoelVM.RijNummer
+            );
 
             if (!string.IsNullOrEmpty(abonementStoelVM.RijNummer))
             {
@@ -107,12 +114,31 @@ namespace ChampionsLeagueTickets.Controllers
                     abonementStoelVM.RijNummer
                 );
 
-                abonementStoelVM.StoelenLijst = new SelectList(
-                    vrijeStoelen.Select(s => new
+                var ticketCart = HttpContext.Session.GetObject<List<ShoppingCartTicketItemKortVM>>("ShoppingCartTicket")
+                                 ?? new List<ShoppingCartTicketItemKortVM>();
+
+                var abonnementCart = HttpContext.Session.GetObject<List<ShoppingCartAbonementItemKortVM>>("ShoppingCartAbonement")
+                                     ?? new List<ShoppingCartAbonementItemKortVM>();
+
+                var vrijeStoelenGefilterd = vrijeStoelen
+                    .Where(s =>
+                        !abonnementCart.Any(a =>
+                            a.ZitplaatsId == s.ZitplaatsId &&
+                            a.SeizoenId == abonementStoelVM.SeizoenId
+                        )
+                        &&
+                        !ticketCart.Any(t =>
+                            t.ZitplaatsId == s.ZitplaatsId
+                        )
+                    )
+                    .Select(s => new
                     {
                         ZitplaatsId = s.ZitplaatsId,
                         DisplayName = "Stoel " + s.StoelNummer
-                    }),
+                    });
+
+                abonementStoelVM.StoelenLijst = new SelectList(
+                    vrijeStoelenGefilterd,
                     "ZitplaatsId",
                     "DisplayName",
                     abonementStoelVM.GeselecteerdeZitplaatsId

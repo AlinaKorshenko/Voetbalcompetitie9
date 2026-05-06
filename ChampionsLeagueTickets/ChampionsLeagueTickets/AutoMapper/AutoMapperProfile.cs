@@ -61,7 +61,9 @@ namespace ChampionsLeagueTickets.AutoMapper
                 .ForMember(dest => dest.AbonnementId, opt => opt.MapFrom(src => src.AbonnementId))
                 .ForMember(dest => dest.Zitplaats, opt => opt.MapFrom(src => src.Zitplaatsen))
                 .ForMember(dest => dest.SeizoenNaam, opt => opt.MapFrom(src => src.Seizoen.Naam))
-                .ForMember(dest => dest.StadionNaam, opt => opt.MapFrom(src => src.Stadion.Naam));
+                .ForMember(dest => dest.StadionNaam, opt => opt.MapFrom(src => src.Stadion.Naam))
+                .ForMember(dest => dest.StartDatum, opt => opt.MapFrom(src => src.Seizoen.StartDatum));
+
 
 
             CreateMap<Orderlijnen, OrderLijnVM>()

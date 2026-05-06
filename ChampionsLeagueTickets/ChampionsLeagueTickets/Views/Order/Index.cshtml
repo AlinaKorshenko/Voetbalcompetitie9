@@ -5,6 +5,7 @@
 }
 
 
+
 @foreach (var order in Model)
 {
     <div class="card mb-4">
@@ -18,11 +19,19 @@
 
             @foreach (var lijn in order.OrderLijnen)
             {
+                var vandaag = DateTime.Now.Date;
+                var beginDatum = DateTime.Now.Date;
+                var dagenTotMatch = 0.0;
+
+
                 <div class="border p-3 mb-3">
 
 
                     @if (lijn.Ticket != null)
                     {
+                        beginDatum = lijn.Ticket.Datum;
+                        dagenTotMatch = (beginDatum - vandaag).TotalDays;
+
                         <p><strong>Type:</strong> Ticket</p>
                         <p>@lijn.Ticket.ThuisTeam - @lijn.Ticket.BezoekTeam</p>
                         <p>@lijn.Ticket.Stadion</p>
@@ -33,10 +42,15 @@
 
                     @if (lijn.Abonement != null)
                     {
+
+                        beginDatum = lijn.Abonement.StartDatum.ToDateTime(TimeOnly.MinValue);
+                        dagenTotMatch = (beginDatum - vandaag).TotalDays;
+
                         <p><strong>Type:</strong> Abonnement</p>
                         <p>@lijn.Abonement.SeizoenNaam</p>
                         <p>@lijn.Abonement.StadionNaam</p>
                     }
+
 
                     <p><strong>Bedrag:</strong> € @lijn.bedrag</p>
 
@@ -46,9 +60,28 @@
                         <input type="hidden" name="orderId" value="@order.OrderId" />
                         <input type="hidden" name="orderLijnNummer" value="@lijn.orderLijnNummer" />
 
-                        <button type="submit" class="btn btn-danger btn-sm">
-                            Annuleren
-                        </button>
+
+
+                        @if (dagenTotMatch <= 0)
+                        {
+                            <button class="btn btn-secondary" disabled>
+                                Annulatie niet mogelijk
+                            </button>
+                        }
+                        else if (dagenTotMatch > 7)
+                        {
+                            <button class="btn btn-danger">
+                                Annuleren
+                            </button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-warning"
+                                    onclick="return confirm('Annulatie is niet meer gratis. Wil je doorgaan?');">
+                                Annuleren
+                            </button>
+                        }
+
                     </form>
 
                 </div>
