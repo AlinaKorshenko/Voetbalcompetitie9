@@ -40,12 +40,9 @@ namespace ChampionsLeagueTickets.Services
         {
             try
             {
-                var entityFound = await _orderlijnenDAO
-                    .FindByOrderIdAndOrderLijnNumber(entity.OrderId, entity.OrderLijnNummer);
-
-                if (entityFound == null)
+                if (entity == null)
                 {
-                    throw new Exception("Orderlijn niet gevonden");
+                    throw new ArgumentNullException("Het meegegeven Orderlijn mag niet null zijn.");
                 }
 
                 await _orderlijnenDAO.DeleteAsync(entity);
@@ -68,7 +65,14 @@ namespace ChampionsLeagueTickets.Services
 
         public async Task<Orderlijnen> FindByOrderIdAndOrderLijnNumber(string orderId, int orderLijnNumber)
         {
-            return await _orderlijnenDAO.FindByOrderIdAndOrderLijnNumber(orderId, orderLijnNumber);
+            try
+            {
+                return await _orderlijnenDAO.FindByOrderIdAndOrderLijnNumber(orderId, orderLijnNumber);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Het Orderlijn is niet gevonden voor de meegegeven orderId '{orderId}' en het meegegeven orderLijnNummer '{orderLijnNumber}'");
+            }
         }
     }
 }

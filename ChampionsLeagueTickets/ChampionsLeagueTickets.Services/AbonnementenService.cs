@@ -26,14 +26,14 @@ namespace ChampionsLeagueTickets.Services
             {
                 if (entity == null)
                 {
-                    throw new ArgumentNullException("Het meegegeven abonnement mag niet null zijn.");
+                    throw new ArgumentNullException("Het meegegeven Abonnement mag niet null zijn.");
                 }
 
                 await _abonnementenDAO.AddAsync(entity);
             }
             catch(Exception ex)
             {
-                throw new Exception("Het toevoegen van het abonnement is mislukt: ", ex);
+                throw new Exception("Het toevoegen van het Abonnement is mislukt: ", ex);
             }
         }
 
@@ -41,11 +41,16 @@ namespace ChampionsLeagueTickets.Services
         {
             try
             {
+                if (entity == null)
+                {
+                    throw new ArgumentNullException("Het meegegeven Abonnement mag niet null zijn.");
+                }
+
                 await _abonnementenDAO.DeleteAsync(entity);
             }
             catch(Exception ex)
             {
-                throw new Exception("Het verwijderen van het abonnement is mislukt: ", ex);
+                throw new Exception("Het verwijderen van het Abonnement is mislukt: ", ex);
             }
         }
 
