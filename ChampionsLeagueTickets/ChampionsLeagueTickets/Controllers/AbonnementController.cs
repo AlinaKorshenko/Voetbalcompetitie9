@@ -176,6 +176,17 @@ namespace ChampionsLeagueTickets.Controllers
             var cart = HttpContext.Session.GetObject<List<ShoppingCartAbonementItemKortVM>>("ShoppingCartAbonement")
                        ?? new List<ShoppingCartAbonementItemKortVM>();
 
+            bool alreadyExists = cart.Any(x =>
+                x.SeizoenId == SeizoenId &&
+                x.StadionId == StadionID &&
+                x.ZitplaatsId == ZitplaatsId);
+
+            if (alreadyExists)
+            {
+                TempData["Error"] = "Deze zitplaats zit al in je winkelmandje voor dit abonnement.";
+                return RedirectToAction("Index", "ShoppingCart");
+            }
+
             var zitplaats = await _zitplaatsenService.FindByIdAsync(ZitplaatsId);
 
             if (zitplaats == null)
