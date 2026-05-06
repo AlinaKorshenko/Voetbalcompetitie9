@@ -22,30 +22,14 @@ namespace ChampionsLeagueTickets.Repositories
 
         public async Task AddAsync(Ticket entity)
         {
-            try
-            {
-                await _dbContext.Tickets.AddAsync(entity);
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error in DAO: " + ex.Message);
-                throw;
-            }
+            await _dbContext.Tickets.AddAsync(entity);
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Ticket entity)
         {
-            try
-            {
-                _dbContext.Tickets.Remove(entity);
-                await _dbContext.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error in DAO: " + ex.Message);
-                throw;
-            }
+            _dbContext.Tickets.Remove(entity);
+            await _dbContext.SaveChangesAsync();
         }
 
         public Task<Ticket?> FindByIdAsync(string Id)
@@ -55,79 +39,49 @@ namespace ChampionsLeagueTickets.Repositories
 
         public async Task<string> GenerateNextTicketIdAsync()
         {
-            try
+            var lastTicket = await _dbContext.Tickets
+                .OrderByDescending(o => o.TicketId)
+                .FirstOrDefaultAsync();
+
+            if (lastTicket == null)
             {
-                var lastTicket = await _dbContext.Tickets
-                    .OrderByDescending(o => o.TicketId)
-                    .FirstOrDefaultAsync();
-
-                if (lastTicket == null)
-                    return "T0001";
-
-                var lastNumber = int.Parse(lastTicket.TicketId.Substring(1));
-                var newNumber = lastNumber + 1;
-
-                return $"T{newNumber.ToString("D4")}";
+                return "T0001";
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error in DAO: " + ex.Message);
-                throw;
-            }
+
+            var lastNumber = int.Parse(lastTicket.TicketId.Substring(1));
+            var newNumber = lastNumber + 1;
+
+            return $"T{newNumber.ToString("D4")}";
         }
 
         public async Task<int> GetAantalTicketsVoorMatchEnUser(string userId, string matchId)
         {
-            try
-            {
-                return await _dbContext.Orderlijnens
-                    .Where(ol =>
-                        ol.MatchId == matchId &&
-                        ol.TicketId != null &&
-                        ol.Order.UserId == userId)
-                    .CountAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error in DAO: " + ex.Message);
-                throw;
-            }
+            return await _dbContext.Orderlijnens
+                .Where(ol =>
+                    ol.MatchId == matchId &&
+                    ol.TicketId != null &&
+                    ol.Order.UserId == userId)
+                .CountAsync();
         }
 
         public async Task<IEnumerable<Ticket>?> GetAllAsync()
         {
-            try
-            {
-                return await _dbContext.Tickets
-                    .ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error in DAO: " + ex.Message);
-                throw;
-            }
+            return await _dbContext.Tickets
+                .ToListAsync();
         }
 
         public async Task<bool> HasTicketOnSameDay(string userId, string matchId, DateTime matchDatum)
         {
-            try
-            {
-                return await _dbContext.Orderlijnens
-                    .Include(ol => ol.Order)
-                    .Include(ol => ol.Ticket)
-                        .ThenInclude(t => t.Match)
-                    .Where(ol =>
-                        ol.Order.UserId == userId &&
-                        ol.TicketId != null &&
-                        ol.Ticket.MatchId != matchId)
-                    .AnyAsync(ol =>
-                        ol.Ticket.Match.DatumTijdStartMatch.Date == matchDatum.Date);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error in DAO: " + ex.Message);
-                throw;
-            }
+            return await _dbContext.Orderlijnens
+                .Include(ol => ol.Order)
+                .Include(ol => ol.Ticket)
+                    .ThenInclude(t => t.Match)
+                .Where(ol =>
+                    ol.Order.UserId == userId &&
+                    ol.TicketId != null &&
+                    ol.Ticket.MatchId != matchId)
+                .AnyAsync(ol =>
+                    ol.Ticket.Match.DatumTijdStartMatch.Date == matchDatum.Date);
         }
     }
 }
