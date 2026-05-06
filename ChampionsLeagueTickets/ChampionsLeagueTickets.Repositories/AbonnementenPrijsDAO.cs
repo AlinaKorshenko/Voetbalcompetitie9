@@ -52,6 +52,27 @@ namespace ChampionsLeagueTickets.Repositories
             }
         }
 
+        public async Task<IEnumerable<AbonnementenPrijs>?> GetAllPrijzenFromNextSeasons()
+        {
+            try
+            {
+                var vandaag = DateOnly.FromDateTime(DateTime.Now);
+
+                return await _dbContext.AbonnementenPrijs
+                    .Where(a => a.Seizoen.StartDatum > vandaag)
+                                        .Include(ap => ap.Stadion)
+                    .Include(ap => ap.Seizoen)
+                    .Include(ap => ap.VakNummerNavigation)
+                    .OrderByDescending(ap => ap.Seizoen.StartDatum)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error in DAO: " + ex.Message);
+                throw;
+            }
+        }
+
         public async Task<decimal> GetPriceBySeizoenIdAndStadionId(string seizoenID, string stadionId)
         {
             try
