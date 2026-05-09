@@ -24,8 +24,9 @@ namespace ChampionsLeagueTickets.Controllers
     {
         private const string CartKeyTicket = "ShoppingCartTicket";
         private const string CartKeyAbonement = "ShoppingCartAbonement";
+        private const int maxAantalTickets = 4;
+
         private readonly IMatchService _matchesService;
-        private readonly IService<VakType> _vakService;
         private readonly ITicketService _ticketService;
         private readonly IAbonnementService _abonnementService;
         private readonly IZitplaatsenService _zitplaatsenService;
@@ -37,10 +38,9 @@ namespace ChampionsLeagueTickets.Controllers
         private readonly IOrderLijnenService _orderlijnenService;
         private readonly IAppEmailSender _appEmailSender;
         private readonly IPdfService _pdfService;
-        private const int maxAantalTickets = 4;
         private readonly IMapper _mapper;
 
-        public ShoppingCartController(IZitplaatsenService zitplaatsenService, IMatchService matchesService, IService<VakType> vakService, ITicketService ticketService, IAbonnementService abonnementService, IZitplaatsenService zitplatsenService, ITicketPrijsService ticketPrijsService, IService<Stadion> stadionService, IAbonementenPrijsService abonementenPrijsService, ISeizoenenService seizoenenService, IOrderService orderService, IOrderLijnenService orderlijnenService, IAppEmailSender appEmailSender, IPdfService pdfService, IMapper mapper)
+        public ShoppingCartController(IZitplaatsenService zitplaatsenService, IMatchService matchesService, ITicketService ticketService, IAbonnementService abonnementService, IZitplaatsenService zitplatsenService, ITicketPrijsService ticketPrijsService, IService<Stadion> stadionService, IAbonementenPrijsService abonementenPrijsService, ISeizoenenService seizoenenService, IOrderService orderService, IOrderLijnenService orderlijnenService, IAppEmailSender appEmailSender, IPdfService pdfService, IMapper mapper)
         {
             _appEmailSender = appEmailSender;
             _orderlijnenService = orderlijnenService;
@@ -48,14 +48,13 @@ namespace ChampionsLeagueTickets.Controllers
             _abonnementService = abonnementService;
             _ticketService = ticketService;
             _matchesService = matchesService;
-            _vakService = vakService;
             _zitplaatsenService = zitplaatsenService;
             _ticketPrijsService = ticketPrijsService;
             _stadionService = stadionService;
             _abonementenPrijsService = abonementenPrijsService;
             _seizoenenService = seizoenenService;
-            _mapper = mapper;
             _pdfService = pdfService;
+            _mapper = mapper;
         }
 
         [Authorize]
@@ -121,7 +120,6 @@ namespace ChampionsLeagueTickets.Controllers
                         });
                     }
                 }
-
             }
 
             var cartAbonementen = HttpContext.Session

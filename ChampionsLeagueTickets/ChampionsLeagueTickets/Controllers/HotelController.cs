@@ -1,5 +1,4 @@
 ﻿using ChampionsLeagueTickets.Domain.EntitiesDB;
-using ChampionsLeagueTickets.Repositories.Interfaces;
 using ChampionsLeagueTickets.Services.Interfaces;
 using ChampionsLeagueTickets.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -9,18 +8,19 @@ namespace ChampionsLeagueTickets.Controllers
 {
     public class HotelController : Controller
     {
-        private readonly IDAO<Stadion> _stadionDAO;
+        private readonly IService<Stadion> _stadionService;
         private readonly IHotelService _hotelService;
 
-        public HotelController(IDAO<Stadion> stadionDAO, IHotelService hotelService)
+        public HotelController(IService<Stadion> stadionService, IHotelService hotelService)
         {
-            _stadionDAO = stadionDAO;
+            _stadionService = stadionService;
             _hotelService = hotelService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var stadiums = await _stadionDAO.GetAllAsync();
+            var stadiums = await _stadionService.GetAllAsync();
 
             var vm = new HotelVM
             {
@@ -33,7 +33,7 @@ namespace ChampionsLeagueTickets.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(string selectedStadiumId)
         {
-            var stadiums = await _stadionDAO.GetAllAsync();
+            var stadiums = await _stadionService.GetAllAsync();
             var stadiumList = stadiums?.ToList() ?? [];
             var selected = stadiumList.FirstOrDefault(s => s.StadionId == selectedStadiumId);
 

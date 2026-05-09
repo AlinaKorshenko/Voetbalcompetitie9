@@ -31,6 +31,7 @@ namespace ChampionsLeagueTickets.Controllers
             _stadionService = stadionService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index(string? seizoenId = null)
         {
             var vandaag = DateOnly.FromDateTime(DateTime.Now);

@@ -10,18 +10,18 @@ namespace ChampionsLeagueTickets.Controllers
     public class StadionController : Controller
     {
 
-        private readonly IService<Team> _setviceTeam;
+        private readonly IService<Team> _teamService;
         private readonly IZitplaatsenService _zitplaatsenService;
 
-        public StadionController(IService<Team> setviceTeam, IZitplaatsenService zitplaatsenService)
+        public StadionController(IService<Team> teamService, IZitplaatsenService zitplaatsenService)
         {
-            _setviceTeam = setviceTeam;
+            _teamService = teamService;
             _zitplaatsenService = zitplaatsenService;
         }
 
         public async Task<IActionResult> Index()
         {
-            var teams = await _setviceTeam.GetAllAsync();
+            var teams = await _teamService.GetAllAsync();
             var zitplaatsenPerStadion = await _zitplaatsenService.GetAllGroupedByStadionAsync();
 
             var model = teams.Select(team =>
