@@ -299,40 +299,49 @@ namespace ChampionsLeagueTickets.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var userEmail = User.Identity.Name;
 
-            //order maken
             string orderId = await _orderService.GenerateNextOrderIdAsync();
 
-            var order = new Order
+            await _orderService.AddAsync(new Order
             {
                 OrderId = orderId,
                 UserId = userId,
                 DatumTijdOrder = DateTime.Now,
                 Status = "Bevestigd"
-            };
-
-            await _orderService.AddAsync(order);
-
-            //orderlijnen
-            int lijn = 1;
-            decimal totaal = 0;
+            });
 
             var ticketLines = new List<string>();
             var abonnementLines = new List<string>();
-
             var attachments = new List<(byte[] File, string FileName)>();
+            int lijn = 1;
+            decimal totaal = 0;
 
-            //tickets
-            foreach (var t in cart.Tickets ?? new List<ShoppingCartTicketVM>())
+            (lijn, totaal) = await VerwerkTickets(cart.Tickets, orderId, lijn, totaal, ticketLines, attachments);
+            (lijn, totaal) = await VerwerkAbonnementen(cart.Abonementen, orderId, userId, lijn, totaal, abonnementLines, attachments);
+
+            await _appEmailSender.SendOrderConfirmationAsync(
+                userEmail, DateTime.Now, ticketLines, abonnementLines, totaal, attachments);
+
+            HttpContext.Session.Remove("ShoppingCartTicket");
+            HttpContext.Session.Remove("ShoppingCartAbonement");
+
+            return RedirectToAction("OrderSucces");
+        }
+
+        private async Task<(int lijn, decimal totaal)> VerwerkTickets(
+            List<ShoppingCartTicketVM> tickets,
+            string orderId,
+            int lijn,
+            decimal totaal,
+            List<string> ticketLines,
+            List<(byte[] File, string FileName)> attachments)
+        {
+            foreach (var t in tickets ?? new List<ShoppingCartTicketVM>())
             {
                 ticketLines.Add($"{t.Aantal}x {t.ThuisTeam} - {t.UitTeam}");
-
                 totaal += t.Prijs * t.Aantal;
 
                 string ticketId = await _ticketService.GenerateNextTicketIdAsync();
-
                 Zitplaatsen zitplaats = await _zitplaatsenService.FindByIdAsync(t.ZitplaatsId);
-                string stadionId = zitplaats.StadionId;
-
                 Match match = await _matchesService.FindByIdAsync(t.MatchId);
 
                 await _ticketService.AddAsync(new Ticket
@@ -340,50 +349,56 @@ namespace ChampionsLeagueTickets.Controllers
                     TicketId = ticketId,
                     MatchId = t.MatchId,
                     ZitplaatsId = t.ZitplaatsId,
-                    StadionId = stadionId,
+                    StadionId = zitplaats.StadionId,
                     Prijs = t.Prijs
                 });
 
                 await _orderlijnenService.AddAsync(new Orderlijnen
                 {
-                    OrderId = order.OrderId,
+                    OrderId = orderId,
                     OrderLijnNummer = lijn++,
                     TicketId = ticketId,
                     MatchId = t.MatchId,
                     Bedrag = t.Prijs
                 });
 
-                var pdf = _pdfService.GenerateTicketPdf(
-                    t.Prijs,
-                    t.ThuisTeam,
-                    t.UitTeam,
-                    match.DatumTijdStartMatch,
-                    zitplaats.VakNummerNavigation.Omschrijving,
-                    zitplaats.RijNummer,
-                    zitplaats.StoelNummer
-                );
-
-                attachments.Add((pdf, $"ticket_{match.ThuisTeam.Naam}X{match.BezoekendTeam.Naam}.pdf"));
+                attachments.Add((
+                    _pdfService.GenerateTicketPdf(
+                        t.Prijs,
+                        t.ThuisTeam,
+                        t.UitTeam,
+                        match.DatumTijdStartMatch,
+                        zitplaats.VakNummerNavigation.Omschrijving,
+                        zitplaats.RijNummer,
+                        zitplaats.StoelNummer),
+                    $"ticket_{match.ThuisTeam.Naam}X{match.BezoekendTeam.Naam}.pdf"
+                ));
             }
 
-            //abonnementen
-            foreach (var a in cart.Abonementen ?? new List<AbonementOverzichtVM>())
+            return (lijn, totaal);
+        }
+
+        private async Task<(int lijn, decimal totaal)> VerwerkAbonnementen(
+            List<AbonementOverzichtVM> abonnementen,
+            string orderId,
+            string userId,
+            int lijn,
+            decimal totaal,
+            List<string> abonnementLines,
+            List<(byte[] File, string FileName)> attachments)
+        {
+            foreach (var a in abonnementen ?? new List<AbonementOverzichtVM>())
             {
                 abonnementLines.Add($"{a.StadionNaam} - {a.SeizoenNaam}");
-
                 totaal += a.Prijs;
 
-                string abonnementenId = await _abonnementService.GenerateNextAbonnementenIdAsync();
-
+                string abonnementId = await _abonnementService.GenerateNextAbonnementenIdAsync();
                 string stadionId = a.zitplaats.StadionId;
-
                 Seizoenen seizoen = await _seizoenenService.FindByIdAsync(a.SeizoenId);
-                DateOnly startDatum = seizoen.StartDatum;
-                DateOnly eindDatum = seizoen.EindDatum;
 
                 await _abonnementService.AddAsync(new Abonnementen
                 {
-                    AbonnementId = abonnementenId,
+                    AbonnementId = abonnementId,
                     StadionId = stadionId,
                     UserId = userId,
                     ZitplaatsId = a.zitplaats.ZitplaatsId,
@@ -393,41 +408,27 @@ namespace ChampionsLeagueTickets.Controllers
 
                 await _orderlijnenService.AddAsync(new Orderlijnen
                 {
-                    OrderId = order.OrderId,
+                    OrderId = orderId,
                     OrderLijnNummer = lijn++,
-                    AbonnementId = abonnementenId,
+                    AbonnementId = abonnementId,
                     StadionId = stadionId,
                     Bedrag = a.Prijs
                 });
 
-                var pdf = _pdfService.GenerateAbonnementPdf(
-                    a.zitplaats.VakOmschrijving,
-                    a.zitplaats.RijNummer,
-                    a.zitplaats.StoelNummer,
-                    startDatum,
-                    eindDatum,
-                    seizoen.Naam,
-                    a.StadionNaam
-                );
-
-                attachments.Add((pdf, $"abonnement_{a.StadionNaam}.pdf"));
+                attachments.Add((
+                    _pdfService.GenerateAbonnementPdf(
+                        a.zitplaats.VakOmschrijving,
+                        a.zitplaats.RijNummer,
+                        a.zitplaats.StoelNummer,
+                        seizoen.StartDatum,
+                        seizoen.EindDatum,
+                        seizoen.Naam,
+                        a.StadionNaam),
+                    $"abonnement_{a.StadionNaam}.pdf"
+                ));
             }
 
-            //email
-            await _appEmailSender.SendOrderConfirmationAsync(
-                userEmail,
-                DateTime.Now,
-                ticketLines,
-                abonnementLines,
-                totaal,
-                attachments
-            );
-
-            //cart leegmaken
-            HttpContext.Session.Remove("ShoppingCartTicket");
-            HttpContext.Session.Remove("ShoppingCartAbonement");
-
-            return RedirectToAction("OrderSucces");
+            return (lijn, totaal);
         }
     }
 }

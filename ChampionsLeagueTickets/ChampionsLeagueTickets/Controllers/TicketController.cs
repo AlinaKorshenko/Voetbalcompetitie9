@@ -15,6 +15,7 @@ namespace Voetbalcompetitie9.Controllers
 {
     public class TicketController : Controller
     {
+        private const int maxAantalTicketsVoorZelfdeMatch = 4;
 
         private readonly IMatchService _matchesService;
         private readonly IService<VakType> _vakService;
@@ -29,6 +30,14 @@ namespace Voetbalcompetitie9.Controllers
             _vakService = vakService;
             _zitplatsenService = zitplaatsenService;
             _ticketPrijsService = ticketPrijsService;
+        }
+
+        private bool IsTicketBeschikbaar(DateTime matchDatum)
+        {
+            var now = DateTime.Now;
+            var oneMonthBeforeMatch = matchDatum.AddMonths(-1);
+
+            return now >= oneMonthBeforeMatch && now < matchDatum;
         }
 
         public async Task<IActionResult> Matches(string club)
@@ -148,17 +157,17 @@ namespace Voetbalcompetitie9.Controllers
 
                 var vrijeStoelen = stoelen
                      .Where(s =>
-            !s.IsBezet &&
+                        !s.IsBezet &&
 
-            !ticketCart.Any(t =>
-                t.MatchId == ticketVM.MatchID &&
-                t.ZitplaatsId == s.ZitplaatsId
-            ) &&
+                        !ticketCart.Any(t =>
+                        t.MatchId == ticketVM.MatchID &&
+                        t.ZitplaatsId == s.ZitplaatsId
+                        ) &&
 
-            !abonnementCart.Any(a =>
-                a.ZitplaatsId == s.ZitplaatsId
-            )
-        )
+                        !abonnementCart.Any(a =>
+                            a.ZitplaatsId == s.ZitplaatsId
+                        )
+                    )
                     .Select(s => new
                     {
                         s.ZitplaatsId,
@@ -261,9 +270,9 @@ namespace Voetbalcompetitie9.Controllers
                     .Where(x => x.MatchId == MatchID)
                     .Sum(x => x.Aantal);
 
-                if (totaalVoorMatch >= 4)
+                if (totaalVoorMatch >= maxAantalTicketsVoorZelfdeMatch)
                 {
-                    TempData["CartMessage"] = "Je kan maximum 4 tickets per match toevoegen.";
+                    TempData["CartMessage"] = $"Je kan maximum {maxAantalTicketsVoorZelfdeMatch} tickets per match toevoegen.";
                     return RedirectToAction("Introductie", "Info");
                 }
 
@@ -275,9 +284,9 @@ namespace Voetbalcompetitie9.Controllers
                     .Where(x => x.MatchId == MatchID)
                     .Sum(x => x.Aantal);
 
-                if (totaalVoorMatch >= 4)
+                if (totaalVoorMatch >= maxAantalTicketsVoorZelfdeMatch)
                 {
-                    TempData["CartMessage"] = "Je kan maximum 4 tickets per match toevoegen.";
+                    TempData["CartMessage"] = $"Je kan maximum {maxAantalTicketsVoorZelfdeMatch} tickets per match toevoegen.";
                     return RedirectToAction("Introductie", "Info");
                 }
 
@@ -293,14 +302,6 @@ namespace Voetbalcompetitie9.Controllers
             HttpContext.Session.SetObject("ShoppingCartTicket", cart);
 
             return RedirectToAction("Index", "ShoppingCart");
-        }
-
-        private bool IsTicketBeschikbaar(DateTime matchDatum)
-        {
-            var now = DateTime.Now;
-            var oneMonthBeforeMatch = matchDatum.AddMonths(-1);
-
-            return now >= oneMonthBeforeMatch && now < matchDatum;
         }
     }
 }
