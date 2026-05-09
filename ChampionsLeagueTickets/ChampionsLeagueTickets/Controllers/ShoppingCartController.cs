@@ -99,7 +99,7 @@ namespace ChampionsLeagueTickets.Controllers
                     }
 
                     var prijs = await _ticketPrijsService.GetTicketPrijsByMatchAndSectionAsync(item.MatchId, zitplaats.VakNummer);
-                    var vak = zitplaats.VakNummerNavigation.Omschrijving + " (Ring " + zitplaats.VakNummerNavigation.Ring + ")";
+                    var vak = zitplaats.VakNummerNavigation.Omschrijving;
 
 
                     if (zitplaats != null && match != null)
