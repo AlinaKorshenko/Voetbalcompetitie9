@@ -28,6 +28,11 @@
                         <button type="submit" class="dropdown-item">Log uit</button>
                     </form>
                 </li>
+                <li>
+                    <form asp-area="Identity" asp-page="/Account/DeletePersonalData" method="get">
+                        <button type="submit" class="dropdown-item delete-acc-button">Verwijder account</button>
+                    </form>
+                </li>
             </ul>
         </li>
     }

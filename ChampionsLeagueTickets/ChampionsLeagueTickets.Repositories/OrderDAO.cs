@@ -80,8 +80,14 @@ namespace ChampionsLeagueTickets.Repositories
 
         public async Task DeleteAsync(Order entity)
         {
-            _dbContext.Orders.Remove(entity);
-            await _dbContext.SaveChangesAsync();
+            var tracked = await _dbContext.Orders
+                .FirstOrDefaultAsync(o => o.OrderId == entity.OrderId);
+
+            if (tracked != null)
+            {
+                _dbContext.Orders.Remove(tracked);
+                await _dbContext.SaveChangesAsync();
+            }
         }
     }
 }

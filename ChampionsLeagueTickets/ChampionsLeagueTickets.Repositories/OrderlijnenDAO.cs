@@ -61,14 +61,10 @@ namespace ChampionsLeagueTickets.Repositories
         public Task<Orderlijnen> FindByOrderIdAndOrderLijnNumber(string orderId, int orderLijnNumber)
         {
             var orderlijnen = _dbContext.Orderlijnens
+                .AsNoTracking()
                 .Include(o => o.Ticket)
                 .Include(o => o.Abonnementen)
                     .FirstOrDefaultAsync(l => l.OrderId == orderId && l.OrderLijnNummer == orderLijnNumber);
-
-            if (orderlijnen == null)
-            {
-                throw new Exception("Orderlijnen not found for the given OrderId.");
-            }
 
             return orderlijnen;
         }

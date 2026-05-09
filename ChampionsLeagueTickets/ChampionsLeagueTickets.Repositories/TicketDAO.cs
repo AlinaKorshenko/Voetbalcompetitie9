@@ -28,8 +28,14 @@ namespace ChampionsLeagueTickets.Repositories
 
         public async Task DeleteAsync(Ticket entity)
         {
-            _dbContext.Tickets.Remove(entity);
-            await _dbContext.SaveChangesAsync();
+            var tracked = await _dbContext.Tickets
+                .FirstOrDefaultAsync(t => t.TicketId == entity.TicketId
+                                       && t.MatchId == entity.MatchId);
+            if (tracked != null)
+            {
+                _dbContext.Tickets.Remove(tracked);
+                await _dbContext.SaveChangesAsync();
+            }
         }
 
         public Task<Ticket?> FindByIdAsync(string Id)

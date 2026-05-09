@@ -21,6 +21,14 @@
     display: block;
 }
 
+.delete-acc-button {
+    color: red;
+}
+
+.delete-acc-button:hover {
+    color: red;
+}
+
 @media (max-width: 576px) {
     .account-dropdown .dropdown-menu {
         right: auto;

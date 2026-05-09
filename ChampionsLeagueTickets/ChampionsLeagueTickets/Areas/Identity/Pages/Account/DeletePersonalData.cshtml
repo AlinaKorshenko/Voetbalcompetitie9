@@ -1,0 +1,49 @@
+﻿@page
+@model DeletePersonalDataModel
+@{
+    ViewData["Title"] = "Verwijder account";
+}
+
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+
+        <h3 class="text-danger">@ViewData["Title"]</h3>
+
+        <div class="alert alert-warning" role="alert">
+            <p>
+                <strong>Uw account verwijderen is permanent.</strong>
+            </p>
+            <p>
+                All uw tickets, abonnementen en orders zullen permanent worden verwijderd.
+                Deze actie <strong>kan niet</strong> ongedaan worden.
+            </p>
+        </div>
+
+        <div>
+            <form id="delete-user" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+                @if (Model.RequirePassword)
+                {
+                    <div class="form-floating mb-3">
+                        <input asp-for="Input.Password"
+                               class="form-control"
+                               autocomplete="current-password"
+                               aria-required="true"
+                               placeholder="wachtwoord" />
+                        <label asp-for="Input.Password" class="form-label">Wachtwoord</label>
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    </div>
+                }
+
+                <button class="w-100 btn btn-lg btn-danger" type="submit">
+                    Verwijder mijn account.
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
