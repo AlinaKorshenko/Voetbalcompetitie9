@@ -17,7 +17,5 @@ namespace ChampionsLeagueTickets.Services.Interfaces
         Task<List<(Zitplaatsen Zitplaats, bool IsBezet)>> GetSeatsForMatchSectionAndRowAsync(string matchId, string vakNummer, string rijNummer);
 
         Task<List<Zitplaatsen>> GetFreeSeatsForSeasonSectionAndRowAsync(string stadionId, string seizoenId, string vakNummer, string rijNummer);
-
-        Task<List<Zitplaatsen>> GetByStadionIdAsync(string stadionId);
     }
 }

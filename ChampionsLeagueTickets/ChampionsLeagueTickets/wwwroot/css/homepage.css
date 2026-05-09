@@ -44,6 +44,10 @@
     max-width: 560px;
 }
 
+.ucl {
+    z-index: 0;
+}
+
 .ucl-emblem {
     display: flex;
     align-items: center;

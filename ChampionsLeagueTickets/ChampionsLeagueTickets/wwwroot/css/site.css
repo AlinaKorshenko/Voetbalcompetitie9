@@ -152,6 +152,7 @@ body {
 .football-header {
     color: #0d0e1a;
     font-size: 1.2em;
+    z-index: 2000;
 }
 
 .football-footer {
@@ -202,6 +203,10 @@ thead {
 
 .aboutUs-title {
     margin: 0;
+}
+
+.lang-switch {
+    z-index: 1;
 }
 
 .lang-switch select {
