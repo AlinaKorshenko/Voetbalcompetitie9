@@ -10,7 +10,7 @@
 .account-dropdown .dropdown-menu {
     display: none;
     position: absolute;
-    right: 0;
+    left: 0;
     top: 100%;
     min-width: 180px;
     border-radius: 10px;

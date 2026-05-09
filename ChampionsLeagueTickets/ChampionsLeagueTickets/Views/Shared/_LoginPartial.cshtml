@@ -12,12 +12,9 @@
             <a class="nav-link account-icon" href="#" id="accountDropdown">
                 <i class="bi bi-person-circle"></i>
             </a>
-
             <ul class="dropdown-menu dropdown-menu-end">
                 <li>
-                    <a class="dropdown-item" asp-area="" asp-controller="Order" asp-action="Index">
-                        Mijn orders
-                    </a>
+                    <a class="dropdown-item" asp-controller="Order" asp-action="Index">Mijn orders</a>
                 </li>
                 <li>
                     <form asp-area="Identity" asp-page="/Account/ForgotPassword" method="post">
@@ -51,5 +48,4 @@
             </a>
         </li>
     }
-
 </ul>
