@@ -1,4 +1,17 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿document.addEventListener('DOMContentLoaded', function () {
+    const accountIcon = document.querySelector('.account-icon');
+    const dropdownMenu = document.querySelector('.account-dropdown .dropdown-menu');
 
-// Write your JavaScript code.
+    if (accountIcon && dropdownMenu) {
+        accountIcon.addEventListener('click', function (e) {
+            e.preventDefault();
+            dropdownMenu.classList.toggle('show');
+        });
+
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('.account-dropdown')) {
+                dropdownMenu.classList.remove('show');
+            }
+        });
+    }
+});

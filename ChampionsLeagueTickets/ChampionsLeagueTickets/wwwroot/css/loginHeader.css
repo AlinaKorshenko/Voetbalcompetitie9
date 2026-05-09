@@ -10,13 +10,20 @@
 .account-dropdown .dropdown-menu {
     display: none;
     position: absolute;
-    left: 0;
+    right: 0;
     top: 100%;
     min-width: 180px;
     border-radius: 10px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
 
 .account-dropdown:hover .dropdown-menu {
     display: block;
+}
+
+@media (max-width: 576px) {
+    .account-dropdown .dropdown-menu {
+        right: auto;
+        left: 0;
+    }
 }

@@ -1,18 +1,15 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
-
 <link href="~/css/loginheader.css" rel="stylesheet" />
-
 <ul class="navbar-nav ms-auto">
-
     @if (SignInManager.IsSignedIn(User))
     {
         <li class="nav-item dropdown account-dropdown">
             <a class="nav-link account-icon" href="#" id="accountDropdown">
                 <i class="bi bi-person-circle"></i>
             </a>
-            <ul class="dropdown-menu dropdown-menu-end">
+            <ul class="dropdown-menu">
                 <li>
                     <a class="dropdown-item" asp-controller="Order" asp-action="Index">Mijn orders</a>
                 </li>
@@ -41,7 +38,6 @@
                 Registreer
             </a>
         </li>
-
         <li class="nav-item">
             <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">
                 Log in

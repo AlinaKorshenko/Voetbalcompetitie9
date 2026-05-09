@@ -2,15 +2,14 @@
 @using Microsoft.AspNetCore.Localization
 @using Microsoft.Extensions.Localization
 @inject IStringLocalizer<SharedResource> Localizer
-
 @{
     ViewData["Title"] = "AboutUs";
-
     var cultureFeature = Context.Features.Get<IRequestCultureFeature>();
     var currentCulture = cultureFeature?.RequestCulture.Culture.Name ?? "nl";
 }
 
-<main class="aboutUs">
+<div class="aboutUs-header">
+    <h1 class="aboutUs-title">@Localizer["AboutUs"]</h1>
     <div class="lang-switch">
         <select onchange="setCulture(this.value)">
             <option value="nl" selected="@(currentCulture == "nl")">NL</option>
@@ -18,17 +17,16 @@
             <option value="en" selected="@(currentCulture == "en")">EN</option>
         </select>
     </div>
+</div>
 
-    <h1>@Localizer["AboutUs"]</h1>
-    <div class="blockIntro">
+<div class="blockIntro">
     <div class="textBlockIntro">
-            <p>@Localizer["AboutUsDescription"]</p>
+        <p>@Localizer["AboutUsDescription"]</p>
     </div>
     <div class="imgBlockIntro">
-    <img  src="~/images/developers.png" alt="developers" />
+        <img src="~/images/developers.png" alt="developers" />
     </div>
-    </div>
-</main>
+</div>
 
 <script>
     function setCulture(culture) {

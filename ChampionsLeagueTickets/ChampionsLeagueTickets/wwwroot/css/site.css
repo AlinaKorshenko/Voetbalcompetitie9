@@ -193,13 +193,63 @@ thead {
     text-align: center;
 }
 
-.aboutUs {
-    position: relative;
+.aboutUs-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
 }
 
-    .aboutUs .lang-switch {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        z-index: 10;
+.aboutUs-title {
+    margin: 0;
+}
+
+.lang-switch select {
+    background-color: #1a1b2e;
+    color: white;
+    border: 1px solid #c9aa71;
+    border-radius: 6px;
+    padding: 4px 8px;
+    cursor: pointer;
+}
+
+    .lang-switch select:focus {
+        outline: none;
+        border-color: #d8c28f;
     }
+
+.blockIntro {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 40px;
+}
+
+.textBlockIntro {
+    width: 50%;
+    font-size: 1.2rem;
+    line-height: 1.7;
+}
+
+.imgBlockIntro {
+    width: 45%;
+}
+
+    .imgBlockIntro img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 12px;
+    }
+
+@media (max-width: 767px) {
+    .blockIntro {
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .textBlockIntro,
+    .imgBlockIntro {
+        width: 100%;
+    }
+}
