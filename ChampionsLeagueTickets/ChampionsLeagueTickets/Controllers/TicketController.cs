@@ -75,7 +75,7 @@ namespace Voetbalcompetitie9.Controllers
                 .Select(v => new
                 {
                     v.VakNummer,
-                    DisplayName = "Ring " + v.Ring + " ( " + v.Omschrijving + " )"
+                    DisplayName = v.Omschrijving
                 });
 
             TicketStoelVM ticketVM = new TicketStoelVM()
@@ -111,7 +111,7 @@ namespace Voetbalcompetitie9.Controllers
              .Select(v => new
              {
                  v.VakNummer,
-                 DisplayName = "Ring " + v.Ring + " ( " + v.Omschrijving + " )"
+                 DisplayName = v.Omschrijving
              });
 
             ticketVM.VakenLijst = new SelectList(vakTypes, "VakNummer", "DisplayName");
