@@ -30,6 +30,11 @@ namespace ChampionsLeagueTickets.Controllers
             _vakService = vakCervice;
             _stadionService = stadionService;
         }
+        private bool IsAbonnementBeschikbaar(DateOnly startDatum)
+        {
+            var vandaag = DateOnly.FromDateTime(DateTime.Now);
+            return vandaag < startDatum;
+        }
 
         [HttpGet]
         public async Task<IActionResult> Index(string? seizoenId = null)
@@ -71,6 +76,14 @@ namespace ChampionsLeagueTickets.Controllers
                 return BadRequest();
             }
 
+            var seizoen = await _seizoenenService.FindByIdAsync(seizoenId);
+
+            if (seizoen == null || !IsAbonnementBeschikbaar(seizoen.StartDatum))
+            {
+                TempData["Error"] = "Abonnementen voor dit seizoen zijn niet meer beschikbaar.";
+                return RedirectToAction("Index");
+            }
+
             var vakken = await _vakService.GetAllAsync();
 
             var vak = vakken.FirstOrDefault(v => v.VakNummer == vakNummer)
@@ -95,7 +108,17 @@ namespace ChampionsLeagueTickets.Controllers
         public async Task<IActionResult> ChooseSeats(AbonementStoelVM model)
         {
             if (!ModelState.IsValid)
+            {
                 return View(model);
+            }
+
+            var seizoen = await _seizoenenService.FindByIdAsync(model.SeizoenId);
+
+            if (seizoen == null || !IsAbonnementBeschikbaar(seizoen.StartDatum))
+            {
+                TempData["Error"] = "Abonnementen voor dit seizoen zijn niet meer beschikbaar.";
+                return RedirectToAction("Index");
+            }
 
             var vakken = await _vakService.GetAllAsync();
 
@@ -163,6 +186,12 @@ namespace ChampionsLeagueTickets.Controllers
             var zitplaats = await _zitplaatsenService.FindByIdAsync(stoelVm.GeselecteerdeZitplaatsId);
             var seizoen = await _seizoenenService.FindByIdAsync(stoelVm.SeizoenId);
 
+            if (seizoen == null || !IsAbonnementBeschikbaar(seizoen.StartDatum))
+            {
+                TempData["Error"] = "Abonnementen voor dit seizoen zijn niet meer beschikbaar.";
+                return RedirectToAction("Index");
+            }
+
             var zitplaatsVM = _mapper.Map<ZitplaatsVM>(zitplaats);
 
             if (zitplaats == null)
@@ -192,6 +221,14 @@ namespace ChampionsLeagueTickets.Controllers
             if (string.IsNullOrEmpty(SeizoenId) || string.IsNullOrEmpty(StadionID) || string.IsNullOrEmpty(ZitplaatsId))
             {
                 return BadRequest();
+            }
+
+            var seizoen = await _seizoenenService.FindByIdAsync(SeizoenId);
+
+            if (seizoen == null || !IsAbonnementBeschikbaar(seizoen.StartDatum))
+            {
+                TempData["Error"] = "Abonnementen voor dit seizoen zijn niet meer beschikbaar.";
+                return RedirectToAction("Index");
             }
 
             var cart = HttpContext.Session.GetObject<List<ShoppingCartAbonementItemKortVM>>("ShoppingCartAbonement")

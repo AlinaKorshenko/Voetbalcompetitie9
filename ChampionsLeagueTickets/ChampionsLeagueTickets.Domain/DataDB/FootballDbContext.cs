@@ -63,7 +63,7 @@ public partial class FootballDbContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("abonnementID");
             entity.Property(e => e.StadionId)
-                .HasMaxLength(5)
+                .HasMaxLength(3)
                 .IsUnicode(false)
                 .HasColumnName("stadionID");
             entity.Property(e => e.SeizoenId)
@@ -105,7 +105,7 @@ public partial class FootballDbContext : DbContext
             entity.HasKey(e => new { e.StadionId, e.SeizoenId, e.VakNummer }).HasName("PK__Abonneme__611BC6D454CBAA73");
 
             entity.Property(e => e.StadionId)
-                .HasMaxLength(5)
+                .HasMaxLength(3)
                 .IsUnicode(false)
                 .HasColumnName("stadionID");
             entity.Property(e => e.SeizoenId)
@@ -113,7 +113,7 @@ public partial class FootballDbContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("seizoenID");
             entity.Property(e => e.VakNummer)
-                .HasMaxLength(5)
+                .HasMaxLength(3)
                 .IsUnicode(false)
                 .HasColumnName("vakNummer");
             entity.Property(e => e.Prijs)
@@ -176,12 +176,14 @@ public partial class FootballDbContext : DbContext
         {
             entity.HasKey(e => e.MatchId).HasName("PK__Matches__02C72A2D6D040317");
 
+            entity.ToTable(tb => tb.HasTrigger("trg_GeenDubbeleMatch"));
+
             entity.Property(e => e.MatchId)
-                .HasMaxLength(5)
+                .HasMaxLength(3)
                 .IsUnicode(false)
                 .HasColumnName("matchID");
             entity.Property(e => e.BezoekendTeamId)
-                .HasMaxLength(5)
+                .HasMaxLength(3)
                 .IsUnicode(false)
                 .HasColumnName("bezoekendTeamID");
             entity.Property(e => e.DatumTijdStartMatch)
@@ -192,7 +194,7 @@ public partial class FootballDbContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("seizoenID");
             entity.Property(e => e.ThuisTeamId)
-                .HasMaxLength(5)
+                .HasMaxLength(3)
                 .IsUnicode(false)
                 .HasColumnName("thuisTeamID");
 
@@ -256,11 +258,11 @@ public partial class FootballDbContext : DbContext
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("bedrag");
             entity.Property(e => e.MatchId)
-                .HasMaxLength(5)
+                .HasMaxLength(3)
                 .IsUnicode(false)
                 .HasColumnName("matchID");
             entity.Property(e => e.StadionId)
-                .HasMaxLength(5)
+                .HasMaxLength(3)
                 .IsUnicode(false)
                 .HasColumnName("stadionID");
             entity.Property(e => e.TicketId)
@@ -305,7 +307,7 @@ public partial class FootballDbContext : DbContext
             entity.HasKey(e => e.StadionId).HasName("PK__Stadions__56AECC45BAFDAEA9");
 
             entity.Property(e => e.StadionId)
-                .HasMaxLength(5)
+                .HasMaxLength(3)
                 .IsUnicode(false)
                 .HasColumnName("stadionID");
             entity.Property(e => e.Adres)
@@ -335,7 +337,7 @@ public partial class FootballDbContext : DbContext
             entity.HasKey(e => e.TeamId).HasName("PK__Teams__5ED7534A07296CA1");
 
             entity.Property(e => e.TeamId)
-                .HasMaxLength(5)
+                .HasMaxLength(3)
                 .IsUnicode(false)
                 .HasColumnName("teamID");
             entity.Property(e => e.Naam)
@@ -343,7 +345,7 @@ public partial class FootballDbContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("naam");
             entity.Property(e => e.StadionId)
-                .HasMaxLength(5)
+                .HasMaxLength(3)
                 .IsUnicode(false)
                 .HasColumnName("stadionID");
 
@@ -362,14 +364,14 @@ public partial class FootballDbContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("ticketID");
             entity.Property(e => e.MatchId)
-                .HasMaxLength(5)
+                .HasMaxLength(3)
                 .IsUnicode(false)
                 .HasColumnName("matchID");
             entity.Property(e => e.Prijs)
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("prijs");
             entity.Property(e => e.StadionId)
-                .HasMaxLength(5)
+                .HasMaxLength(3)
                 .IsUnicode(false)
                 .HasColumnName("stadionID");
             entity.Property(e => e.ZitplaatsId)
@@ -398,11 +400,11 @@ public partial class FootballDbContext : DbContext
             entity.HasKey(e => new { e.MatchId, e.VakNummer }).HasName("PK__TicketsP__B97B8E44CB171748");
 
             entity.Property(e => e.MatchId)
-                .HasMaxLength(5)
+                .HasMaxLength(3)
                 .IsUnicode(false)
                 .HasColumnName("matchID");
             entity.Property(e => e.VakNummer)
-                .HasMaxLength(5)
+                .HasMaxLength(3)
                 .IsUnicode(false)
                 .HasColumnName("vakNummer");
             entity.Property(e => e.Prijs)
@@ -425,7 +427,7 @@ public partial class FootballDbContext : DbContext
             entity.HasKey(e => e.VakNummer).HasName("PK__VakTypes__BBCA469A4C59D109");
 
             entity.Property(e => e.VakNummer)
-                .HasMaxLength(5)
+                .HasMaxLength(3)
                 .IsUnicode(false)
                 .HasColumnName("vakNummer");
             entity.Property(e => e.Omschrijving)
@@ -442,7 +444,7 @@ public partial class FootballDbContext : DbContext
             entity.ToTable("Zitplaatsen");
 
             entity.Property(e => e.StadionId)
-                .HasMaxLength(5)
+                .HasMaxLength(3)
                 .IsUnicode(false)
                 .HasColumnName("stadionID");
             entity.Property(e => e.ZitplaatsId)
@@ -458,7 +460,7 @@ public partial class FootballDbContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("stoelNummer");
             entity.Property(e => e.VakNummer)
-                .HasMaxLength(5)
+                .HasMaxLength(3)
                 .IsUnicode(false)
                 .HasColumnName("vakNummer");
 

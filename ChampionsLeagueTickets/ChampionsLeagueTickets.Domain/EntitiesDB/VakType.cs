@@ -9,7 +9,7 @@ public partial class VakType
 
     public int Ring { get; set; }
 
-    public string? Omschrijving { get; set; }
+    public string Omschrijving { get; set; } = null!;
 
     public virtual ICollection<AbonnementenPrijs> AbonnementenPrijs { get; set; } = new List<AbonnementenPrijs>();
 

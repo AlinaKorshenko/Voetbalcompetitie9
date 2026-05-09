@@ -136,10 +136,10 @@ namespace Voetbalcompetitie9.Controllers
             if (!string.IsNullOrEmpty(ticketVM.StadionVak) && !string.IsNullOrEmpty(ticketVM.RijNummer))
             {
                 var stoelen = await _zitplatsenService.GetSeatsForMatchSectionAndRowAsync(
-       ticketVM.MatchID,
-       ticketVM.StadionVak,
-       ticketVM.RijNummer
-   );
+                   ticketVM.MatchID,
+                   ticketVM.StadionVak,
+                   ticketVM.RijNummer
+               );
 
                 var ticketCart = HttpContext.Session.GetObject<List<ShoppingCartTicketItemKortVM>>("ShoppingCartTicket")
                                  ?? new List<ShoppingCartTicketItemKortVM>();
